@@ -1,0 +1,44 @@
+{
+"wood" : {
+    "texture" : "wood",
+
+    "holdMode" : "item",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+
+"stone" : {
+    "texture" : "stone",
+
+    "holdMode" : "item",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+
+"sword" : {
+    "texture" : "sword",
+
+    "holdMode" : "item",
+
+    "maxStack" : 1,
+
+    "types" : ["item"]
+},
+
+
+"bodyArmor" : {
+    "texture" : "bodyArmor",
+
+    "holdMode" : "item",
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+}
+}
