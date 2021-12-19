@@ -26,6 +26,15 @@ function deepcopyTable(orig)
     return copy
 end
 
+function wipeKill(kill,tableEditing)
+
+    for id,K in pairs(kill) do
+        table.remove(tableEditing,K - (id-1))
+    end
+
+    return tableEditing
+end
+
 -- Color 0-255 range functions (i just like it that way XD)
 
 function clear(r,g,b,a) -- Clear but it uses 0-255

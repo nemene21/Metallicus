@@ -25,10 +25,10 @@ SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitc
 lights = {}
 
 function shine(x,y,diffuse,power)
-    table.insert(lights,{position={x,y},diffuse=diffuse,power=power})
+    table.insert(lights,{position={x+camera[1],y+camera[2]},diffuse=diffuse,power=power})
 end
 
-function processLights(position,diffuse,power)
+function processLights()
     SHADERS.LIGHT:send("offset",{w*0.5-dw*0.5*displayScale,h*0.5-dh*0.5*displayScale})
     SHADERS.LIGHT:send("numLights",table.getn(lights))
 

@@ -1,14 +1,14 @@
 
 camera = {0,0}; boundCamPos = {0,0}
 
-lerpSpeed = 10
+lerpSpeed = 4
 
 shakeStr = 0; shakes = 0; shakeTimer = newTimer(0); dir = 0; screenshake = {0,0}
 
 -- Camera
 
 function bindCamera(x,y)
-    boundCamPos = {x,y}
+    boundCamPos = {x - WS[1] * 0.5, y - WS[2] * 0.5}
 end
 
 function processCamera()
@@ -32,7 +32,6 @@ end
 -- Screenshake
 
 function shake(shakeStrNew,shakesNew,time,dir)
-    print("sheke")
     dir = dir or 0
 
     if shakeStr <= shakeStrNew then

@@ -68,7 +68,7 @@ end
 function processParticleSystem(particleSystem)
     particleSystem.timer = particleSystem.timer - dt
 
-    if particleSystem.timer < 0 and particleSystem.ticks ~= 0 then
+    if particleSystem.timer < 0 and particleSystem.ticks ~= 0 and particleSystem.spawning then
         
         particleSystem.ticks = particleSystem.ticks - 1
         particleSystem.timer = love.math.random(particleSystem.tickSpeed.a*100,particleSystem.tickSpeed.b*100)*0.01

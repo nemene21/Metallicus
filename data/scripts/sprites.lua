@@ -20,14 +20,15 @@ function loadSpritesheet(filename,w,h)
     return images
 end
 
-function drawFrame(spritesheet,X,Y,x,y,sx,sy,r)
+function drawFrame(spritesheet,X,Y,x,y,sx,sy,r,offsetCamera)
     local sx = sx or 1; local sy = sy or 1; local r = r or 0
-    love.graphics.draw(spritesheet.texture,spritesheet[tostring(X)..","..tostring(Y)],x-camera[1],y-camera[2],r,SPRSCL*sx,SPRSCL*sy)
+    love.graphics.draw(spritesheet.texture,spritesheet[tostring(X)..","..tostring(Y)],x-camera[1],y-camera[2],r,SPRSCL*sx,SPRSCL*sy,offsetCamera)
 end
 
 -- Sprites
 
-function drawSprite(tex,x,y,sx,sy,r)
+function drawSprite(tex,x,y,sx,sy,r,offsetCamera)
+    local offsetCamera = offsetCamera or 1
     local sx = sx or 1; local sy = sy or 1; local r = r or 0
-    love.graphics.draw(tex,x-camera[1],y-camera[2],r,SPRSCL*(sx + 0.001),SPRSCL*(sy + 0.001),tex:getWidth()*0.5,tex:getHeight()*0.5)
+    love.graphics.draw(tex,x-camera[1]*offsetCamera,y-camera[2]*offsetCamera,r,SPRSCL*(sx + 0.001),SPRSCL*(sy + 0.001),tex:getWidth()*0.5,tex:getHeight()*0.5)
 end

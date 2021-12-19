@@ -9,7 +9,7 @@ function love.load()
 
     fullscreen = false; title = "Ne_mene´s Framework"
 
-    WS = {800,600}; wFlags = {resizable=true}
+    WS = {800,600}; wFlags = {resizable=true}; UI_LAYER = love.graphics.newCanvas(WS[1],WS[2])
     aspectRatio = {WS[1]/WS[2],WS[2]/WS[1]}
     love.graphics.setBackgroundColor(0,0,0,1); love.window.setMode(WS[1],WS[2],wFlags); display = love.graphics.newCanvas(WS[1],WS[2]); displayScale = 1
     postProCanvas = love.graphics.newCanvas(WS[1],WS[2])
@@ -23,7 +23,7 @@ function love.load()
     -- Mouse
     love.mouse.setVisible(false)
     mouseMode = "pointer"
-    mouse = {["pointer"] = love.graphics.newImage("data/images/mouse/pointer.png")}
+    mouse = {["pointer"] = love.graphics.newImage("data/images/mouse/pointer.png"), ["aimer"] = love.graphics.newImage("data/images/mouse/aimer.png")}; mCentered = 0
     mouseOffset = {0,0}
 
     -- Scenes
@@ -65,6 +65,9 @@ function love.draw()
     xM = xM/displayScale; yM = yM/displayScale
 
     -- Bg and canvas resetting
+    love.graphics.setCanvas(UI_LAYER)
+    love.graphics.clear(0,0,0,0)
+
     love.graphics.setColor(1,1,1,1); love.graphics.setCanvas(display)
     love.graphics.clear(0,0,0,1)
 
@@ -83,10 +86,6 @@ function love.draw()
 
     processCamera()
 
-    -- Mouse
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(mouse[mouseMode],xM,yM,0,SPRSCL,SPRSCL)
-
     -- Post processing
 
     for id,P in pairs(postPro) do
@@ -98,20 +97,28 @@ function love.draw()
     end
     love.graphics.setShader()
 
+    setColor(255,255,255,255)
+    love.graphics.setCanvas(display)
+    love.graphics.draw(UI_LAYER)
+
+    -- Mouse
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(mouse[mouseMode],xM,yM,0,SPRSCL,SPRSCL,mouse[mouseMode]:getWidth() * mCentered,mouse[mouseMode]:getHeight() * mCentered)
+
     -- Draw display
     love.graphics.setCanvas()
 
     love.graphics.draw(display,w*0.5-dw*0.5*displayScale,h*0.5-dh*0.5*displayScale,0,displayScale,displayScale)
     
     love.graphics.setColor(1,0,1,1)
-    resetLights()
 
     -- Check for fullscreen
     if justPressed("f1") then changeFullscreen() end
 
-    -- Reset input
+    -- Reset stuff
     lastKeyPressed = "none"; lastMouseButtonPressed = -1
     for id,J in pairs(JOYSTICKS) do JOYSTICK_LAST_PRESSES[id] = "none" end
+    scroll = 0; resetLights()
 end
 
 -- Display resizing
@@ -135,6 +142,8 @@ function love.keypressed(k) setJustPressed(k) end
 
 -- Mouse
 function love.mousepressed(x,y,button) setMouseJustPressed(button) end
+
+function love.wheelmoved(x,y) scroll = y end
 
 -- Joysticks
 function love.joystickadded(joystick) table.insert(JOYSTICKS,joystick); table.insert(JOYSTICK_LAST_PRESSES,"none") end

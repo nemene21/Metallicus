@@ -1,11 +1,14 @@
 
 INVENTORY_SPACING = 64
 
+HOLDING_ARROW = love.graphics.newImage("data/images/UI/inventory/holdingArrow.png")
+
 IN_HAND = nil
 
 ITEMS = loadJson("data/items.json")
 for id,I in pairs(ITEMS) do I.name = id; I.amount = 1 end
 
+-- Init
 function newInventory(ox,oy,w,h,image)
     local inventory = {x=ox,y=oy,slots={}}
     local image = image or "slot"
@@ -32,6 +35,7 @@ function newInventory(ox,oy,w,h,image)
     return inventory
 end
 
+-- Processing an inventory
 function processInventory(inventory)
 
     for id,S in pairs(inventory.slots) do
@@ -122,8 +126,6 @@ function processInventory(inventory)
             end
 
         else S.scaleTo = 1 end
-        
-        S.scale = lerp(S.scale,S.scaleTo,dt*20)
 
         S.on = false
 
@@ -138,6 +140,7 @@ function processInventory(inventory)
     return inventory 
 end
 
+-- Drawing an inventory
 function drawInventory(inventory)
     -- DRAW
     for id,S in pairs(inventory.slots) do
@@ -149,14 +152,14 @@ function drawInventory(inventory)
     -- Draw slot
     if S.item == nil then setColor(140,140,140) else setColor(255,255,255) end
 
-    drawSprite(SLOT_IMAGES[S.image], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0)
+    drawSprite(SLOT_IMAGES[S.image], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
 
-    if S.icon ~= nil then drawSprite(SLOT_ICONS[S.icon], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0) end
+    if S.icon ~= nil then drawSprite(SLOT_ICONS[S.icon], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0) end
 
     -- Draw item and item count, if there is one
     if S.item ~= nil then
         setColor(255,255,255)
-        drawSprite(ITEM_IMGES[S.item.texture], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0)
+        drawSprite(ITEM_IMGES[S.item.texture], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
 
         if S.item.amount ~= 1 then
             local count = tostring(S.item.amount)
@@ -165,6 +168,9 @@ function drawInventory(inventory)
 
         setColor(255,255,255)
     end
+
+    S.scale = lerp(S.scale,S.scaleTo,dt*20)
+    S.scaleTo = 1
 
     end
 end
@@ -176,12 +182,12 @@ function processMouseSlot()
         setColor(255,255,255)
 
         -- Draw
-        drawSprite(ITEM_IMGES[IN_HAND.texture],xM + 58,yM + 58)
+        drawSprite(ITEM_IMGES[IN_HAND.texture],xM + 48,yM + 48, 1, 1, 0, 0)
 
         if IN_HAND.amount ~= 1 and IN_HAND.amount ~= 0 then
 
             local count = tostring(IN_HAND.amount)
-            outlinedText(xM + 84, yM + 68, 2, count)
+            outlinedText(xM + 74, yM + 58, 2, count)
 
         end
 
@@ -190,6 +196,23 @@ function processMouseSlot()
         end
     end
 end
+
+-- HOLDING STUFF
+
+-- Play hold state
+function holdItem(player,headed,item) return HOLD_MODES[item.holdMode](player,headed,item) end
+
+-- Hold states
+
+function MODE_HOLD(player,headed,item)
+    drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
+
+    return item
+end
+
+HOLD_MODES = {
+hold=MODE_HOLD
+}
 
 -- Images for all items and icons in the game currently!
 

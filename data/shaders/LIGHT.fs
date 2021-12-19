@@ -17,6 +17,7 @@ extern vec2 offset;
 const float constant = 1.0;
 const float linear = 0.09;
 const float quadratic = 0.032;
+const float diffuseDefault = 0.75;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
@@ -24,7 +25,7 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 
     vec2 norm_screen_pos = screen_coords / screen;
 
-    vec3 diffuse = vec3(0);
+    vec3 diffuse = vec3(diffuseDefault);
 
     for (int i = 0; i < numLights; i++) {
         Light light = lights[i];
@@ -37,7 +38,7 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
         diffuse += light.diffuse * attenuation;
     }
 
-    diffuse = clamp(diffuse,0.0,1.1);
+    diffuse = clamp(diffuse,0.0,diffuseDefault + 1);
 
     return px * vec4(diffuse, 1.0);
 }

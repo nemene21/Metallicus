@@ -18,6 +18,9 @@ function mousePressed(button) return love.mouse.isDown(button) end -- Returns if
 
 function mouseJustPressed(button) return lastMouseButtonPressed == button end -- Returns if a key is pressed at that frame.
 
+scroll = 0
+function getScroll() return scroll end
+
 -- Updating the input (unimportant, not for use)
 function setMouseJustPressed(button) lastMouseButtonPressed = button end
 
