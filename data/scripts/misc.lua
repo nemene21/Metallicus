@@ -28,9 +28,10 @@ end
 
 function wipeKill(kill,tableEditing)
 
-    for id,K in pairs(kill) do
-        table.remove(tableEditing,K - (id-1))
+    for i=#kill,1,-1 do
+        table.remove(tableEditing,kill[i])
     end
+    kill = {}
 
     return tableEditing
 end
@@ -39,13 +40,13 @@ end
 
 function clear(r,g,b,a) -- Clear but it uses 0-255
     a = a or 255
-    local convert = 0.003921
+    local convert = 0.003921568627451
     love.graphics.clear(r * convert, g * convert, b * convert, a * convert)
 end
 
 function setColor(r,g,b,a) -- setColor but it uses 0-255
     a = a or 255
-    local convert = 0.003921
+    local convert = 0.003921568627451
     love.graphics.setColor(r * convert, g * convert, b * convert, a * convert)
 end
 

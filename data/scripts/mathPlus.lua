@@ -25,18 +25,19 @@ function boolToInt(booleon)
 end
 --------------------------PHYSICS
 
-function newRect(x,y,w,h) return {x=x,y=y,w=w,h=h,touching=newVec(0,0)} end -- Make a new rect
+function newRect(x,y,w,h) return {x=x,y=y,w=w,h=h,touching=newVec(0,0),cR=true,cL=true,cUP=true,cDW=true} end -- Make a new rect
 
 function isRectColliding(rect,R) -- Return if two rects are touching
     return R.x + R.w * 0.5 > rect.x - rect.w * 0.5 and R.x - R.w * 0.5 < rect.x + rect.w * 0.5 and R.y + R.h * 0.5 > rect.y - rect.h * 0.5 and R.y - R.h * 0.5 < rect.y + rect.h * 0.5
 end
 
-function checkCollisions(rect,collidesWith) 
+function checkCollisions(rect,motion,collidesWith) 
     local collided = {}
 
     -- Loop trough every rect you want to check collision with, if they are touching, add it to a list, return the list
     for id,R in pairs(collidesWith) do
-        if isRectColliding(rect,R) then
+
+        if not isRectColliding({x = rect.x - motion.x * dt, y = rect.y - motion.y * dt, w = rect.w, h = rect.h},R) and isRectColliding(rect,R) then
             table.insert(collided,R)
         end
     end
@@ -51,13 +52,13 @@ function moveRect(rect,motion,collidesWith)
     rect.x = rect.x + motion.x * dt
 
     -- Get rects colliding
-    local collided = checkCollisions(rect,collidesWith)
+    local collided = checkCollisions(rect,motion,collidesWith)
 
     -- Clamp rect according to the collided rects boundries
     for id,R in pairs(collided) do
-        if motion.x < 0 then
+        if motion.x < 0 and R.cL then
             rect.x = R.x + R.w * 0.5 + rect.w * 0.5; rect.touching.x = -1
-        else if motion.x > 0 then
+        else if motion.x > 0 and R.cR then
             rect.x = R.x - R.w * 0.5 - rect.w * 0.5; rect.touching.x = 1
         end end
     end
@@ -66,13 +67,13 @@ function moveRect(rect,motion,collidesWith)
     rect.y = rect.y + motion.y * dt
 
     -- Get rects colliding
-    local collided = checkCollisions(rect,collidesWith)
+    local collided = checkCollisions(rect,motion,collidesWith)
     
     -- Clamp rect according to the collided rects boundries
     for id,R in pairs(collided) do
-        if motion.y < 0 then
+        if motion.y < 0 and R.cDW then
             rect.y = R.y + R.h * 0.5 + rect.h * 0.5; rect.touching.y = -1
-        else if motion.y > 0 then
+        else if motion.y > 0 and R.cUP then
             rect.y = R.y - R.h * 0.5 - rect.h * 0.5; rect.touching.y = 1
         end end
     end

@@ -1,12 +1,12 @@
 
-INVENTORY_SPACING = 64
+INVENTORY_SPACING = 56
 
 HOLDING_ARROW = love.graphics.newImage("data/images/UI/inventory/holdingArrow.png")
 
 IN_HAND = nil
 
 ITEMS = loadJson("data/items.json")
-for id,I in pairs(ITEMS) do I.name = id; I.amount = 1 end
+for id,I in pairs(ITEMS) do I.amount = 1 end
 
 -- Init
 function newInventory(ox,oy,w,h,image)
@@ -22,7 +22,7 @@ function newInventory(ox,oy,w,h,image)
             image=image
         }
 
-        POSSIBLE_ITEMS = {"wood","stone","sword","bodyArmor","none"}
+        POSSIBLE_ITEMS = {"wood","stone","sword","bodyArmor","headArmor","none"}
 
         inventory.slots[tostring(x)..","..tostring(y)].item = deepcopyTable(ITEMS[POSSIBLE_ITEMS[love.math.random(0,#POSSIBLE_ITEMS)]])
 
@@ -45,11 +45,11 @@ function processInventory(inventory)
         -- If getting hovered
         if S.on then 
 
-            S.scaleTo = 1.2
+            S.scaleTo = 1.15
 
             -- Left click
             if mouseJustPressed(1) then
-                S.scale = 1.5
+                S.scale = 1.3
 
                 if IN_HAND ~= nil and S.item ~= nil then
                 if IN_HAND.name == S.item.name then
@@ -93,7 +93,7 @@ function processInventory(inventory)
             
             -- Right click
             if mouseJustPressed(2) then
-                S.scale = 1.5
+                S.scale = 1.3
 
                 -- If hand is empty and the slot is not empty, split slot
                 if IN_HAND == nil then
@@ -163,7 +163,7 @@ function drawInventory(inventory)
 
         if S.item.amount ~= 1 then
             local count = tostring(S.item.amount)
-            outlinedText(math.floor(slotX * INVENTORY_SPACING + inventory.x) + 24, math.floor(slotY * INVENTORY_SPACING + inventory.y) + 10, 2, count)
+            outlinedText(math.floor(slotX * INVENTORY_SPACING + inventory.x) + 24, math.floor(slotY * INVENTORY_SPACING + inventory.y) + 5, 2, count, {255,255,255}, 1)
         end
 
         setColor(255,255,255)
@@ -171,7 +171,17 @@ function drawInventory(inventory)
 
     S.scale = lerp(S.scale,S.scaleTo,dt*20)
     S.scaleTo = 1
+    end
+end
 
+function processTooltip(inventory)
+    -- Hover over slot
+    local mouseSlotX = math.floor(((xM-inventory.x) / INVENTORY_SPACING) + 0.5); local mouseSlotY = math.floor(((yM-inventory.y) / INVENTORY_SPACING) + 0.5)
+
+    if inventory.slots[tostring(mouseSlotX)..","..tostring(mouseSlotY)] ~= nil then
+
+        -- Draw tooltip if there is an item
+        if inventory.slots[tostring(mouseSlotX)..","..tostring(mouseSlotY)].item ~= nil then drawTooltip(inventory.slots[tostring(mouseSlotX)..","..tostring(mouseSlotY)].item) end
     end
 end
 
@@ -187,7 +197,7 @@ function processMouseSlot()
         if IN_HAND.amount ~= 1 and IN_HAND.amount ~= 0 then
 
             local count = tostring(IN_HAND.amount)
-            outlinedText(xM + 74, yM + 58, 2, count)
+            outlinedText(xM + 74, yM + 58, 2, count, {255,255,255}, 1)
 
         end
 
@@ -195,6 +205,57 @@ function processMouseSlot()
             IN_HAND = nil
         end
     end
+end
+
+-- TOOLTIP
+STAT_NAMES = {
+dmg = "damage", def = "defense", ["your mom lmao"] = "your mom lmao"
+}
+
+TOOLTIP_OFFSET = 80
+RARITY_COLORS = {common={255,255,255},uncommon={0,255,0},rare={44,255,255},epic={142,0,154},mythic={255,0,68}}
+
+function drawTooltip(item)
+    
+    -- If the item is equippable
+    if item.tooltipEquipName ~= nil then
+
+        -- Get width of rect
+        local textDraws = {}; colors = {}
+        local width = 0
+
+        local STAT_OFFSET = 15
+        
+        for id,S in pairs(item.stats) do
+            local text = STAT_NAMES[id]..":  "
+            if S > 0 then text = text.."+"; table.insert(colors,{0,255,0}) else table.insert(colors,{255,0,0}) end
+            text = text..S
+
+            table.insert(textDraws,text)
+
+            local textWidth = FONT:getWidth(text)
+            if textWidth + STAT_OFFSET > width then width = textWidth + STAT_OFFSET end
+        end
+
+        local fontHeight = FONT:getHeight("text lol") + 4
+
+        -- Draw rect
+        setColor(0,0,0,150)
+        love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM + 38, width + 12, fontHeight * (#textDraws + 1) + 18,8, 8)
+
+        -- Draw stats
+        outlinedText(xM + TOOLTIP_OFFSET,yM + 38 + 8,2,item.tooltipEquipName,{120,120,120})
+
+        for id,T in ipairs(textDraws) do
+            outlinedText(xM + TOOLTIP_OFFSET + STAT_OFFSET,yM + 38 + 12 + id * fontHeight,2,T,colors[id])
+        end
+    end
+    -- Draw rect
+    setColor(0,0,0,150)
+    love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM - 6, FONT:getWidth(item.name)+12, 38,8, 8)
+
+    -- Draw name
+    outlinedText(xM + TOOLTIP_OFFSET,yM,2,item.name,RARITY_COLORS[item.rarity])
 end
 
 -- HOLDING STUFF
@@ -205,13 +266,42 @@ function holdItem(player,headed,item) return HOLD_MODES[item.holdMode](player,he
 -- Hold states
 
 function MODE_HOLD(player,headed,item)
+    -- Draw
     drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
 
     return item
 end
 
+function MODE_SLASH(player,headed,item)
+    -- Rotate anchor and sprite
+    item.holdData.rotation = lerp(item.holdData.rotation,item.holdData.rotateTo,dt * 8)
+    item.holdData.spriteRotation = lerp(item.holdData.spriteRotation,item.holdData.spriteRotateTo,dt * 8)
+
+    -- Slash
+    item.holdData.attackTimer = item.holdData.attackTimer - dt
+    if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+        -- Reset attack timer
+        item.holdData.attackTimer = item.holdData.attackTime
+        -- Reverse turn
+        item.holdData.turnTo = item.holdData.turnTo * -1
+        -- Set anchor rotator
+        item.holdData.rotateTo = item.holdData.rotateTo + (360 - 2 * item.holdData.roatationDefault) * item.holdData.turnTo
+        -- Set sprite rotator
+        item.holdData.spriteRotateTo = 270 * (item.holdData.turnTo + 1) * 0.5
+    end
+
+    -- Get draw pos and rotation
+    local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM); rotation = rotation:getRot()
+
+    local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + item.holdData.rotation)
+
+    -- Draw
+    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, item.holdData.flip, (rotation + item.holdData.spriteRotation) / 180 * 3.14)
+    return item
+end
+
 HOLD_MODES = {
-hold=MODE_HOLD
+hold=MODE_HOLD, slash=MODE_SLASH
 }
 
 -- Images for all items and icons in the game currently!
@@ -234,7 +324,8 @@ ITEM_IMGES = {
 wood = love.graphics.newImage("data/images/items/wood.png"),
 stone = love.graphics.newImage("data/images/items/stone.png"),
 sword = love.graphics.newImage("data/images/items/sword.png"),
-bodyArmor = love.graphics.newImage("data/images/items/bodyArmor.png")
+bodyArmor = love.graphics.newImage("data/images/items/bodyArmor.png"),
+headArmor = love.graphics.newImage("data/images/items/helmet.png")
 }
 
 -- Add slot function

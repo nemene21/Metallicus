@@ -73,7 +73,9 @@ function processParticleSystem(particleSystem)
         particleSystem.ticks = particleSystem.ticks - 1
         particleSystem.timer = love.math.random(particleSystem.tickSpeed.a*100,particleSystem.tickSpeed.b*100)*0.01
 
-        for i=0,love.math.random(particleSystem.amount.a,particleSystem.amount.b) do
+        particlesGoingToSpawn = love.math.random(particleSystem.amount.a,particleSystem.amount.b)
+
+        for i=0,particlesGoingToSpawn do
             -- Make pos
             particlePos = SPAWNS[particleSystem.spawnShape.mode](particleSystem.x,particleSystem.y,particleSystem.spawnShape.data)
             -- Make lifetime
@@ -100,8 +102,9 @@ function processParticleSystem(particleSystem)
         end
     end
 
-    kill = {}
-    for id,P in pairs(particleSystem.particles) do
+    local kill = {}
+
+    for id,P in ipairs(particleSystem.particles) do
         -- Set color to particles color
         love.graphics.setColor(P.color.r,P.color.g,P.color.b,P.color.a)
 
@@ -112,23 +115,17 @@ function processParticleSystem(particleSystem)
         P.vel:rotate(P.rotation * dt)
         P.vel.x = P.vel.x + particleSystem.force.x * dt
         P.vel.y = P.vel.y + particleSystem.force.y * dt
-
+        
         -- Decrease lifetime
         P.lifetime = P.lifetime - dt
 
         -- Kill if lifetime < 0
-        if P.lifetime < 0 then table.insert(kill,id) end
+        if P.lifetime < 0 then table.insert(kill,id)end
 
         -- Get width
         particleWidth = INTERPOLATIONS[particleSystem.interpolation](P.width,P.lifetime,P.lifetimeStart)
-
+        
         -- Draw
         DRAWS[particleSystem.particleData.drawMode](P,particleWidth)
-    end
-
-    killed = 0
-    for id,P in pairs(kill) do
-        table.remove(particleSystem.particles,P-killed)
-        killed = killed + 1
-    end
+    end particleSystem.particles = wipeKill(kill, particleSystem.particles)
 end

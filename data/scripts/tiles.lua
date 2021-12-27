@@ -2,7 +2,7 @@
 -- Tile functions
 function getTilemapTile(tilemap,x,y) return tilemap.tiles[tostring(x)..","..tostring(y)] end
 
-function setTilemapTile(tilemap,x,y,tile) tilemap.tiles[tostring(x)..","..tostring(y)] = tile end
+function setTilemapTile(tilemap,x,y,tile) tilemap.tiles[tostring(x)..","..tostring(y)] = {tile[1],tile[2]} end
 
 function removeTilemapTile(tilemap,x,y) tilemap.tiles[tostring(x)..","..tostring(y)] = nil end
 
@@ -20,7 +20,7 @@ end
 
 -- Build colliders (goes trough all tiles, places a collider on them in the tilemap.collided if they dont have a neightbour somewhere)
 function buildTilemapColliders(tilemap)
-    tilemap.colliders = {}
+    tilemap.colliders = {}; tilemap.collidersWithFalltrough = {}
 
     for id,T in pairs(tilemap.tiles) do
         local pos = splitString(id,",")
@@ -31,7 +31,10 @@ function buildTilemapColliders(tilemap)
 
         if place then
             local rect = newRect(tileX * tilemap.tileSize + tilemap.tileSize * 0.5, tileY * tilemap.tileSize + tilemap.tileSize * 0.5, tilemap.tileSize, tilemap.tileSize)
-            table.insert(tilemap.colliders,rect)
+            if T[1] <= 3 and T[2] <= 5 then table.insert(tilemap.colliders,rect)
+            else rect.cDW = false; rect.cL = false; rect.cR = false end
+
+            table.insert(tilemap.collidersWithFalltrough,rect)
         end
     end
 end

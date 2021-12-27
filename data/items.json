@@ -1,6 +1,7 @@
 {
 "wood" : {
     "texture" : "wood",
+    "name" : "Wood", "rarity" : "common",
 
     "holdMode" : "hold",
 
@@ -12,6 +13,7 @@
 
 "stone" : {
     "texture" : "stone",
+    "name" : "Stone", "rarity" : "mythic",
 
     "holdMode" : "hold",
 
@@ -23,22 +25,48 @@
 
 "sword" : {
     "texture" : "sword",
+    "name" : "Sword", "rarity" : "uncommon",
 
-    "holdMode" : "hold",
+    "holdMode" : "slash",
+    "armRTaken" : true, "armLTaken" : false,
 
-    "maxStack" : 1,
+    "holdData" : {
+        "attackTimer" : 0, "attackTime" : 0.5, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+    },
+
+    "tooltipEquipName" : "when held:",
+    "stats" : {"dmg" : 10},
+
+    "maxStack" : 1, 
 
     "types" : ["item"]
 },
 
-
 "bodyArmor" : {
     "texture" : "bodyArmor",
+    "name" : "Chestplate", "rarity" : "rare",
 
     "holdMode" : "hold",
+
+    "tooltipEquipName" : "when worn:",
+    "stats" : {"def" : 10, "your mom lmao" : -10},
 
     "maxStack" : 1,
 
     "types" : ["item","bodyArmor"]
+},
+
+"headArmor" : {
+    "texture" : "headArmor",
+    "name" : "Helmet", "rarity" : "epic",
+
+    "holdMode" : "hold",
+
+    "tooltipEquipName" : "when worn:",
+    "stats" : {"def" : 5},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
 }
 }

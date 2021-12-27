@@ -1,13 +1,14 @@
 
 -- All global values used in all scenes (display, textures, options, etc.)
 function love.load()
+
     -- Get screenRes
     screenRes = {love.graphics.getWidth(),love.graphics.getHeight()}
 
     -- Window and defaulting
     globalTimer = 0; love.graphics.setDefaultFilter("nearest","nearest")
 
-    fullscreen = false; title = "Ne_mene´s Framework"
+    fullscreen = false; title = "¨Gaem"
 
     WS = {800,600}; wFlags = {resizable=true}; UI_LAYER = love.graphics.newCanvas(WS[1],WS[2])
     aspectRatio = {WS[1]/WS[2],WS[2]/WS[1]}
@@ -18,7 +19,7 @@ function love.load()
 
     -- Imports
     json = require "data.scripts.json"; require "data.scripts.misc"; require "data.scripts.loading"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
-    require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
+    require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
     
     -- Mouse
     love.mouse.setVisible(false)
@@ -48,6 +49,7 @@ end
 
 -- Play scenes
 function love.draw()
+
     -- Time and resetting
     dt = love.timer.getDelta()
     globalTimer = globalTimer + dt
@@ -84,33 +86,31 @@ function love.draw()
     setColor(0,0,0,255*transition)
     love.graphics.rectangle("fill",0,0,800,600)
 
-    processCamera()
+    
 
-    -- Post processing
+    processCamera(); processLight()
 
-    for id,P in pairs(postPro) do
-        love.graphics.setShader(SHADERS[P])
-        love.graphics.setCanvas(postProCanvas)
-        love.graphics.draw(display,0,0)
-        love.graphics.setCanvas(display)
-        love.graphics.draw(postProCanvas,0,0)
-    end
+    love.graphics.setCanvas(postProCanvas)
+    love.graphics.setShader(SHADERS[postPro])
+
+    love.graphics.draw(display)
+
     love.graphics.setShader()
-
-    setColor(255,255,255,255)
-    love.graphics.setCanvas(display)
+    
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(UI_LAYER)
 
     -- Mouse
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(mouse[mouseMode],xM,yM,0,SPRSCL,SPRSCL,mouse[mouseMode]:getWidth() * mCentered,mouse[mouseMode]:getHeight() * mCentered)
 
     -- Draw display
     love.graphics.setCanvas()
 
-    love.graphics.draw(display,w*0.5-dw*0.5*displayScale,h*0.5-dh*0.5*displayScale,0,displayScale,displayScale)
+    love.graphics.draw(postProCanvas,w*0.5-dw*0.5*displayScale,h*0.5-dh*0.5*displayScale,0,displayScale,displayScale)
     
-    love.graphics.setColor(1,0,1,1)
+    love.graphics.setColor(1,1,1)
+
 
     -- Check for fullscreen
     if justPressed("f1") then changeFullscreen() end
@@ -118,7 +118,7 @@ function love.draw()
     -- Reset stuff
     lastKeyPressed = "none"; lastMouseButtonPressed = -1
     for id,J in pairs(JOYSTICKS) do JOYSTICK_LAST_PRESSES[id] = "none" end
-    scroll = 0; resetLights()
+    scroll = 0; processSound(); resetLight()
 end
 
 -- Display resizing

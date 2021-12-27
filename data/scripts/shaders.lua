@@ -7,7 +7,7 @@ SHADERS = {
     ,
     FLASH = love.graphics.newShader((love.filesystem.read("data/shaders/FLASH.fs")))
     ,
-    LIGHT = love.graphics.newShader((love.filesystem.read("data/shaders/LIGHT.fs")))
+    GLOW_AND_LIGHT = love.graphics.newShader((love.filesystem.read("data/shaders/GLOW_AND_LIGHT.fs")))
     ,
     GLITCH = love.graphics.newShader((love.filesystem.read("data/shaders/GLITCH.fs")))
     ,
@@ -19,29 +19,29 @@ SHADERS = {
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
+SHADERS.GLOW_AND_LIGHT:send("xRatio",aspectRatio[2])
 SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitch.png"))
 
 -------- LIGHT SHADER FUNCTIONS --------
-lights = {}
+lightImage = love.graphics.newCanvas(WS[1],WS[2])
+ambientLight = {80,80,80}
 
-function shine(x,y,diffuse,power)
-    table.insert(lights,{position={x+camera[1],y+camera[2]},diffuse=diffuse,power=power})
+LIGHT_ROUND = love.graphics.newImage("data/images/roundLight.png")
+
+function processLight() SHADERS.GLOW_AND_LIGHT:send("lightImage",lightImage) end
+
+function resetLight()
+    love.graphics.setCanvas(lightImage)
+    clear(ambientLight[1],ambientLight[2],ambientLight[3])
+    love.graphics.setCanvas()
 end
 
-function processLights()
-    SHADERS.LIGHT:send("offset",{w*0.5-dw*0.5*displayScale,h*0.5-dh*0.5*displayScale})
-    SHADERS.LIGHT:send("numLights",table.getn(lights))
-
-    for id,L in pairs(lights) do
-        actualId = id - 1
-        SHADERS.LIGHT:send("lights["..tostring(actualId).."].position",L.position)
-        SHADERS.LIGHT:send("lights["..tostring(actualId).."].diffuse",L.diffuse)
-        SHADERS.LIGHT:send("lights["..tostring(actualId).."].power",L.power)
-    end
-end
-
-function resetLights()
-    lights = {}
+function shine(x,y,r,color)
+    local color = color or {255,255,255}
+    love.graphics.setCanvas(lightImage)
+    setColor(color[1],color[2],color[3])
+    love.graphics.draw(LIGHT_ROUND,x - camera[1],y - camera[2],0,r/300,r/300,LIGHT_ROUND:getWidth() * 0.5,LIGHT_ROUND:getHeight() * 0.5)
+    love.graphics.setCanvas(display)
 end
 
 -- Table of all post process effects you want, example: postPro = {"PIXEL_PERFECT","GLOW"}

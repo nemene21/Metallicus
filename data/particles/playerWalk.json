@@ -15,7 +15,7 @@
 },
 
 "particleData" : {
-    "speed" : {"a" : 20, "b" : 25},
+    "speed" : {"a" : 20, "b" : 70},
     "rotation" : {"a" : -30, "b" : 30},
     "color" : {
         "r" : {"a" : 0.99, "b" : 1},

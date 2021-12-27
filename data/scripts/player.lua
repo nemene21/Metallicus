@@ -5,9 +5,9 @@ PLAYER_ARM = love.graphics.newImage("data/images/player/arm.png")
 PLAYER_LEG = love.graphics.newImage("data/images/player/arm.png")
 
 function newPlayer(x,y,stats)
-    local inventory = newInventory(42,120,5,3)
+    local inventory = newInventory(42,42 + INVENTORY_SPACING + 12,5,3)
     local hotbar = newInventory(42,42,5,1,"hotbarSlot")
-    local wearing = newInventory(312,120,0,0)
+    local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 12,42 + INVENTORY_SPACING + 12,0,0)
 
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")
@@ -21,14 +21,16 @@ function newPlayer(x,y,stats)
     return {
         vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer,
 
-        collider=newRect(x,y,40,46),
+        collider=newRect(x,y,30,46),
 
         inventoryOpen=false, slotOn = 0,
+
+        downPressedTimer=0, jumpPressedTimer=0,
 
         armL=newVec(-15,15), armR=newVec(15,15), legL=newVec(-6,24), legR=newVec(6,24), body=newVec(0,9), head=newVec(0,-6),
         armLR=0,armRR=0,legLR=0,legRR=0,bodyR=0,headR=0,
 
-        animation="idle", walkParticles=newParticleSystem(x,y,loadJson("data/particles/playerWalk.json")); jumpParticles=newParticleSystem(x,y,loadJson("data/particles/playerJump.json"))
+        animation="idle", walkParticles=newParticleSystem(x,y,loadJson("data/particles/playerWalk.json")); jumpParticles=loadJson("data/particles/playerJump.json")
     }
 end
 
@@ -39,17 +41,26 @@ function processPlayer(player)
 
     player.vel.x = lerp(player.vel.x, xInput * 300, dt * 8)
 
-    player.collider = moveRect(player.collider, player.vel, TILEMAP.colliders)
+    player.downPressedTimer = player.downPressedTimer - dt
+    if pressed("s") then player.downPressedTimer = 0.4 end
 
-    player.vel.y = math.min(player.vel.y + 800 * dt,600)
+    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, player.vel, TILEMAP.colliders)
+    else player.collider = moveRect(player.collider, player.vel, TILEMAP.collidersWithFalltrough) end
+
+    player.vel.y = math.min(player.vel.y + 1200 * dt,600)
+
+    if player.collider.touching.y == -1 then player.vel.y = 0 end
+
+    player.jumpPressedTimer = player.jumpPressedTimer - dt
+    if justPressed("space") then player.jumpPressedTimer = 0.15 end
 
     if player.collider.touching.y == 1 then
         player.vel.y = 1
 
-        if justPressed("space") then
-            player.vel.y = -400
+        if player.jumpPressedTimer > 0 then
+            player.vel.y = -600
 
-            table.insert(particleSystems,deepcopyTable(player.jumpParticles))
+            table.insert(particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
 
         end
     end
@@ -58,8 +69,6 @@ function processPlayer(player)
     player.walkParticles:process()
 
     player.walkParticles.spawning = xInput ~= 0; player.walkParticles.x = player.collider.x; player.walkParticles.y = player.collider.y + 16
-
-    player.jumpParticles.x = player.collider.x; player.jumpParticles.y = player.collider.y + 16
 
     -- Animation
     if player.collider.touching.y ~= 1 then
@@ -81,39 +90,47 @@ function processPlayer(player)
 
     -- HEAD AND BODY
     drawSprite(PLAYER_BODY, player.collider.x + player.body.x * lookAt, player.collider.y + player.body.y, lookAt, 1, player.bodyR)
+    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt, player.collider.y + player.body.y, lookAt, 1, player.bodyR) end
+
     drawSprite(PLAYER_HEAD, player.collider.x + player.head.x * lookAt, player.collider.y + player.head.y, lookAt, 1, player.headR)
+    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt, player.collider.y + player.head.y, lookAt, 1, player.headR) end
 
     -- ITEM IN HAND
     local holding = tostring(player.slotOn)..",0"
+    local handed = 0
 
     if player.hotbar.slots[holding].item ~= nil then
         player.hotbar.slots[holding].item = holdItem(player,lookAt,player.hotbar.slots[holding].item)
+        handed = handed + boolToInt(player.hotbar.slots[holding].item.armRTaken)
+        handed = handed + boolToInt(player.hotbar.slots[holding].item.armLTaken)
     end
 
     -- ARMS
-    drawSprite(PLAYER_ARM, player.collider.x + player.armR.x * lookAt, player.collider.y + player.armR.y, lookAt, 1, player.armRR)
-    drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt, player.collider.y + player.armL.y, lookAt, 1, player.armLR)
+    if handed < 1 then drawSprite(PLAYER_ARM, player.collider.x + player.armR.x * lookAt, player.collider.y + player.armR.y, lookAt, 1, player.armRR) end
+    if handed < 2 then drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt, player.collider.y + player.armL.y, lookAt, 1, player.armLR) end
 
-    drawCollider(player.collider)
+    -- drawCollider(player.collider)
     
     -- Inventory and camera
 
     love.graphics.setCanvas(UI_LAYER)
 
     drawInventory(player.hotbar)
-    drawSprite(HOLDING_ARROW,42 + 64 * player.slotOn, 81 + math.sin(globalTimer * 4) * 4, 1, 1, 0, 0)
+    drawSprite(HOLDING_ARROW,42 + INVENTORY_SPACING * player.slotOn, 76.5 + math.sin(globalTimer * 4) * 2, 1, 1, 0, 0)
 
     player.slotOn = wrap(player.slotOn + getScroll(), 0, 4); mouseMode = "aimer"; mCentered = 0.5
 
-    if justPressed("e") then inventoryOpen = not inventoryOpen end
+    if justPressed("e") then player.inventoryOpen = not player.inventoryOpen end
 
-    if inventoryOpen then
+    if player.inventoryOpen then
         mouseMode = "pointer"; mCentered = 0
         player.inventory = processInventory(player.inventory); drawInventory(player.inventory)
         player.wearing = processInventory(player.wearing); drawInventory(player.wearing)
         player.hotbar = processInventory(player.hotbar)
 
         processMouseSlot()
+
+        processTooltip(player.inventory); processTooltip(player.hotbar); processTooltip(player.wearing)
 
         bindCamera(player.collider.x, player.collider.y)
 
