@@ -10,16 +10,16 @@ function love.load()
 
     fullscreen = false; title = "¨Gaem"
 
-    WS = {800,600}; wFlags = {resizable=true}; UI_LAYER = love.graphics.newCanvas(WS[1],WS[2])
-    aspectRatio = {WS[1]/WS[2],WS[2]/WS[1]}
-    love.graphics.setBackgroundColor(0,0,0,1); love.window.setMode(WS[1],WS[2],wFlags); display = love.graphics.newCanvas(WS[1],WS[2]); displayScale = 1
+    WS = {800, 600}; wFlags = {resizable=true}; UI_LAYER = love.graphics.newCanvas(WS[1],WS[2])
+    aspectRatio = {WS[1]/WS[2], WS[2]/WS[1]}
+    love.graphics.setBackgroundColor(0,0,0,1); love.window.setMode(WS[1], WS[2], wFlags); display = love.graphics.newCanvas(WS[1], WS[2]); displayScale = 1
     postProCanvas = love.graphics.newCanvas(WS[1],WS[2])
 
     love.window.setTitle(title.."                   [F1 for fullscreen]")
 
     -- Imports
     json = require "data.scripts.json"; require "data.scripts.misc"; require "data.scripts.loading"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
-    require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
+    require "data.scripts.enemies"; require "data.scripts.projectiles"; require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
     
     -- Mouse
     love.mouse.setVisible(false)
@@ -44,14 +44,16 @@ function love.load()
     for id,J in pairs(JOYSTICKS) do JOYSTICK_LAST_PRESSES[id] = "none" end
 
     -- Transitions
-    transition = 1
+    transition = 1; transitionSpeed = 0.75
+
+    MIN_DELTA = 1 / 30
 end
 
 -- Play scenes
 function love.draw()
 
     -- Time and resetting
-    dt = love.timer.getDelta()
+    dt = math.min(love.timer.getDelta(), MIN_DELTA)
     globalTimer = globalTimer + dt
     
     -- Mouse pos
@@ -82,11 +84,10 @@ function love.draw()
         transition = 1
     end
 
-    transition = clamp(transition - dt,0,1)
-    setColor(0,0,0,255*transition)
+    transition = clamp(transition - dt * transitionSpeed,0,1)
+    setColor(0,0,0,255 * transition)
     love.graphics.rectangle("fill",0,0,800,600)
 
-    
 
     processCamera(); processLight()
 

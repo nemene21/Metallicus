@@ -34,6 +34,15 @@
         "attackTimer" : 0, "attackTime" : 0.5, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
+    "projectile" : {
+        "speed" : 280,
+        "range" : 100,
+        "followPlayer" : 1,
+        "radius" : 30,
+        "pirice" : -1,
+        "knockback" : 300
+    },
+
     "tooltipEquipName" : "when held:",
     "stats" : {"dmg" : 10},
 

@@ -2,10 +2,8 @@
 
 function lerp(a,b,c) return a+(b-a)*c end -- A + (B - A) * C
 
-function clamp(n,min,max) -- Holds a number between two threasholds
-    if n < min then n = min end
-    if n > max then n = max end
-    return n
+function clamp(val, min, max) -- Clamps a number between two threasholds
+    return math.max(min, math.min(val, max))
 end
 
 function wrap(n,min,max) -- Wraps a number around two threasholds
@@ -92,6 +90,12 @@ function drawColliders(colliders)
     for id,C in pairs(colliders) do
         drawCollider(C)
 end end
+
+function rectCollidingCircle(rect,cX,cY,rad)
+    local x = clamp(cX, rect.x - rect.w * 0.5, rect.x + rect.w * 0.5)
+    local y = clamp(cY, rect.y - rect.h * 0.5, rect.y + rect.h * 0.5)
+    return newVec(x - cX, y - cY):getLen() < rad
+end
 
 --------------------------VECTORS
 function newVec(x,y) --Makes new table with x and y

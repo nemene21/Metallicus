@@ -6,7 +6,7 @@ HOLDING_ARROW = love.graphics.newImage("data/images/UI/inventory/holdingArrow.pn
 IN_HAND = nil
 
 ITEMS = loadJson("data/items.json")
-for id,I in pairs(ITEMS) do I.amount = 1 end
+for id,I in pairs(ITEMS) do I.amount = 1; I.index = id end
 
 -- Init
 function newInventory(ox,oy,w,h,image)
@@ -288,6 +288,15 @@ function MODE_SLASH(player,headed,item)
         item.holdData.rotateTo = item.holdData.rotateTo + (360 - 2 * item.holdData.roatationDefault) * item.holdData.turnTo
         -- Set sprite rotator
         item.holdData.spriteRotateTo = 270 * (item.holdData.turnTo + 1) * 0.5
+
+        -- Summon projectile
+        local rotation = newVec(player.collider.x - camera[1] - xM - 32, player.collider.y - camera[2] - yM + 32); rotation = rotation:getRot()
+
+        local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
+
+        local projectile = newPlayerProjectile("basicSlash", 6, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.speed, rotation, 2, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback)
+
+        table.insert(playerProjectiles,projectile)
     end
 
     -- Get draw pos and rotation
@@ -344,3 +353,30 @@ function addSlot(inventory,x,y,type,icon,image)
 
     return inventory
 end
+
+--                                                            ITEMS ON FLOOR
+
+function newItem(x,y,item)
+
+    return {
+        x = x, y = y,
+
+        data = item,
+
+        process = processDroppedItem, draw = drawDroppedItem
+    }
+
+end
+
+function processDroppedItem(item)
+
+    item.y = item.y + dt * 400
+
+end
+
+function drawDroppedItem(item)
+
+    drawSprite(ITEM_IMGES[item.data.texture], item.x, item.y)
+
+end
+

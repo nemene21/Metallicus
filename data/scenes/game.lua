@@ -3,18 +3,15 @@ function gameReload()
     particleSystems = {}
     
     player = newPlayer(400,300,{})
-    open = false
-
-    TILEMAP = newTilemap(loadSpritesheet("data/images/tilesets/caveTiles.png",16,16),48,loadJson("data/layouts/cave/1.json"))
-    TILEMAP:buildColliders()
-
-    BACKGROUND = newTilemap(loadSpritesheet("data/images/tilesets/bg.png",16,16),48)
-    for x=-1,16 do for y=-1,13 do BACKGROUND:setTile(x,y,{1,love.math.random(1,3)}) end end
-
-    EDGE_IMAGE = love.graphics.newImage("data/images/roomEdge.png")
+    roomOn = 1
 
     postPro = "GLOW_AND_LIGHT"
 
+    ROOMS = generate(8,"cave")
+    ROOM = ROOMS[roomOn]
+
+    playerProjectiles = {}; enemyProjectiles = {}
+    IMG = love.graphics.newImage("data/images/enemies/slime/slime.png")
 end
 
 function gameDie()
@@ -27,28 +24,51 @@ function game()
     setColor(255, 255, 255)
     clear(24, 20, 37)
 
-    BACKGROUND:draw()
-    TILEMAP:draw()
+    -- Loop
+    ROOM:drawBg()
 
-    -- Particles
-    local kill = {}
-    for id,P in ipairs(particleSystems) do
-        P:process()
-
-        if #P.particles == 0 and P.ticks == 0 and P.timer < 0 then table.insert(kill,id)end
-
-    end particleSystems = wipeKill(kill,particleSystems)
-
-    -- Player
     player:process()
+
+    ROOM:processEnemies()
+
+    ROOM:processParticles()
+
+    player:draw()
+    player:drawUI()
+
+    ROOM:process()
+
+    ROOM:drawTiles()
+
+    -- Projectiles
+
+    processPlayerProjectiles(playerProjectiles)
+    processEnemyProjectiles(enemyProjectiles)
+
+    ROOM:drawEdge()
+
+    setColor(255, 255, 255)
 
     love.window.setTitle(tostring(love.timer.getFPS()))
 
-    setColor(255,255,255)
-    drawSprite(EDGE_IMAGE,412,320)
-
-    shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100})
-
     -- Return scene
     return sceneAt
+end
+
+function swtichRoom(num)
+    transition = 1
+
+    roomOn = roomOn + num
+    ROOM = ROOMS[roomOn]
+
+    if num > 0 then
+        player.collider.x = ROOM.entranceParticles.x + 16; player.collider.y = ROOM.entranceParticles.y + 48
+    else
+        player.collider.x = ROOM.exitParticles.x - 16; player.collider.y = ROOM.exitParticles.y + 48
+    end
+
+    camera[1] = player.collider.x - 400; camera[2] = player.collider.y - 300
+
+    playerProjectiles = {}; enemyProjectiles = {}
+
 end

@@ -19,13 +19,13 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
 
     return {
-        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer,
+        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, draw=drawPlayer, drawUI=drawPlayerUI,
 
         collider=newRect(x,y,30,46),
 
         inventoryOpen=false, slotOn = 0,
 
-        downPressedTimer=0, jumpPressedTimer=0,
+        downPressedTimer=0, jumpPressedTimer=0, coyoteTime=0,
 
         armL=newVec(-15,15), armR=newVec(15,15), legL=newVec(-6,24), legR=newVec(6,24), body=newVec(0,9), head=newVec(0,-6),
         armLR=0,armRR=0,legLR=0,legRR=0,bodyR=0,headR=0,
@@ -36,46 +36,53 @@ end
 
 function processPlayer(player)
 
-    -- Movement
+    -- Movement X
     local xInput = boolToInt(pressed("d")) - boolToInt(pressed("a"))
-
-    player.vel.x = lerp(player.vel.x, xInput * 300, dt * 8)
-
-    player.downPressedTimer = player.downPressedTimer - dt
-    if pressed("s") then player.downPressedTimer = 0.4 end
-
-    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, player.vel, TILEMAP.colliders)
-    else player.collider = moveRect(player.collider, player.vel, TILEMAP.collidersWithFalltrough) end
-
-    player.vel.y = math.min(player.vel.y + 1200 * dt,600)
-
-    if player.collider.touching.y == -1 then player.vel.y = 0 end
-
-    player.jumpPressedTimer = player.jumpPressedTimer - dt
-    if justPressed("space") then player.jumpPressedTimer = 0.15 end
-
-    if player.collider.touching.y == 1 then
-        player.vel.y = 1
-
-        if player.jumpPressedTimer > 0 then
-            player.vel.y = -600
-
-            table.insert(particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
-
-        end
-    end
-    
-    -- Particles
-    player.walkParticles:process()
 
     player.walkParticles.spawning = xInput ~= 0; player.walkParticles.x = player.collider.x; player.walkParticles.y = player.collider.y + 16
 
-    -- Animation
+    player.vel.x = lerp(player.vel.x, xInput * 300, dt * 8)
+    
+    -- Movement Y
+
+    player.downPressedTimer = player.downPressedTimer - dt -- Fall trough platform
+    if pressed("s") then player.downPressedTimer = 0.3 end
+
+    player.vel.y = math.min(player.vel.y + 1200 * dt,600) -- Gravity
+    
+    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, player.vel, ROOM.tilemap.colliders)
+    else player.collider = moveRect(player.collider, player.vel, ROOM.tilemap.collidersWithFalltrough) end
+
+    if player.collider.touching.y == -1 then player.vel.y = 0 end -- Grounded
+
+    player.jumpPressedTimer = player.jumpPressedTimer - dt             -- Jump time
+    if justPressed("space") then player.jumpPressedTimer = 0.15 end
+
+    player.coyoteTime = player.coyoteTime - dt                             -- Coyote time
+    if player.collider.touching.y == 1 then
+        player.coyoteTime = 0.15
+        player.vel.y = 1
+    end
+
+    if player.jumpPressedTimer > 0 and player.coyoteTime > 0 then -- Jump
+        player.vel.y = -620; player.coyoteTime = 0
+
+        table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
+    end
+
+    -- Set animation
     if player.collider.touching.y ~= 1 then
         if player.vel.y > 0 then player.animation="fall" else player.animation="jump" end
     else
     if xInput ~= 0 then player.animation="run" else player.animation="idle" end
     end
+
+end
+
+function drawPlayer(player)
+    
+    -- Particles
+    player.walkParticles:process()
 
     player = PLAYER_ANIMATIONS[player.animation](player)
 
@@ -110,18 +117,24 @@ function processPlayer(player)
     if handed < 2 then drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt, player.collider.y + player.armL.y, lookAt, 1, player.armLR) end
 
     -- drawCollider(player.collider)
-    
+end
+
+function drawPlayerUI(player)
     -- Inventory and camera
 
     love.graphics.setCanvas(UI_LAYER)
 
+    -- Draw hotbar
     drawInventory(player.hotbar)
     drawSprite(HOLDING_ARROW,42 + INVENTORY_SPACING * player.slotOn, 76.5 + math.sin(globalTimer * 4) * 2, 1, 1, 0, 0)
 
+    -- Scroll
     player.slotOn = wrap(player.slotOn + getScroll(), 0, 4); mouseMode = "aimer"; mCentered = 0.5
 
+    -- Open / close
     if justPressed("e") then player.inventoryOpen = not player.inventoryOpen end
 
+    -- Process inventory when open
     if player.inventoryOpen then
         mouseMode = "pointer"; mCentered = 0
         player.inventory = processInventory(player.inventory); drawInventory(player.inventory)
@@ -132,18 +145,21 @@ function processPlayer(player)
 
         processTooltip(player.inventory); processTooltip(player.hotbar); processTooltip(player.wearing)
 
-        bindCamera(player.collider.x, player.collider.y)
+        bindCamera(player.collider.x, player.collider.y) -- Camera to the middle
 
     else
         local zoom = 0.35
-        bindCamera(player.collider.x + (xM - WS[1] * 0.5) * zoom, player.collider.y + (yM - WS[2] * 0.5) * zoom)
+        bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, 200, 600), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, 0, 500)) -- Camera to the mouse
     end
 
-    love.graphics.setCanvas(display)
+    shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100}) -- Light
 
 end
 
---                                  ANIMATIONS
+
+--                          <DO NOT, I REPEAT, DO NOT LOOK AT THIS EVER, AND WHEN I SAY EVER, I MEAN EVEEEEEEEEEEER, AGAIN!!!1111!11!!
+
+--                                                                            ANIMATIONS
 
 -- IDLE
 function playerIdleAnimation(player)

@@ -20,9 +20,13 @@ function loadSpritesheet(filename,w,h)
     return images
 end
 
-function drawFrame(spritesheet,X,Y,x,y,sx,sy,r,offsetCamera)
-    local sx = sx or 1; local sy = sy or 1; local r = r or 0
-    love.graphics.draw(spritesheet.texture,spritesheet[tostring(X)..","..tostring(Y)],x-camera[1],y-camera[2],r,SPRSCL*sx,SPRSCL*sy,offsetCamera)
+function drawFrame(spritesheet,X,Y,x,y,sx,sy,r,offsetCamera,center)
+    local sx = sx or 1; local sy = sy or 1; local r = r or 0; local offsetCamera = offsetCamera or 1; local center = center or 1
+    local quad = spritesheet[tostring(X)..","..tostring(Y)]
+
+    local qx,qy,qw,qh = quad:getViewport()
+
+    love.graphics.draw(spritesheet.texture, quad, x - camera[1] * offsetCamera, y - camera[2] * offsetCamera, r, SPRSCL * sx, SPRSCL * sy, qw * 0.5 * center, qh * 0.5 * center)
 end
 
 -- Sprites

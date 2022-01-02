@@ -13,16 +13,18 @@ function drawTilemap(tilemap)
         local pos = splitString(id,",")
         local tileX = tonumber(pos[1]); local tileY = tonumber(pos[2])
         
-        drawFrame(tilemap.sheet,T[1],T[2],tileX*tilemap.tileSize,tileY*tilemap.tileSize)
+        drawFrame(tilemap.sheet,T[1],T[2],tileX*tilemap.tileSize,tileY*tilemap.tileSize, 1, 1, 0, 1, 0)
     end
-
+    -- drawColliders(tilemap.colliders)
 end
 
 -- Build colliders (goes trough all tiles, places a collider on them in the tilemap.collided if they dont have a neightbour somewhere)
 function buildTilemapColliders(tilemap)
     tilemap.colliders = {}; tilemap.collidersWithFalltrough = {}
-
+    
     for id,T in pairs(tilemap.tiles) do
+
+        -- Get pos and is tile collidable
         local pos = splitString(id,",")
         local tileX = tonumber(pos[1]); local tileY = tonumber(pos[2])
 
@@ -30,11 +32,48 @@ function buildTilemapColliders(tilemap)
                 tilemap.tiles[tostring(tileX)..","..tostring(tileY - 1)] == nil or tilemap.tiles[tostring(tileX)..","..tostring(tileY + 1)] == nil
 
         if place then
-            local rect = newRect(tileX * tilemap.tileSize + tilemap.tileSize * 0.5, tileY * tilemap.tileSize + tilemap.tileSize * 0.5, tilemap.tileSize, tilemap.tileSize)
-            if T[1] <= 3 and T[2] <= 5 then table.insert(tilemap.colliders,rect)
-            else rect.cDW = false; rect.cL = false; rect.cR = false end
 
-            table.insert(tilemap.collidersWithFalltrough,rect)
+            
+            -- Is tile falltrough
+            if T[1] > 3 and T[2] > 5 then
+
+                -- rect.cDW = false; rect.cL = false; rect.cR = false; rect.h = 18; rect.y = rect.y - 15
+                
+                if T[1] == 4 and T[2] == 6 then
+
+                    local done = false; local tileAt = 1; local width = 48
+
+                    while done == false do
+
+                        local index = tostring(tileX + tileAt)..","..tostring(tileY)
+
+                        local TChecking = tilemap.tiles[index]
+
+                        if TChecking ~= nil then
+                            
+                            if TChecking[1] == 5 and TChecking[2] == 6 then
+
+                                tileAt = tileAt + 1; width = width + 48
+
+                            else if TChecking[1] == 6 and TChecking[2] == 6 then
+
+                                tileAt = tileAt + 1; width = width + 48
+                                done = true
+
+                            end end
+                        end
+                    end
+
+                    local rect = newRect((tileX + math.floor(tileAt * 0.5)) * tilemap.tileSize + tilemap.tileSize * 0.5, tileY * tilemap.tileSize + tilemap.tileSize * 0.5, width, tilemap.tileSize)
+                    rect.cDW = false; rect.cL = false; rect.cR = false
+                     
+                    table.insert(tilemap.collidersWithFalltrough,rect)
+
+                end
+            else
+                local rect = newRect(tileX * tilemap.tileSize + tilemap.tileSize * 0.5, tileY * tilemap.tileSize + tilemap.tileSize * 0.5, tilemap.tileSize, tilemap.tileSize)
+                table.insert(tilemap.colliders,rect); table.insert(tilemap.collidersWithFalltrough,rect)
+            end
         end
     end
 end
@@ -51,7 +90,7 @@ function newTilemap(texture,tileSize,tiles)
         removeTile=removeTilemapTile,
         draw=drawTilemap,
 
-        colliders={},
+        colliders={}, collidersWithFalltrough={},
         buildColliders=buildTilemapColliders
     }
 
