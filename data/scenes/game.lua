@@ -31,6 +31,7 @@ function game()
 
     ROOM:processEnemies()
 
+    ROOM:processEnemyBodies()
     ROOM:processParticles()
 
     player:draw()

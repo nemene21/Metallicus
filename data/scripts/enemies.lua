@@ -1,4 +1,6 @@
 
+PARTICLES_ENEMY_HIT = loadJson("data/particles/enemyhit.json")
+
 -- Build and process functions
 
 ENEMY_ID = 0
@@ -32,11 +34,19 @@ function hitEnemy(enemy,damage,strenght,dir)
     enemy.knockback.y = enemy.knockback.y + knockback.y
 
     enemy.flash = 1
+
+    local particleData = deepcopyTable(PARTICLES_ENEMY_HIT)
+    particleData.rotation = dir + 90
+
+    table.insert(ROOM.particleSystems, newParticleSystem(enemy.collider.x, enemy.collider.y, particleData))
 end
 
 --                                                                   IMAGES AND STUFF
 
-IMAGE_SLIME = love.graphics.newImage("data/images/enemies/slime/slime.png")
+ENEMY_IMAGES = {
+SLIME = love.graphics.newImage("data/images/enemies/slime/slime.png")
+}
+
 PARTICLES_SLIME_JUMP = loadJson("data/particles/slimeJumpAndHit.json")
 
 --                                                           BUILDS AND STATES FOR EVERY ENEMY
@@ -49,6 +59,8 @@ function buildSlime(x, y)
         hp = 10,
 
         knockback = newVec(0,0), knockBackResistance = 1,
+
+        image = "SLIME",
 
         collider = newRect(x,y,48,30), vel = newVec(0,200),
         
@@ -81,7 +93,7 @@ function slimeStateIdle(slime, player)
 
     SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.5))
     love.graphics.setShader(SHADERS.FLASH)
-    drawSprite(IMAGE_SLIME, slime.collider.x, slime.collider.y, slime.scaleX * (boolToInt(player.collider.x > slime.collider.x) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002) -- Draw
+    drawSprite(ENEMY_IMAGES[slime.image], slime.collider.x, slime.collider.y, slime.scaleX * (boolToInt(player.collider.x > slime.collider.x) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002) -- Draw
     love.graphics.setShader()
 
     -- Go to prepare state
@@ -111,7 +123,7 @@ function slimeStatePrepare(slime, player)
 
     SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.5))
     love.graphics.setShader(SHADERS.FLASH)
-    drawSprite(IMAGE_SLIME, slime.collider.x, slime.collider.y + (30 - 30 * slime.scaleY) * 0.5, slime.scaleX * (boolToInt(player.collider.x > slime.collider.x) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002)
+    drawSprite(ENEMY_IMAGES[slime.image], slime.collider.x, slime.collider.y + (30 - 30 * slime.scaleY) * 0.5, slime.scaleX * (boolToInt(player.collider.x > slime.collider.x) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002)
     love.graphics.setShader()
 
     -- Go to prepare state
@@ -138,7 +150,7 @@ function slimeStateJump(slime, player)
     slime.collider = moveRect(slime.collider,newVec(slime.vel.x + slime.knockback.x, slime.vel.y + slime.knockback.y),ROOM.tilemap.collidersWithFalltrough)
 
     if slime.collider.touching.x ~= 0 then slime.vel.x = slime.vel.x * -1 end
-    if slime.collider.touching.y == -1 then slime.vel.y = 0 end
+    if slime.collider.touching.y == -1 then slime.vel.y = 0; slime.knockback.y = 0 end
 
     if slime.collider.touching.y == 1 then
 
@@ -163,7 +175,7 @@ function slimeStateJump(slime, player)
 
     SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.5))
     love.graphics.setShader(SHADERS.FLASH)
-    drawSprite(IMAGE_SLIME, slime.collider.x, slime.collider.y, slime.scaleX * (boolToInt(slime.vel.x > 0) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002) -- Draw
+    drawSprite(ENEMY_IMAGES[slime.image], slime.collider.x, slime.collider.y, slime.scaleX * (boolToInt(slime.vel.x > 0) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002) -- Draw
     love.graphics.setShader()
 
     return slime

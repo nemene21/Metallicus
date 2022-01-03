@@ -17,13 +17,15 @@ EDGE_IMAGE = love.graphics.newImage("data/images/roomEdge.png")
 PARTICLES_ENEMY_DIE = loadJson("data/particles/enemyDie.json")
 PARTICLES_ENEMY_DIE_BLAST = loadJson("data/particles/enemyDieBlast.json")
 
+PARTICLES_BODY = loadJson("data/particles/bodyTravel.json")
+
 function generate(amount,biome)
     local rooms = {}
     local biome = BIOMES[biome]
 
     for num=0,amount - 1 do
 
-        local room = {items = {}, cleared=false,enemies = {buildEnemy("slime",168 * SPRSCL,50 * SPRSCL)}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
+        local room = {processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {buildEnemy("slime",168 * SPRSCL,50 * SPRSCL)}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 
         -- Set bg
         room.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
@@ -128,15 +130,54 @@ function roomProcessEnemies(room)
     for id,E in ipairs(room.enemies) do
         E:process(player)
 
-        if E.hp < 1 then table.insert(kill,id); table.insert(room.particleSystems,newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_ENEMY_DIE)))
+        if E.hp < 1 then table.insert(kill,id)
         
             local particlesAdding = deepcopyTable(PARTICLES_ENEMY_DIE_BLAST)
             particlesAdding.rotation = E.knockback:getRot()
 
             table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, particlesAdding))
+
+            table.insert(room.enemyBodies, {image=E.image, collider=E.collider, vel=newVec(E.knockback.x * 2, E.knockback.y * 2), hp=500, particles=newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_BODY))})
         end
         
     end room.enemies = wipeKill(kill,room.enemies)
+
+end
+
+function roomProcessEnemyBodies(room)
+
+    kill = {}
+
+    SHADERS.FLASH:send("intensity", 1); love.graphics.setShader(SHADERS.FLASH)
+    for id,E in ipairs(room.enemyBodies) do
+
+        E.collider = moveRect(E.collider, E.vel, room.tilemap.collidersWithFalltrough)
+
+        E.particles.x = E.collider.x; E.particles.y = E.collider.y
+        E.particles:process()
+
+        E.vel.x = lerp(E.vel.x, 0, dt * 0.1)
+        E.vel.y = math.min(E.vel.y + dt * 1200, 800)
+
+        if E.collider.touching.x ~= 0 then E.vel.x = E.vel.x * -1; E.hp = E.hp - math.abs(E.vel.x) end
+        if E.collider.touching.y ~= 0 then E.vel.y = E.vel.y * -0.8; E.hp = E.hp - math.abs(E.vel.y) end
+
+        drawSprite(ENEMY_IMAGES[E.image], E.collider.x, E.collider.y, 1, 1, E.vel:getLen() * 0.001 * (boolToInt(E.vel.x > 0) * 2 - 1))
+
+        if E.hp < 0 then
+            
+            table.insert(kill, id)
+            table.insert(room.particleSystems,newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_ENEMY_DIE)))
+
+            local particlesAdding = deepcopyTable(PARTICLES_ENEMY_DIE_BLAST)
+            particlesAdding.rotation = E.vel:getRot()
+
+            table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, particlesAdding))
+
+        end
+
+    end room.enemyBodies = wipeKill(kill, room.enemyBodies)
+    love.graphics.setShader()
 
 end
 
