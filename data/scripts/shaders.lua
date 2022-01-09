@@ -16,9 +16,12 @@ SHADERS = {
     INVERT = love.graphics.newShader((love.filesystem.read("data/shaders/INVERT.fs")))
     ,
     GRAYSCALE = love.graphics.newShader((love.filesystem.read("data/shaders/GRAYSCALE.fs")))
+    ,
+    BLUR = love.graphics.newShader((love.filesystem.read("data/shaders/BLUR.fs")))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
+SHADERS.BLUR:send("xRatio",aspectRatio[2])
 SHADERS.GLOW_AND_LIGHT:send("xRatio",aspectRatio[2])
 SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitch.png"))
 

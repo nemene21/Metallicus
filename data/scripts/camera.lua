@@ -1,9 +1,10 @@
 
 camera = {0,0}; boundCamPos = {0,0}
 
-lerpSpeed = 4
+lerpSpeed = 6
 
-shakeStr = 0; shakes = 0; shakeTimer = newTimer(0); dir = 0; screenshake = {0,0}
+shakeStr = 0; shakes = 0; shakeTimer = newTimer(0); dir = nil; screenshake = {0,0}
+lastScreenshake = {0,0}; boundScreenshake = {0,0}
 
 -- Camera
 
@@ -16,27 +17,41 @@ function processCamera()
 
     if shakeTimer:isDone() then
     if shakes > 0 then
+
+        lastScreenshake = deepcopyTable(boundScreenshake)
+
         shakes = shakes - 1
 
         shakeTimer:reset()
 
-        screenshake = {love.math.random(-shakeStr,shakeStr),love.math.random(-shakeStr,shakeStr)}
+        if dir == nil then
+            boundScreenshake = {love.math.random(-shakeStr,shakeStr),love.math.random(-shakeStr,shakeStr)}
+        else
+            local screenshakeTemp = newVec(love.math.random(shakeStr * 0.5,shakeStr), 0); screenshakeTemp:rotate(dir)
+            boundScreenshake = {screenshakeTemp.x, screenshakeTemp.y}
+        end
     else
-        shakeStr = 0; screenshake = {0,0}
+        shakeStr = 0; boundScreenshake = {0,0}; dir = nil; lastScreenshake = {0,0}
     end end
 
-    camera[1] = lerp(camera[1],boundCamPos[1] + screenshake[1],dt*lerpSpeed)
-    camera[2] = lerp(camera[2],boundCamPos[2] + screenshake[2],dt*lerpSpeed)
+    camera[1] = lerp(camera[1],boundCamPos[1], dt*lerpSpeed)
+    camera[2] = lerp(camera[2],boundCamPos[2], dt*lerpSpeed)
+
+    screenshake[1] = lerp(lastScreenshake[1], boundScreenshake[1], shakeTimer.time / shakeTimer.timeMax)
+    screenshake[2] = lerp(lastScreenshake[2], boundScreenshake[2], shakeTimer.time / shakeTimer.timeMax)
+
 end
 
 -- Screenshake
 
 function shake(shakeStrNew,shakesNew,time,dir)
-    dir = dir or 0
+    dir = dir or nil
 
     if shakeStr <= shakeStrNew then
-        shakeStr = shakeStrNew; shakes = shakesNew; shakeTimer.timeMax = time; shakeTimer.time = 0
+        shakeStr = shakeStrNew; shakes = shakesNew; shakeTimer.timeMax = time; shakeTimer.time = 0; dir = dir
     end
 end
 
 function lockScreenshake(bool) shakeTimer.playing = bool end
+
+shake(1, 1, 0.01)

@@ -10,13 +10,13 @@
 "force" : {"x" : 0,"y" : 0},
 
 "spawnShape" : {
-    "mode" : "point",
-    "data" : null
+    "mode" : "circle",
+    "data" : 16
 },
 
 "particleData" : {
-    "speed" : {"a" : 20, "b" : 101},
-    "rotation" : {"a" : 180, "b" : 360},
+    "speed" : {"a" : 20, "b" : 60},
+    "rotation" : {"a" : 20, "b" : 180},
     "color" : {
         "r" : {"a" : 0.99, "b" : 1},
         "g" : {"a" : 0.99, "b" : 1},

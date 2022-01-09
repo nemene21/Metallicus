@@ -17,6 +17,10 @@ function drawParticleSquare(P,data)
     love.graphics.rectangle("fill",P.x-offsetX - camera[1],P.y-offsetY - camera[2],w,h)
 end
 
+function drawParticleText(P,w)
+    outlinedText(P.x - camera[1], P.y - camera[2], 2, P.width, {P.color.r * 255, P.color.g * 255, P.color.b * 255, 255 * w}, 1, 1, 0.5, 0.5)
+end
+
 function drawParticleSpark(P,data)
     local point1 = newVec(P.width * P.lifetime / P.lifetimeStart, 0); local point2 = newVec(0, -P.width * 0.3 * P.lifetime / P.lifetimeStart)
     local point3 = newVec(-P.width * P.lifetime / P.lifetimeStart, 0); local point4 = newVec(0, P.width * 0.3 * P.lifetime / P.lifetimeStart)
@@ -33,7 +37,8 @@ DRAWS = {
 ["circle"] = drawParticleCircle,
 ["circleGlow"] = drawParticleCircleGlow,
 ["square"] = drawParticleSquare,
-["spark"] = drawParticleSpark
+["spark"] = drawParticleSpark,
+["text"] = drawParticleText
 }
 -- INTERPOLATE WIDTH
 function interpolateParticleSine(w,lf,lfS)
@@ -44,10 +49,16 @@ function interpolateParticleLinear(w,lf,lfS)
     return w * lf / lfS
 end
 
+function interpolateParticlesText(w,lf,lfS)
+    return lf / lfS
+end
+
 INTERPOLATIONS = {
 ["linear"] = interpolateParticleLinear,
-["sine"] = interpolateParticleSine
+["sine"] = interpolateParticleSine,
+["text"] = interpolateParticlesText
 }
+
 -- SPAWN PARTICLES
 function spawnParticlePoint(x,y,data,particleSystem,am,id)
     -- Make a vel var out the speed (range from a to b)
@@ -66,7 +77,7 @@ function spawnParticleCircle(x,y,data,particleSystem,am,id)
     -- Rotate by rotation + random spread
     newVel:rotate(particleSystem.rotation + love.math.random(-particleSystem.spread,particleSystem.spread))
 
-    particlePos:rotateVec(particlePos,love.math.random(0,360))
+    particlePos:rotate(love.math.random(0,360))
     particlePos.x = particlePos.x + x; particlePos.y = particlePos.y + y
 
     return {particlePos,newVel}
@@ -135,11 +146,19 @@ function processParticleSystem(particleSystem)
             local b=love.math.random(particleSystem.particleData.color.b.a*100,particleSystem.particleData.color.b.b*100)*0.01
             local a=love.math.random(particleSystem.particleData.color.a.a*100,particleSystem.particleData.color.a.b*100)*0.01
 
+            -- Width
+            local width = nil
+            if type(particleSystem.particleData.width) == "table" then
+                width = love.math.random(particleSystem.particleData.width.a,particleSystem.particleData.width.b)
+            else
+                width = particleSystem.particleData.width
+            end
+
             -- SET ALL THE VALUES OF THE PARTICLE AND APPEND IT TO THE LIST
             table.insert(particleSystem.particles,{
                 x=particlePos.x, y=particlePos.y,
                 vel=newVel,
-                width=love.math.random(particleSystem.particleData.width.a,particleSystem.particleData.width.b), 
+                width=width, 
                 lifetime=newLf, lifetimeStart=newLf,
                 color={r=r,g=g,b=b,a=a},
                 rotation=love.math.random(particleSystem.particleData.rotation.a,particleSystem.particleData.rotation.b)

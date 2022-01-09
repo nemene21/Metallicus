@@ -40,7 +40,8 @@
         "followPlayer" : 1,
         "radius" : 30,
         "pirice" : -1,
-        "knockback" : 300
+        "knockback" : 300,
+        "sound" : "slash"
     },
 
     "tooltipEquipName" : "when held:",

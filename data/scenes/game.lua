@@ -1,6 +1,5 @@
 
 function gameReload()
-    particleSystems = {}
     
     player = newPlayer(400,300,{})
     roomOn = 1
@@ -11,7 +10,11 @@ function gameReload()
     ROOM = ROOMS[roomOn]
 
     playerProjectiles = {}; enemyProjectiles = {}
-    IMG = love.graphics.newImage("data/images/enemies/slime/slime.png")
+
+    paused = false
+
+    PAUSED_SCREEN_BG = love.graphics.newCanvas(WS[1], WS[2])
+    
 end
 
 function gameDie()
@@ -25,30 +28,56 @@ function game()
     clear(24, 20, 37)
 
     -- Loop
-    ROOM:drawBg()
+    if not paused then
+        ROOM:drawBg()
 
-    player:process()
+        player:process()
 
-    ROOM:processEnemies()
+        ROOM:processItems()
 
-    ROOM:processEnemyBodies()
-    ROOM:processParticles()
+        ROOM:processEnemies()
 
-    player:draw()
-    player:drawUI()
+        ROOM:processEnemyBodies()
+        ROOM:processParticles()
 
-    ROOM:process()
+        player:draw()
+        player:drawUI()
 
-    ROOM:drawTiles()
+        ROOM:process()
 
-    -- Projectiles
+        ROOM:drawTiles()
 
-    processPlayerProjectiles(playerProjectiles)
-    processEnemyProjectiles(enemyProjectiles)
+        -- Projectiles
 
-    ROOM:drawEdge()
+        processPlayerProjectiles(playerProjectiles)
+        processEnemyProjectiles(enemyProjectiles)
 
-    setColor(255, 255, 255)
+        ROOM:drawEdge()
+
+        setColor(255, 255, 255)
+
+        if justPressed("escape") then
+
+            love.graphics.setCanvas(PAUSED_SCREEN_BG)
+            love.graphics.setShader(SHADERS.BLUR)
+            love.graphics.draw(postProCanvas)
+            love.graphics.setShader()
+            love.graphics.setCanvas(display)
+            
+            paused = true
+
+            mouseMode = "pointer"; mCentered = 0
+
+        end
+    else
+        setColor(255, 255, 255)
+        love.graphics.draw(PAUSED_SCREEN_BG, 0, 0)
+
+        waveText(400, 300, 6, "Game Paused", {255,255,255}, 3, 3, 1, 1, 4, 5)
+
+        if justPressed("escape") then paused = false end
+
+    end
 
     love.window.setTitle(tostring(love.timer.getFPS()))
 

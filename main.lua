@@ -108,10 +108,9 @@ function love.draw()
     -- Draw display
     love.graphics.setCanvas()
 
-    love.graphics.draw(postProCanvas,w*0.5-dw*0.5*displayScale,h*0.5-dh*0.5*displayScale,0,displayScale,displayScale)
+    love.graphics.draw(postProCanvas, w * 0.5 - dw * 0.5 * displayScale - screenshake[1] * displayScale, h * 0.5 - dh * 0.5 * displayScale - screenshake[2] * displayScale, 0, displayScale, displayScale)
     
     love.graphics.setColor(1,1,1)
-
 
     -- Check for fullscreen
     if justPressed("f1") then changeFullscreen() end

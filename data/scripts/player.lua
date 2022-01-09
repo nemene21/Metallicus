@@ -25,6 +25,8 @@ function newPlayer(x,y,stats)
 
         inventoryOpen=false, slotOn = 0,
 
+        walkSoundTimer = newTimer(0.2),
+
         downPressedTimer=0, jumpPressedTimer=0, coyoteTime=0,
 
         armL=newVec(-15,15), armR=newVec(15,15), legL=newVec(-6,24), legR=newVec(6,24), body=newVec(0,9), head=newVec(0,-6),
@@ -42,6 +44,9 @@ function processPlayer(player)
     player.walkParticles.spawning = xInput ~= 0; player.walkParticles.x = player.collider.x; player.walkParticles.y = player.collider.y + 16
 
     player.vel.x = lerp(player.vel.x, xInput * 300, dt * 8)
+
+    player.walkSoundTimer:process()
+    if player.walkSoundTimer:isDone() and xInput ~= 0 and player.collider.touching == -1 then player.walkSoundTimer:reset(); print("ajwfwaf"); playSound("walk", love.math.random(80, 100) * 0.01) end
     
     -- Movement Y
 
@@ -129,7 +134,13 @@ function drawPlayerUI(player)
     drawSprite(HOLDING_ARROW,42 + INVENTORY_SPACING * player.slotOn, 76.5 + math.sin(globalTimer * 4) * 2, 1, 1, 0, 0)
 
     -- Scroll
-    player.slotOn = wrap(player.slotOn + getScroll(), 0, 4); mouseMode = "aimer"; mCentered = 0.5
+
+    if getScroll() ~= 0 then
+
+        -- playSound("scroll")
+        player.slotOn = wrap(player.slotOn + getScroll(), 0, 4)
+
+    end
 
     -- Open / close
     if justPressed("e") then player.inventoryOpen = not player.inventoryOpen end
@@ -148,8 +159,10 @@ function drawPlayerUI(player)
         bindCamera(player.collider.x, player.collider.y) -- Camera to the middle
 
     else
+        mouseMode = "aimer"; mCentered = 0.5
+
         local zoom = 0.35
-        bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, 200, 600), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, 0, 500)) -- Camera to the mouse
+        bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, 200, 600), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, 200, 500)) -- Camera to the mouse
     end
 
     shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100}) -- Light

@@ -10,7 +10,7 @@ for id,I in pairs(ITEMS) do I.amount = 1; I.index = id end
 
 -- Init
 function newInventory(ox,oy,w,h,image)
-    local inventory = {x=ox,y=oy,slots={}}
+    local inventory = {addItem = inventoryAddItem, x=ox,y=oy,slots={}}
     local image = image or "slot"
 
     for x=0,w-1 do
@@ -35,6 +35,40 @@ function newInventory(ox,oy,w,h,image)
     return inventory
 end
 
+-- Putting an item in an inventory
+function inventoryAddItem(inventory, item)
+    
+    for id,S in pairs(inventory.slots) do
+
+        if S.item == nil then
+
+            --for id,A in pairs(item) do print(id, A) end
+            S.item = deepcopyTable(item); item.amount = 0
+
+        else if S.item.index == item.index then
+
+            S.item.amount = S.item.amount + item.amount
+            
+            if S.item.amount > S.item.maxStack then
+
+                item.amount = S.item.amount - S.item.maxStack
+                S.item.amount = S.item.maxStack
+
+            else
+
+                item.amount = 0
+
+            end
+
+        end end
+
+        if item.amount == 0 then break end
+
+    end
+
+    return item
+end
+
 -- Processing an inventory
 function processInventory(inventory)
 
@@ -49,7 +83,7 @@ function processInventory(inventory)
 
             -- Left click
             if mouseJustPressed(1) then
-                S.scale = 1.3
+                S.scale = 1.3; playSound("inventoryClick")
 
                 if IN_HAND ~= nil and S.item ~= nil then
                 if IN_HAND.name == S.item.name then
@@ -93,7 +127,7 @@ function processInventory(inventory)
             
             -- Right click
             if mouseJustPressed(2) then
-                S.scale = 1.3
+                S.scale = 1.3; playSound("inventoryClick")
 
                 -- If hand is empty and the slot is not empty, split slot
                 if IN_HAND == nil then
@@ -163,7 +197,7 @@ function drawInventory(inventory)
 
         if S.item.amount ~= 1 then
             local count = tostring(S.item.amount)
-            outlinedText(math.floor(slotX * INVENTORY_SPACING + inventory.x) + 24, math.floor(slotY * INVENTORY_SPACING + inventory.y) + 5, 2, count, {255,255,255}, 1)
+            outlinedText(math.floor(slotX * INVENTORY_SPACING + inventory.x) + 24, math.floor(slotY * INVENTORY_SPACING + inventory.y) + 5, 2, count, {255,255,255}, 1, 1, 1)
         end
 
         setColor(255,255,255)
@@ -197,7 +231,7 @@ function processMouseSlot()
         if IN_HAND.amount ~= 1 and IN_HAND.amount ~= 0 then
 
             local count = tostring(IN_HAND.amount)
-            outlinedText(xM + 74, yM + 58, 2, count, {255,255,255}, 1)
+            outlinedText(xM + 74, yM + 58, 2, count, {255,255,255}, 1, 1, 1)
 
         end
 
@@ -290,11 +324,14 @@ function MODE_SLASH(player,headed,item)
         item.holdData.spriteRotateTo = 270 * (item.holdData.turnTo + 1) * 0.5
 
         -- Summon projectile
-        local rotation = newVec(player.collider.x - camera[1] - xM - 32, player.collider.y - camera[2] - yM + 32); rotation = rotation:getRot()
+        local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM); rotation = rotation:getRot()
 
         local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
 
         local projectile = newPlayerProjectile("basicSlash", 6, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.speed, rotation, 2, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback)
+
+        shake(4, 1, 0.15, rotation)
+        if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
 
         table.insert(playerProjectiles,projectile)
     end
@@ -359,7 +396,7 @@ end
 function newItem(x,y,item)
 
     return {
-        x = x, y = y,
+        pos = newVec(x, y), vel = newVec(0, 0),
 
         data = item,
 
@@ -368,15 +405,40 @@ function newItem(x,y,item)
 
 end
 
-function processDroppedItem(item)
+function processDroppedItem(item, room)
 
-    item.y = item.y + dt * 400
+    item.vel.y = math.min(item.vel.y + dt * 1200, 600)
+
+    item.pos.x = item.pos.x + item.vel.x * dt
+    item.pos.y = item.pos.y + item.vel.y * dt
+
+    local tilePos = newVec(math.floor(item.pos.x / 48), math.floor((item.pos.y + 28) / 48))
+    local tile = room.tilemap:getTile(tilePos.x, tilePos.y)
+
+    if tile ~= nil then
+
+        item.pos.y = item.pos.y - item.vel.y * dt * 1.2
+        item.vel.y = item.vel.y * - 0.4
+
+    end
 
 end
 
 function drawDroppedItem(item)
 
-    drawSprite(ITEM_IMGES[item.data.texture], item.x, item.y)
+    local sine =  math.sin(globalTimer * 3 + item.pos.x) * 8
+
+    love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
+    setColor(RARITY_COLORS[item.data.rarity][1], RARITY_COLORS[item.data.rarity][2], RARITY_COLORS[item.data.rarity][3])
+
+    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x - 1, item.pos.y + sine)
+    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x + 1, item.pos.y + sine)
+    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine - 1)
+    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine + 1)
+
+    love.graphics.setShader(); setColor(255, 255, 255)
+
+    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine)
 
 end
 

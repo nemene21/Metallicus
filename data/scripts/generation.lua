@@ -25,7 +25,7 @@ function generate(amount,biome)
 
     for num=0,amount - 1 do
 
-        local room = {processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {buildEnemy("slime",168 * SPRSCL,50 * SPRSCL)}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
+        local room = {textPopUps = newParticleSystem(0, 0, loadJson("data/particles/textParticles.json")),processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {buildEnemy("slime",168 * SPRSCL,50 * SPRSCL)}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 
         -- Set bg
         room.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
@@ -98,7 +98,7 @@ end
 -- Drawing
 function roomDrawBg(room) setColor(255,255,255); room.bgTilemap:draw() end
 
-function roomDrawTiles(room) setColor(255,255,255); room.tilemap:draw() end
+function roomDrawTiles(room) setColor(255,255,255); room.tilemap:draw(); room.textPopUps:process() end
 
 function roomDrawEdge(room)
     
@@ -131,13 +131,34 @@ function roomProcessEnemies(room)
         E:process(player)
 
         if E.hp < 1 then table.insert(kill,id)
+
+            shake(12 * E.knockBackResistance, 2, 0.1)
         
             local particlesAdding = deepcopyTable(PARTICLES_ENEMY_DIE_BLAST)
             particlesAdding.rotation = E.knockback:getRot()
 
+            for id,I in pairs(E.drops) do
+
+                local amount = 0
+                local percentage = I
+
+                while percentage > 100 do
+
+                    percentage = percentage - 100; amount = amount + 1
+
+                end
+
+                if love.math.random(1, 100) < percentage then amount = amount + 1 end
+
+                local item = ITEMS[id]; item.amount = amount
+
+                table.insert(room.items, newItem(E.collider.x + love.math.random(-24, 24), E.collider.y + love.math.random(-24, 24), item))
+
+            end
+
             table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, particlesAdding))
 
-            table.insert(room.enemyBodies, {image=E.image, collider=E.collider, vel=newVec(E.knockback.x * 2, E.knockback.y * 2), hp=500, particles=newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_BODY))})
+            table.insert(room.enemyBodies, {image=E.image, collider=E.collider, vel=newVec(E.knockback.x * 2, E.knockback.y * 2), hp=1, particles=newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_BODY))})
         end
         
     end room.enemies = wipeKill(kill,room.enemies)
@@ -159,20 +180,23 @@ function roomProcessEnemyBodies(room)
         E.vel.x = lerp(E.vel.x, 0, dt * 0.1)
         E.vel.y = math.min(E.vel.y + dt * 1200, 800)
 
-        if E.collider.touching.x ~= 0 then E.vel.x = E.vel.x * -1; E.hp = E.hp - math.abs(E.vel.x) end
-        if E.collider.touching.y ~= 0 then E.vel.y = E.vel.y * -0.8; E.hp = E.hp - math.abs(E.vel.y) end
+        if E.collider.touching.x ~= 0 then E.collider.x = E.collider.x - E.vel.x * dt; E.vel.x = E.vel.x * -1; E.hp = E.hp - 1 end
+        if E.collider.touching.y ~= 0 then E.collider.y = E.collider.y - E.vel.y * dt; E.vel.y = E.vel.y * -0.8; E.hp = E.hp - 1 end
 
         drawSprite(ENEMY_IMAGES[E.image], E.collider.x, E.collider.y, 1, 1, E.vel:getLen() * 0.001 * (boolToInt(E.vel.x > 0) * 2 - 1))
 
-        if E.hp < 0 then
+        if E.hp <= 0 then
             
             table.insert(kill, id)
             table.insert(room.particleSystems,newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_ENEMY_DIE)))
 
             local particlesAdding = deepcopyTable(PARTICLES_ENEMY_DIE_BLAST)
-            particlesAdding.rotation = E.vel:getRot()
+            local velocity = newVec(E.vel.x * (boolToInt(E.collider.touching.x ~= 0) * 2 - 1), E.vel.y * (boolToInt(E.collider.touching.x ~= 0) * 2 - 1))
+            particlesAdding.rotation = velocity:getRot() + 180
 
             table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, particlesAdding))
+
+            shake(6, 2, 0.05)
 
         end
 
@@ -198,5 +222,42 @@ function processRoom(room)
     if room.exitParticles ~= nil then
         if player.collider.x > room.exitParticles.x + 3 then swtichRoom(1) end
     end
+
+end
+
+function roomProcessItems(room)
+
+    kill = {}
+    for id,I in ipairs(room.items) do
+
+        I:process(room)
+        I:draw()
+
+        if rectCollidingCircle(player.collider, I.pos.x, I.pos.y, 8) then 
+            
+            local startAmount = I.data.amount
+            I.data = player.hotbar:addItem(I.data)
+
+            if I.data.amount ~= 0 then I.data = player.inventory:addItem(I.data) end
+
+            if I.data.amount ~= startAmount then
+                local text = tostring(I.data.name)
+                local difference = startAmount - I.data.amount
+                if difference ~= 1 then text = text .. " x" .. tostring(difference) end
+
+                table.insert(room.textPopUps.particles,{
+                    x = I.pos.x + love.math.random(-24, 24), y = I.pos.y + love.math.random(-24, 24),
+                    vel = newVec(0, -100), width = text,
+                    lifetime = 1, lifetimeStart = 1,
+                    color = {r=RARITY_COLORS[I.data.rarity][1],g=RARITY_COLORS[I.data.rarity][2],b=RARITY_COLORS[I.data.rarity][3],a=1},
+                    rotation = 0
+                })
+            end
+
+            if I.data.amount == 0 then table.insert(kill, id) end
+
+        end
+
+    end room.items = wipeKill(kill, room.items)
 
 end

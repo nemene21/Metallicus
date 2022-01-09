@@ -39,6 +39,18 @@ function hitEnemy(enemy,damage,strenght,dir)
     particleData.rotation = dir + 90
 
     table.insert(ROOM.particleSystems, newParticleSystem(enemy.collider.x, enemy.collider.y, particleData))
+
+    playSound(enemy.hitSound or "basicHit", love.math.random(80, 120) * 0.01)
+    shake(5, 2, 0.1)
+
+    table.insert(ROOM.textPopUps.particles,{
+        x = enemy.collider.x + love.math.random(-24, 24), y = enemy.collider.y + love.math.random(-24, 24),
+        vel = newVec(0, -100), width = tostring(damage),
+        lifetime = 1, lifetimeStart = 1,
+        color = {r=1,g=0,b=0,a=1},
+        rotation = 0
+
+    })
 end
 
 --                                                                   IMAGES AND STUFF
@@ -68,7 +80,7 @@ function buildSlime(x, y)
 
         scaleX = 1, scaleY = 1,
 
-        drop = {{"wood",3,6}, {"sword",1,1}},
+        drops = {wood = 250, sword = 100},
 
         states = {
             idle = slimeStateIdle, prepare = slimeStatePrepare, jump = slimeStateJump
@@ -162,6 +174,7 @@ function slimeStateJump(slime, player)
         slime.vel.y = 0
 
         slime.state = "idle"; slime.nextStateTimer = love.math.random(3,5)
+        shake(20, 2, 0.12); playSound("slimeHitGround", love.math.random(80, 120) * 0.01)
 
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(slime.collider.x, slime.collider.y), 200, 0, 24, 1, {255,200,200}))
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(slime.collider.x, slime.collider.y), 200, 90, 24, 1, {255,200,200}))
@@ -173,7 +186,7 @@ function slimeStateJump(slime, player)
         slime.scaleX = 1.6; slime.scaleY = 0.5
     end
 
-    SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.5))
+    SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.3))
     love.graphics.setShader(SHADERS.FLASH)
     drawSprite(ENEMY_IMAGES[slime.image], slime.collider.x, slime.collider.y, slime.scaleX * (boolToInt(slime.vel.x > 0) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002) -- Draw
     love.graphics.setShader()
