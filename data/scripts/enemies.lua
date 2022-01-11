@@ -1,5 +1,5 @@
 
-PARTICLES_ENEMY_HIT = loadJson("data/particles/enemyhit.json")
+PARTICLES_ENEMY_HIT = loadJson("data/particles/enemies/enemyhit.json")
 
 -- Build and process functions
 
@@ -59,7 +59,7 @@ ENEMY_IMAGES = {
 SLIME = love.graphics.newImage("data/images/enemies/slime/slime.png")
 }
 
-PARTICLES_SLIME_JUMP = loadJson("data/particles/slimeJumpAndHit.json")
+PARTICLES_SLIME_JUMP = loadJson("data/particles/enemies/slimeJumpAndHit.json")
 
 --                                                           BUILDS AND STATES FOR EVERY ENEMY
 
@@ -174,7 +174,7 @@ function slimeStateJump(slime, player)
         slime.vel.y = 0
 
         slime.state = "idle"; slime.nextStateTimer = love.math.random(3,5)
-        shake(20, 2, 0.12); playSound("slimeHitGround", love.math.random(80, 120) * 0.01)
+        shake(16, 2, 0.12); playSound("slimeHitGround", love.math.random(80, 120) * 0.01)
 
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(slime.collider.x, slime.collider.y), 200, 0, 24, 1, {255,200,200}))
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(slime.collider.x, slime.collider.y), 200, 90, 24, 1, {255,200,200}))

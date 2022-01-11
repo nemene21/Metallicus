@@ -21,7 +21,7 @@ function newPlayer(x,y,stats)
     return {
         vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, draw=drawPlayer, drawUI=drawPlayerUI,
 
-        collider=newRect(x,y,30,46),
+        collider=newRect(x,y,30,46), justLanded = false,
 
         inventoryOpen=false, slotOn = 0,
 
@@ -32,7 +32,7 @@ function newPlayer(x,y,stats)
         armL=newVec(-15,15), armR=newVec(15,15), legL=newVec(-6,24), legR=newVec(6,24), body=newVec(0,9), head=newVec(0,-6),
         armLR=0,armRR=0,legLR=0,legRR=0,bodyR=0,headR=0,
 
-        animation="idle", walkParticles=newParticleSystem(x,y,loadJson("data/particles/playerWalk.json")); jumpParticles=loadJson("data/particles/playerJump.json")
+        animation="idle", walkParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerWalk.json")); jumpParticles=loadJson("data/particles/player/playerJump.json")
     }
 end
 
@@ -46,7 +46,7 @@ function processPlayer(player)
     player.vel.x = lerp(player.vel.x, xInput * 300, dt * 8)
 
     player.walkSoundTimer:process()
-    if player.walkSoundTimer:isDone() and xInput ~= 0 and player.collider.touching == -1 then player.walkSoundTimer:reset(); print("ajwfwaf"); playSound("walk", love.math.random(80, 100) * 0.01) end
+    if player.walkSoundTimer:isDone() and xInput ~= 0 and player.collider.touching.y == 1 then player.walkSoundTimer:reset(); playSound("walk", love.math.random(30, 170) * 0.01) end
     
     -- Movement Y
 
@@ -65,8 +65,32 @@ function processPlayer(player)
 
     player.coyoteTime = player.coyoteTime - dt                             -- Coyote time
     if player.collider.touching.y == 1 then
+
+        if player.justLanded == false then
+
+            player.justLanded = true
+            table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) -- Fall particles
+
+            -- Move body parts due to force
+
+            local impulse = player.vel.y / 600
+            shake(4 * impulse, 1, 90)
+
+            player.armL.y = player.armL.y + impulse * 13
+            player.armR.y = player.armL.y + impulse * 13
+
+            player.body.y = player.body.y + impulse * 13
+            player.head.y = player.head.y + impulse * 13
+
+        end
+
         player.coyoteTime = 0.15
         player.vel.y = 1
+    
+    else
+        
+        player.justLanded = false
+
     end
 
     if player.jumpPressedTimer > 0 and player.coyoteTime > 0 then -- Jump
@@ -143,7 +167,22 @@ function drawPlayerUI(player)
     end
 
     -- Open / close
-    if justPressed("e") then player.inventoryOpen = not player.inventoryOpen end
+    if justPressed("e") then
+        
+        player.inventoryOpen = not player.inventoryOpen
+
+        if not player.inventoryOpen and IN_HAND ~= nil then
+
+            local lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
+            local item = newItem(player.collider.x + 36 * lookAt, player.collider.y, IN_HAND)
+
+            item.vel.x = 60 * lookAt
+            table.insert(ROOM.items, item)
+
+            IN_HAND = nil
+        end
+    
+    end
 
     -- Process inventory when open
     if player.inventoryOpen then
@@ -153,6 +192,23 @@ function drawPlayerUI(player)
         player.hotbar = processInventory(player.hotbar)
 
         processMouseSlot()
+
+        -- Drop items
+        if not player.inventory.hovered and not player.hotbar.hovered and not player.wearing.hovered and IN_HAND ~= nil then
+
+            if mouseJustPressed(1) then
+
+                local lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
+                local item = newItem(player.collider.x + 36 * lookAt, player.collider.y, IN_HAND)
+
+                item.vel.x = 60 * lookAt
+                table.insert(ROOM.items, item)
+
+                IN_HAND = nil
+
+            end
+
+        end
 
         processTooltip(player.inventory); processTooltip(player.hotbar); processTooltip(player.wearing)
 

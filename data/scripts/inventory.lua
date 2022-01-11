@@ -10,7 +10,7 @@ for id,I in pairs(ITEMS) do I.amount = 1; I.index = id end
 
 -- Init
 function newInventory(ox,oy,w,h,image)
-    local inventory = {addItem = inventoryAddItem, x=ox,y=oy,slots={}}
+    local inventory = {hovered = false, addItem = inventoryAddItem, x=ox,y=oy,slots={}}
     local image = image or "slot"
 
     for x=0,w-1 do
@@ -72,12 +72,16 @@ end
 -- Processing an inventory
 function processInventory(inventory)
 
+    inventory.hovered = false
+
     for id,S in pairs(inventory.slots) do
 
         -- PROCESSING
 
         -- If getting hovered
-        if S.on then 
+        if S.on then
+
+            inventory.hovered = true
 
             S.scaleTo = 1.15
 
@@ -408,6 +412,7 @@ end
 function processDroppedItem(item, room)
 
     item.vel.y = math.min(item.vel.y + dt * 1200, 600)
+    item.vel.x = lerp(item.vel.x, 0, dt)
 
     item.pos.x = item.pos.x + item.vel.x * dt
     item.pos.y = item.pos.y + item.vel.y * dt
@@ -426,7 +431,7 @@ end
 
 function drawDroppedItem(item)
 
-    local sine =  math.sin(globalTimer * 3 + item.pos.x) * 8
+    local sine =  math.sin(globalTimer * 3) * 8
 
     love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
     setColor(RARITY_COLORS[item.data.rarity][1], RARITY_COLORS[item.data.rarity][2], RARITY_COLORS[item.data.rarity][3])

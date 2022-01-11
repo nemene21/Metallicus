@@ -7,17 +7,20 @@ bgTilesetPath = "data/images/tilesets/cave/bg.png",
 
 decorations = nil,
 
-layoutPath = "data/layouts/cave/", nLayouts = 1
+layoutPath = "data/layouts/cave/", nLayouts = 1,
+
+ambientParticles = "data/particles/ambient/waterDrops.json",
+particlesPosition = {396, -100}
 }
 
 }
 
 EDGE_IMAGE = love.graphics.newImage("data/images/roomEdge.png")
 
-PARTICLES_ENEMY_DIE = loadJson("data/particles/enemyDie.json")
-PARTICLES_ENEMY_DIE_BLAST = loadJson("data/particles/enemyDieBlast.json")
+PARTICLES_ENEMY_DIE = loadJson("data/particles/enemies/enemyDie.json")
+PARTICLES_ENEMY_DIE_BLAST = loadJson("data/particles/enemies/enemyDieBlast.json")
 
-PARTICLES_BODY = loadJson("data/particles/bodyTravel.json")
+PARTICLES_BODY = loadJson("data/particles/enemies/bodyTravel.json")
 
 function generate(amount,biome)
     local rooms = {}
@@ -26,6 +29,9 @@ function generate(amount,biome)
     for num=0,amount - 1 do
 
         local room = {textPopUps = newParticleSystem(0, 0, loadJson("data/particles/textParticles.json")),processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {buildEnemy("slime",168 * SPRSCL,50 * SPRSCL)}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
+
+        -- Ambient particles
+        room.ambientParticles = newParticleSystem(biome.particlesPosition[1], biome.particlesPosition[2], loadJson(biome.ambientParticles))
 
         -- Set bg
         room.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
@@ -108,6 +114,9 @@ function roomDrawEdge(room)
     -- Door particles
     if room.entranceParticles ~= nil then room.entranceParticles:process(); room.entranceParticles.spawning = #room.enemies ~= 0 end
     if room.exitParticles ~= nil then room.exitParticles:process(); room.exitParticles.spawning = #room.enemies ~= 0  end
+
+    -- Ambient particles
+    room.ambientParticles:process()
 end
 
 -- Particles
@@ -241,6 +250,8 @@ function roomProcessItems(room)
             if I.data.amount ~= 0 then I.data = player.inventory:addItem(I.data) end
 
             if I.data.amount ~= startAmount then
+                playSound("pickup", love.math.random(60,140) * 0.01, 3)
+
                 local text = tostring(I.data.name)
                 local difference = startAmount - I.data.amount
                 if difference ~= 1 then text = text .. " x" .. tostring(difference) end

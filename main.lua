@@ -8,7 +8,7 @@ function love.load()
     -- Window and defaulting
     globalTimer = 0; love.graphics.setDefaultFilter("nearest","nearest")
 
-    fullscreen = false; title = "¨Gaem"
+    fullscreen = false; title = ""
 
     WS = {800, 600}; wFlags = {resizable=true}; UI_LAYER = love.graphics.newCanvas(WS[1],WS[2])
     aspectRatio = {WS[1]/WS[2], WS[2]/WS[1]}

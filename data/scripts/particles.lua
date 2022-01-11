@@ -12,9 +12,9 @@ function drawParticleCircleGlow(P,w)
 end
 
 function drawParticleSquare(P,data)
-    local w = data[1]; local h = data[2]
-    offsetX = w*0.5; offsetY = h*0.5
-    love.graphics.rectangle("fill",P.x-offsetX - camera[1],P.y-offsetY - camera[2],w,h)
+    local w = P.width
+    local offset = w * 0.5
+    love.graphics.rectangle("fill",P.x - offset - camera[1],P.y - offset - camera[2],w,w)
 end
 
 function drawParticleText(P,w)
