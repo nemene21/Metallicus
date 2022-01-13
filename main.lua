@@ -24,7 +24,10 @@ function love.load()
     -- Mouse
     love.mouse.setVisible(false)
     mouseMode = "pointer"
-    mouse = {["pointer"] = love.graphics.newImage("data/images/mouse/pointer.png"), ["aimer"] = love.graphics.newImage("data/images/mouse/aimer.png")}; mCentered = 0
+
+
+
+    mouse = {["pointer"] = love.graphics.newImage("data/images/mouse/pointer.png"), ["aimer"] = love.graphics.newImage("data/images/mouse/aimer.png"), ["crafter"] = love.graphics.newImage("data/images/mouse/craftingPointer.png")}; mCentered = 0
     mouseOffset = {0,0}
 
     -- Scenes

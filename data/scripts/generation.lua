@@ -161,7 +161,7 @@ function roomProcessEnemies(room)
 
                 local item = ITEMS[id]; item.amount = amount
 
-                table.insert(room.items, newItem(E.collider.x + love.math.random(-24, 24), E.collider.y + love.math.random(-24, 24), item))
+                table.insert(room.items, newItem(E.collider.x + love.math.random(-24, 24), E.collider.y + love.math.random(-24, 0), item))
 
             end
 

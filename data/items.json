@@ -10,6 +10,27 @@
     "types" : ["item"]
 },
 
+"jello" : {
+    "texture" : "jello",
+    "name" : "Jello", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+"stick" : {
+    "texture" : "stick",
+    "name" : "Stick", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
 
 "stone" : {
     "texture" : "stone",
@@ -59,7 +80,7 @@
     "holdMode" : "hold",
 
     "tooltipEquipName" : "when worn:",
-    "stats" : {"def" : 10, "your mom lmao" : -10},
+    "stats" : {"def" : 10},
 
     "maxStack" : 1,
 

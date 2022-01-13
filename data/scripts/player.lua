@@ -4,6 +4,8 @@ PLAYER_BODY = love.graphics.newImage("data/images/player/body.png")
 PLAYER_ARM = love.graphics.newImage("data/images/player/arm.png")
 PLAYER_LEG = love.graphics.newImage("data/images/player/arm.png")
 
+PARTICLES_CRAFT = loadJson("data/particles/craft.json")
+
 function newPlayer(x,y,stats)
     local inventory = newInventory(42,42 + INVENTORY_SPACING + 12,5,3)
     local hotbar = newInventory(42,42,5,1,"hotbarSlot")
@@ -28,6 +30,8 @@ function newPlayer(x,y,stats)
         walkSoundTimer = newTimer(0.2),
 
         downPressedTimer=0, jumpPressedTimer=0, coyoteTime=0,
+
+        craftParticles = newParticleSystem(0,0,PARTICLES_CRAFT),
 
         armL=newVec(-15,15), armR=newVec(15,15), legL=newVec(-6,24), legR=newVec(6,24), body=newVec(0,9), head=newVec(0,-6),
         armLR=0,armRR=0,legLR=0,legRR=0,bodyR=0,headR=0,
@@ -187,9 +191,123 @@ function drawPlayerUI(player)
     -- Process inventory when open
     if player.inventoryOpen then
         mouseMode = "pointer"; mCentered = 0
-        player.inventory = processInventory(player.inventory); drawInventory(player.inventory)
-        player.wearing = processInventory(player.wearing); drawInventory(player.wearing)
-        player.hotbar = processInventory(player.hotbar)
+
+        local hoveredSlot = nil
+        player.inventory, hoveredSlot = processInventory(player.inventory); drawInventory(player.inventory)
+
+        player.wearing, hold = processInventory(player.wearing); drawInventory(player.wearing)
+        hoveredSlot = hoveredSlot or hold
+
+        player.hotbar, hold = processInventory(player.hotbar)
+        hoveredSlot = hoveredSlot or hold
+
+        -- Craft
+        if pressed("lshift") and IN_HAND ~= nil then
+            mouseMode = "crafter"
+            
+            -- If craftable
+            if hoveredSlot ~= nil then
+            if hoveredSlot.item ~= nil and (mouseJustPressed(1) or mouseJustPressed(2)) then
+
+                -- Get the crafted item
+                local craftedItem = CRAFTING_RECIPIES[IN_HAND.index .. " + " .. hoveredSlot.item.index] or CRAFTING_RECIPIES[hoveredSlot.item.index .. " + " .. IN_HAND.index]
+
+                -- Get if the item exists
+                if craftedItem ~= nil then
+                    player.craftParticles.ticks = player.craftParticles.ticks + 1
+                    player.craftParticles.x = xM + camera[1]; player.craftParticles.y = yM + camera[2]
+
+                    -- Craft if am1 == am2
+                    if IN_HAND.amount == hoveredSlot.item.amount and not mouseJustPressed(2) then
+
+                        -- Get item
+                        local itemsAdding = deepcopyTable(ITEMS[craftedItem])
+                        local amount = IN_HAND.amount
+
+                        -- Place in inventory
+                        while amount ~= 0 do
+                            amount = amount - 1
+                            item = deepcopyTable(itemsAdding)
+
+                            item = player.hotbar:addItem(item)
+
+                            if item.amount ~= 0 then item = player.inventory:addItem(item) end
+
+                            if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 36 * lookAt, player.collider.y, item)) end
+                        end
+
+                        -- Set slots
+                        IN_HAND = nil; hoveredSlot.item = nil
+                    
+                    -- Craft if am1 > am2
+                    else if IN_HAND.amount > hoveredSlot.item.amount and not mouseJustPressed(2) then
+
+                        -- Get item
+                        local itemsAdding = deepcopyTable(ITEMS[craftedItem])
+                        local amount = hoveredSlot.item.amount
+
+                        -- Place in inventory
+                        while amount ~= 0 do
+                            amount = amount - 1
+                            item = deepcopyTable(itemsAdding)
+
+                            item = player.hotbar:addItem(item)
+
+                            if item.amount ~= 0 then item = player.inventory:addItem(item) end
+
+                            if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 36 * lookAt, player.collider.y, item)) end
+                        end
+
+                        -- Set slots
+                        IN_HAND.amount = IN_HAND.amount - hoveredSlot.item.amount; hoveredSlot.item = nil
+                    
+                    -- Craft if am1 < am2
+                    else if not mouseJustPressed(2) then
+
+                        -- Get item
+                        local itemsAdding = deepcopyTable(ITEMS[craftedItem])
+                        local amount = IN_HAND.amount
+
+                        -- Place in inventory
+                        while amount ~= 0 do
+                            amount = amount - 1
+                            item = deepcopyTable(itemsAdding)
+
+                            item = player.hotbar:addItem(item)
+
+                            if item.amount ~= 0 then item = player.inventory:addItem(item) end
+
+                            if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 36 * lookAt, player.collider.y, item)) end
+                        end
+
+                        -- Set slots
+                        hoveredSlot.item.amount = hoveredSlot.item.amount - IN_HAND.amount; IN_HAND = nil
+
+                    else if mouseJustPressed(2) then
+
+                        -- Get item
+                        local itemsAdding = deepcopyTable(ITEMS[craftedItem])
+
+                        -- Place in inventory
+                        item = deepcopyTable(itemsAdding)
+
+                        item = player.hotbar:addItem(item)
+
+                        if item.amount ~= 0 then item = player.inventory:addItem(item) end
+
+                        if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 36 * lookAt, player.collider.y, item)) end
+
+                        -- Set slots
+                        hoveredSlot.item.amount = hoveredSlot.item.amount - 1; IN_HAND.amount = IN_HAND.amount - 1
+                        if hoveredSlot.item.amount == 0 then hoveredSlot.item = nil end
+                        if IN_HAND.amount == 0 then IN_HAND = nil end
+
+                    end end end end
+                end
+
+            end end
+
+        end
 
         processMouseSlot()
 
@@ -212,14 +330,16 @@ function drawPlayerUI(player)
 
         processTooltip(player.inventory); processTooltip(player.hotbar); processTooltip(player.wearing)
 
-        bindCamera(player.collider.x, player.collider.y) -- Camera to the middle
+        bindCamera(clamp(player.collider.x, 200, 600), clamp(player.collider.y, 120, 500)) -- Camera to the middle
 
     else
         mouseMode = "aimer"; mCentered = 0.5
 
         local zoom = 0.35
-        bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, 200, 600), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, 200, 500)) -- Camera to the mouse
+        bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, 200, 600), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, 120, 500)) -- Camera to the mouse
     end
+    player.craftParticles.x = player.craftParticles.x + player.vel.x * dt; player.craftParticles.y = player.craftParticles.y + player.vel.y * dt
+    player.craftParticles:process()
 
     shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100}) -- Light
 

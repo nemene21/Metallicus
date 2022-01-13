@@ -80,7 +80,7 @@ function buildSlime(x, y)
 
         scaleX = 1, scaleY = 1,
 
-        drops = {wood = 250, sword = 100},
+        drops = {jello = 250},
 
         states = {
             idle = slimeStateIdle, prepare = slimeStatePrepare, jump = slimeStateJump

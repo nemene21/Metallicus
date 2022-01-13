@@ -5,22 +5,26 @@ HOLDING_ARROW = love.graphics.newImage("data/images/UI/inventory/holdingArrow.pn
 
 IN_HAND = nil
 
+CRAFTING_RECIPIES = loadJson("data/craftingRecipies.json")
+
 ITEMS = loadJson("data/items.json")
 for id,I in pairs(ITEMS) do I.amount = 1; I.index = id end
 
 -- Init
 function newInventory(ox,oy,w,h,image)
-    local inventory = {hovered = false, addItem = inventoryAddItem, x=ox,y=oy,slots={}}
+    local inventory = {hovered = false, addItem = inventoryAddItem, x=ox,y=oy,slots={},slotIndexes={}}
     local image = image or "slot"
 
-    for x=0,w-1 do
     for y=0,h-1 do
+    for x=0,w-1 do
         inventory.slots[tostring(x)..","..tostring(y)] = {
             item=nil,
             scale=1, scaleTo=1,
             type="item",
             image=image
         }
+
+        table.insert(inventory.slotIndexes, tostring(x)..","..tostring(y))
 
         POSSIBLE_ITEMS = {"wood","stone","sword","bodyArmor","headArmor","none"}
 
@@ -38,11 +42,11 @@ end
 -- Putting an item in an inventory
 function inventoryAddItem(inventory, item)
     
-    for id,S in pairs(inventory.slots) do
+    for id,S in ipairs(inventory.slotIndexes) do
+        id = S; S = inventory.slots[S]
 
         if S.item == nil then
 
-            --for id,A in pairs(item) do print(id, A) end
             S.item = deepcopyTable(item); item.amount = 0
 
         else if S.item.index == item.index then
@@ -73,20 +77,21 @@ end
 function processInventory(inventory)
 
     inventory.hovered = false
+    local slotHovered = nil
 
     for id,S in pairs(inventory.slots) do
-
         -- PROCESSING
 
         -- If getting hovered
         if S.on then
+            slotHovered = S
 
             inventory.hovered = true
 
             S.scaleTo = 1.15
 
             -- Left click
-            if mouseJustPressed(1) then
+            if mouseJustPressed(1) and not pressed("lshift") then
                 S.scale = 1.3; playSound("inventoryClick")
 
                 if IN_HAND ~= nil and S.item ~= nil then
@@ -130,7 +135,7 @@ function processInventory(inventory)
             end
             
             -- Right click
-            if mouseJustPressed(2) then
+            if mouseJustPressed(2) and not pressed("lshift") then
                 S.scale = 1.3; playSound("inventoryClick")
 
                 -- If hand is empty and the slot is not empty, split slot
@@ -174,12 +179,13 @@ function processInventory(inventory)
         inventory.slots[tostring(mouseSlotX)..","..tostring(mouseSlotY)].on = true
     end
     end
-
-    return inventory 
+    
+    return inventory, slotHovered
 end
 
 -- Drawing an inventory
 function drawInventory(inventory)
+
     -- DRAW
     for id,S in pairs(inventory.slots) do
 
@@ -209,6 +215,7 @@ function drawInventory(inventory)
 
     S.scale = lerp(S.scale,S.scaleTo,dt*20)
     S.scaleTo = 1
+
     end
 end
 
@@ -247,7 +254,7 @@ end
 
 -- TOOLTIP
 STAT_NAMES = {
-dmg = "damage", def = "defense", ["your mom lmao"] = "your mom lmao"
+dmg = "damage", def = "defense"
 }
 
 TOOLTIP_OFFSET = 80
@@ -372,6 +379,8 @@ equipmentSlot=love.graphics.newImage("data/images/UI/inventory/equipmentSlot.png
 
 ITEM_IMGES = {
 wood = love.graphics.newImage("data/images/items/wood.png"),
+stick = love.graphics.newImage("data/images/items/stick.png"),
+jello = love.graphics.newImage("data/images/items/jello.png"),
 stone = love.graphics.newImage("data/images/items/stone.png"),
 sword = love.graphics.newImage("data/images/items/sword.png"),
 bodyArmor = love.graphics.newImage("data/images/items/bodyArmor.png"),
@@ -446,4 +455,3 @@ function drawDroppedItem(item)
     drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine)
 
 end
-
