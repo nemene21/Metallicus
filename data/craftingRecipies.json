@@ -1,0 +1,17 @@
+[
+{
+    "name" : "stick",
+    "materials" : [["wood", 1]],
+    "amount" : 2
+},
+{
+    "name" : "sword",
+    "materials" : [["stone", 4], ["stick", 2]],
+    "amount" : 1
+},
+{
+    "name" : "jelloRod",
+    "materials" : [["jello", 8], ["stick", 2]],
+    "amount" : 1
+}
+]

@@ -1,0 +1,263 @@
+{
+"wood" : {
+    "texture" : "wood",
+    "name" : "Wood", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+"stick" : {
+    "texture" : "stick",
+    "name" : "Stick", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+"jello" : {
+    "texture" : "jello",
+    "name" : "Jello", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+"stone" : {
+    "texture" : "stone",
+    "name" : "Stone", "rarity" : "mythic",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+"jelloRod" : {
+    "texture" : "jelloRod",
+    "name" : "Jello rod", "rarity" : "mythic",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "attackTime" : 0.3, "distance" : 16, "swing" : 0.25
+    },
+
+    "projectile" : {
+        "speed" : 480,
+        "range" : 99999,
+        "gravity" : 200,
+
+        "offsetRotation" : 40,
+
+        "collides" : true, "bounces" : 3,
+        "pirice" : 1,
+
+        "damage" : 15,
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 14,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 0,
+
+        "sound" : "slash", "texture" : "slimeShot", "particles" : "slimeShot", "particlesDie" : "slimeShot", "particlesSpawn" : "slimeShot"
+    },
+
+    "types" : ["item"]
+},
+
+"crystalRod" : {
+    "texture" : "crystalRod",
+    "name" : "Crystal rod", "rarity" : "mythic",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "attackTime" : 0.6, "distance" : 16, "swing" : 0.25
+    },
+
+    "projectile" : {
+        "speed" : 480,
+        "range" : 99999,
+        "gravity" : 200,
+
+        "offsetRotation" : 40,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 3,
+
+        "damage" : 8,
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 14,
+
+        "burst" : 3, "burstTimer" : 0, "burstWait" : 0.1, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 0,
+
+        "sound" : "slash", "texture" : "crystalShot", "particles" : "crystalShot", "particlesDie" : "crystalShot", "particlesSpawn" : "crystalShot"
+    },
+
+    "types" : ["item"]
+},
+
+"blunderbuss" : {
+    "texture" : "blunderbuss",
+    "name" : "Blunderbuss", "rarity" : "mythic",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "attackTime" : 1.5, "distance" : 8, "swing" : 0
+    },
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 350,
+        "gravity" : 200,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 1,
+        "pirice" : 1,
+
+        "damage" : 25,
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 14,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 4, "spread" : 45,
+
+        "sound" : "slash", "texture" : "bullet", "particlesSpawn" : "bullet"
+    },
+
+    "types" : ["item"]
+},
+
+"sword" : {
+    "texture" : "sword",
+    "name" : "Sword", "rarity" : "uncommon",
+
+    "holdMode" : "slash",
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "attackTime" : 1, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+    },
+
+    "projectile" : {
+        "speed" : 500,
+        "range" : 100,
+        "followPlayer" : 1,
+        "collides" : false, "bounces" : 1,
+        "damage" : 25,
+        "radius" : 30,
+        "pirice" : 999,
+        "knockback" : 300,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 4,
+
+        "sound" : "slash", "texture" : "basicSlash"
+    },
+
+    "tooltipEquipName" : "when held:",
+    "stats" : {"dmg" : 10},
+
+    "maxStack" : 1, 
+
+    "types" : ["item"]
+},
+
+"bat" : {
+    "texture" : "bat",
+    "name" : "Bat", "rarity" : "common",
+
+    "holdMode" : "slash",
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "attackTime" : 0.8, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+    },
+
+    "projectile" : {
+        "speed" : 500,
+        "range" : 100,
+        "followPlayer" : 1,
+        "collides" : false, "bounces" : 1,
+        "damage" : 20,
+        "radius" : 30,
+        "pirice" : 999,
+        "knockback" : 300,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 4,
+
+        "sound" : "slash", "texture" : "basicSlash"
+    },
+
+    "tooltipEquipName" : "when held:",
+    "stats" : {"dmg" : 10},
+
+    "maxStack" : 1, 
+
+    "types" : ["item"]
+},
+
+"bodyArmor" : {
+    "texture" : "bodyArmor",
+    "name" : "Chestplate", "rarity" : "rare",
+
+    "holdMode" : "hold",
+
+    "tooltipEquipName" : "when worn:",
+    "stats" : {"def" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
+"headArmor" : {
+    "texture" : "headArmor",
+    "name" : "Helmet", "rarity" : "epic",
+
+    "holdMode" : "hold",
+
+    "tooltipEquipName" : "when worn:",
+    "stats" : {"def" : 5},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+}
+}
