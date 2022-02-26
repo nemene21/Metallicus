@@ -199,7 +199,18 @@ function processEnemyProjectiles(enemyProjectiles)
             
             table.insert(kill, id); player.iFrames = 1
 
-            player.hp = player.hp - P.damage
+            local damage = math.floor(P.damage * (1 - player.damageReduction * 0.01))
+
+            player.hp = player.hp - damage
+
+            table.insert(ROOM.textPopUps.particles,{
+                x = player.collider.x + love.math.random(-12, 12), y = player.collider.y + love.math.random(-12, 12),
+                vel = newVec(0, -100), width = tostring(damage),
+                lifetime = 1, lifetimeStart = 1,
+                color = {r=255,g=0,b=0,a=1},
+                rotation = 0
+        
+            })
 
         else if P.pos.x < -200 or P.pos.x > 1500 or P.pos.y < -200 or P.pos.y > 1100 then table.insert(kill, id) end
         

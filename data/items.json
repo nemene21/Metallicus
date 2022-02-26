@@ -67,7 +67,6 @@
         "collides" : true, "bounces" : 3,
         "pirice" : 1,
 
-        "damage" : 15,
         "knockback" : 150,
 
         "followPlayer" : 0,
@@ -79,6 +78,8 @@
 
         "sound" : "slash", "texture" : "slimeShot", "particles" : "slimeShot", "particlesDie" : "slimeShot", "particlesSpawn" : "slimeShot"
     },
+
+    "stats" : {"dmg" : 15, "attackTime" : 0.3},
 
     "types" : ["item"]
 },
@@ -94,7 +95,7 @@
     "armRTaken" : true, "armLTaken" : false,
 
     "holdData" : {
-        "attackTimer" : 0, "attackTime" : 0.6, "distance" : 16, "swing" : 0.25
+        "attackTimer" : 0, "distance" : 16, "swing" : 0.25
     },
 
     "projectile" : {
@@ -107,18 +108,19 @@
         "collides" : true, "bounces" : 0,
         "pirice" : 3,
 
-        "damage" : 8,
         "knockback" : 150,
 
         "followPlayer" : 0,
 
         "radius" : 14,
 
-        "burst" : 3, "burstTimer" : 0, "burstWait" : 0.1, "burstsLeft" : 0,
+        "burstTimer" : 0, "burstWait" : 0.1, "burstsLeft" : 0,
         "amount" : 1, "spread" : 0,
 
         "sound" : "slash", "texture" : "crystalShot", "particles" : "crystalShot", "particlesDie" : "crystalShot", "particlesSpawn" : "crystalShot"
     },
+
+    "stats" : {"dmg" : 8, "attackTime" : 0.6, "burst" : 3},
 
     "types" : ["item"]
 },
@@ -134,7 +136,7 @@
     "armRTaken" : true, "armLTaken" : false,
 
     "holdData" : {
-        "attackTimer" : 0, "attackTime" : 1.5, "distance" : 8, "swing" : 0
+        "attackTimer" : 0, "distance" : 8, "swing" : 0
     },
 
     "projectile" : {
@@ -147,18 +149,19 @@
         "collides" : true, "bounces" : 1,
         "pirice" : 1,
 
-        "damage" : 25,
         "knockback" : 150,
 
         "followPlayer" : 0,
 
         "radius" : 14,
 
-        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
-        "amount" : 4, "spread" : 45,
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 45,
 
         "sound" : "slash", "texture" : "bullet", "particlesSpawn" : "bullet"
     },
+
+    "stats" : {"dmg" : 25, "attackTime" : 1.5, "amount" : 4},
 
     "types" : ["item"]
 },
@@ -171,7 +174,7 @@
     "armRTaken" : true, "armLTaken" : false,
 
     "holdData" : {
-        "attackTimer" : 0, "attackTime" : 1, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+        "attackTimer" : 0, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
     "projectile" : {
@@ -179,19 +182,18 @@
         "range" : 100,
         "followPlayer" : 1,
         "collides" : false, "bounces" : 1,
-        "damage" : 25,
+
         "radius" : 30,
         "pirice" : 999,
         "knockback" : 300,
 
-        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
-        "amount" : 1, "spread" : 4,
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 4,
 
         "sound" : "slash", "texture" : "basicSlash"
     },
 
-    "tooltipEquipName" : "when held:",
-    "stats" : {"dmg" : 10},
+    "stats" : {"dmg" : 25, "attackTime" : 0.8},
 
     "maxStack" : 1, 
 
@@ -206,7 +208,7 @@
     "armRTaken" : true, "armLTaken" : false,
 
     "holdData" : {
-        "attackTimer" : 0, "attackTime" : 0.8, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+        "attackTimer" : 0, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
     "projectile" : {
@@ -220,13 +222,12 @@
         "knockback" : 300,
 
         "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
-        "amount" : 1, "spread" : 4,
+        "spread" : 4,
 
         "sound" : "slash", "texture" : "basicSlash"
     },
 
-    "tooltipEquipName" : "when held:",
-    "stats" : {"dmg" : 10},
+    "stats" : {"dmg" : 20, "attackTime" : 0.8},
 
     "maxStack" : 1, 
 
@@ -240,7 +241,7 @@
     "holdMode" : "hold",
 
     "tooltipEquipName" : "when worn:",
-    "stats" : {"def" : 10},
+    "stats" : {"def" : 20},
 
     "maxStack" : 1,
 
@@ -254,7 +255,7 @@
     "holdMode" : "hold",
 
     "tooltipEquipName" : "when worn:",
-    "stats" : {"def" : 5},
+    "stats" : {"def" : 10},
 
     "maxStack" : 1,
 

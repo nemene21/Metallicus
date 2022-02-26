@@ -12,11 +12,18 @@ PARTICLES_DIE_CIRCLE = loadJson("data/particles/player/playerDieCircleParticles.
 HP_BAR = love.graphics.newImage("data/images/UI/hpBar.png")
 
 function newPlayer(x,y,stats)
+
     local inventory = newInventory(42,600 - INVENTORY_SPACING - 12 - 152,5,3)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 12,600 - INVENTORY_SPACING - 12 - 152,0,0)
     
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["headArmor"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["bodyArmor"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
     -- Adding slots to the equipment section
@@ -29,7 +36,7 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
 
     return {
-        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, draw=drawPlayer, drawUI=drawPlayerUI,
+        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
 
         collider=newRect(x,y,30,46), justLanded = false,
 
@@ -37,9 +44,9 @@ function newPlayer(x,y,stats)
 
         walkSoundTimer = newTimer(0.2),
 
-        iFrames = 0,
+        iFrames = 0, damageReduction = 0,
 
-        hp = 100, hpMax = 100, hpBarDelayed = 0,
+        hp = 100, hpMax = 100, hpBarDelayed = 0, 
 
         downPressedTimer=0, jumpPressedTimer=0, coyoteTime=0, canCutJump = false,
 
@@ -53,6 +60,16 @@ function newPlayer(x,y,stats)
 end
 
 function processPlayer(player)
+
+    -- Update stats
+    for id, S in pairs(player.wearing.slots) do
+
+        if S.item ~= nil then
+            if S.item.stats ~= nil then
+                player.damageReduction = player.damageReduction + S.item.stats.def or 0
+            end
+        end
+    end
 
     -- Particles
     love.graphics.setCanvas(particleCanvas)
@@ -191,7 +208,19 @@ function drawPlayer(player)
     -- drawCollider(player.collider)
 end
 
+function resetPlayerStats(player)
 
+    -- Update stats
+    for id, S in pairs(player.wearing.slots) do
+
+        if S.item ~= nil then
+            if S.item.stats ~= nil then
+                player.damageReduction = player.damageReduction - S.item.stats.def or 0
+            end
+        end
+    end
+
+end
 
 
 
@@ -281,7 +310,7 @@ function drawPlayerUI(player)
 
         processTooltip(player.inventory); processTooltip(player.hotbar); processTooltip(player.wearing)
 
-        bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset)) -- Camera to the middle
+        bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y, ROOM.endUp.y + 300 - cameraWallOffset, ROOM.endDown.y - 300 + cameraWallOffset)) -- Camera to the mouse
 
     else
         mouseMode = "aimer"; mCentered = 0.5
@@ -290,6 +319,7 @@ function drawPlayerUI(player)
         bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, ROOM.endUp.y + 300 - cameraWallOffset, ROOM.endDown.y - 300 + cameraWallOffset)) -- Camera to the mouse
     end
 
+    love.graphics.setCanvas(display)
 end
 
 

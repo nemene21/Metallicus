@@ -252,7 +252,11 @@ end
 
 -- TOOLTIP
 STAT_NAMES = {
-dmg = "damage", def = "defense"
+dmg = "damage", def = "defense", attackTime = "attack speed"
+}
+
+STAT_MEASURES = {
+attackTime = "s", def = "%"
 }
 
 TOOLTIP_OFFSET = 80
@@ -261,36 +265,45 @@ RARITY_COLORS = {common={255,255,255},uncommon={0,255,0},rare={44,255,255},epic=
 function drawTooltip(item)
     
     -- If the item is equippable
-    if item.tooltipEquipName ~= nil then
+    if item.stats ~= nil then
 
         -- Get width of rect
         local textDraws = {}; colors = {}
         local width = 0
 
-        local STAT_OFFSET = 15
+        local STAT_OFFSET = 12
         
         for id,S in pairs(item.stats) do
-            local text = STAT_NAMES[id]..":  "
-            if S > 0 then text = text.."+"; table.insert(colors,{0,255,0}) else table.insert(colors,{255,0,0}) end
-            text = text..S
+            
+            if id ~= "burst" and id ~= "amount" then
 
-            table.insert(textDraws,text)
+                local text = (STAT_NAMES[id] or id)..":  "
+                if S > 0 then table.insert(colors,{0,255,0}) else table.insert(colors,{255,0,0}) end
+                text = text..S
 
-            local textWidth = FONT:getWidth(text)
-            if textWidth + STAT_OFFSET > width then width = textWidth + STAT_OFFSET end
+                if id == "dmg" and (item.stats.amount ~= nil or item.stats.burst ~= nil) then text = text.."x"..tostring(item.stats.amount or 1 * item.stats.burst or 1) end
+                text = text.." "
+
+                if STAT_MEASURES[id] ~= nil then text = text..STAT_MEASURES[id] end
+
+                table.insert(textDraws,text)
+
+                local textWidth = FONT:getWidth(text)
+                if textWidth + STAT_OFFSET > width then width = textWidth + STAT_OFFSET end
+
+            end
         end
 
         local fontHeight = FONT:getHeight("text lol") + 4
 
         -- Draw rect
         setColor(0,0,0,150)
-        love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM + 38, width + 12, fontHeight * (#textDraws + 1) + 18,8, 8)
+        love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM + 38, width + 12, fontHeight * (#textDraws + 1),8, 8)
 
         -- Draw stats
-        outlinedText(xM + TOOLTIP_OFFSET,yM + 38 + 8,2,item.tooltipEquipName,{120,120,120})
 
         for id,T in ipairs(textDraws) do
-            outlinedText(xM + TOOLTIP_OFFSET + STAT_OFFSET,yM + 38 + 12 + id * fontHeight,2,T,colors[id])
+            outlinedText(xM + TOOLTIP_OFFSET + STAT_OFFSET,yM + 24 + id * fontHeight,2,T,colors[id])
         end
     end
     -- Draw rect
@@ -327,8 +340,8 @@ function MODE_SLASH(player,headed,item)
     item.holdData.attackTimer = item.holdData.attackTimer - dt
     if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
         -- Reset attack timer
-        item.holdData.attackTimer = item.holdData.attackTime
-        item.projectile.burstsLeft = item.projectile.burst
+        item.holdData.attackTimer = item.stats.attackTime
+        item.projectile.burstsLeft = item.stats.burst or 1
         -- Reverse turn
         item.holdData.turnTo = item.holdData.turnTo * -1
         -- Set anchor rotator
@@ -344,13 +357,13 @@ function MODE_SLASH(player,headed,item)
         item.projectile.burstTimer = item.projectile.burstWait
         item.projectile.burstsLeft = item.projectile.burstsLeft - 1
 
-        for x=1, item.projectile.amount do
+        for x=1, item.stats.amount or 1 do
             -- Summon projectile
             local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM); rotation = rotation:getRot()
 
             local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
 
-            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), item.projectile.damage, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), item.stats.dmg, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
             shake(2, 1, 0.15, rotation)
@@ -381,8 +394,8 @@ function MODE_SHOOT(player,headed,item)
     item.holdData.attackTimer = item.holdData.attackTimer - dt
     if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
         -- Reset attack timer
-        item.holdData.attackTimer = item.holdData.attackTime
-        item.projectile.burstsLeft = item.projectile.burst
+        item.holdData.attackTimer = item.stats.attackTime
+        item.projectile.burstsLeft = item.stats.burst or 1
 
     end
 
@@ -400,9 +413,9 @@ function MODE_SHOOT(player,headed,item)
             
         end
 
-        for x=1, item.projectile.amount do
+        for x=1, item.stats.amount or 1 do
             -- Summon projectile
-            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), item.projectile.damage, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), item.stats.dmg, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
 
             if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
 
@@ -416,7 +429,7 @@ function MODE_SHOOT(player,headed,item)
     end
 
     -- Draw
-    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y + 8, 1 - 0.25 * clamp(item.holdData.attackTimer, 0, item.holdData.attackTime) / item.holdData.attackTime, turned, math.sin(clamp(item.holdData.attackTimer, 0, item.holdData.attackTime) / item.holdData.attackTime * 3.14 * 3) * item.holdData.swing + rotation / 180 * 3.14, 1, 0, 1)
+    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y + 8, 1 - 0.25 * clamp(item.holdData.attackTimer, 0, item.stats.attackTime) / item.stats.attackTime, turned, math.sin(clamp(item.holdData.attackTimer, 0, item.stats.attackTime) / item.stats.attackTime * 3.14 * 3) * item.holdData.swing + rotation / 180 * 3.14, 1, 0, 1)
     return item
 end
 

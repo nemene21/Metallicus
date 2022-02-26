@@ -50,6 +50,8 @@ function slimeStateIdle(slime, player)
         slime.state = "prepare"; slime.nextStateTimer = 1
     end
 
+    shine(slime.collider.x, slime.collider.y, 120, {0, 255, 80, 35})
+
     return slime
 end
 
@@ -68,10 +70,11 @@ function slimeStatePrepare(slime, player)
     slime.scaleX = lerp(slime.scaleX, 1.5, dt)
     slime.scaleY = lerp(slime.scaleY, 0.5, dt)
 
-    SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.5))
-    if slime.flash > 0.5 then love.graphics.setShader(SHADERS.FLASH) end
-
     setColor(255, 255 * slime.nextStateTimer, 255 * slime.nextStateTimer)
+
+    SHADERS.FLASH:send("intensity", boolToInt(slime.flash > 0.5))
+    if slime.flash > 0.5 then love.graphics.setShader(SHADERS.FLASH); setColor(255, 255, 255) end
+
     drawSprite(ENEMY_IMAGES[slime.image], slime.collider.x, slime.collider.y + (30 - 30 * slime.scaleY) * 0.5, slime.scaleX * (boolToInt(player.collider.x > slime.collider.x) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002)
     love.graphics.setShader()
 
@@ -85,6 +88,8 @@ function slimeStatePrepare(slime, player)
 
         slime.vel.y = -600
     end
+
+    shine(slime.collider.x, slime.collider.y, 120, {255 * slime.nextStateTimer, 255 * (1 - slime.nextStateTimer), 80 * (1 - slime.nextStateTimer), 35})
 
     return slime
 end
@@ -127,6 +132,8 @@ function slimeStateJump(slime, player)
     love.graphics.setShader(SHADERS.FLASH)
     drawSprite(ENEMY_IMAGES[slime.image], slime.collider.x, slime.collider.y, slime.scaleX * (boolToInt(slime.vel.x > 0) * 2 - 1), slime.scaleY, slime.knockback.x * 0.002) -- Draw
     love.graphics.setShader()
+
+    shine(slime.collider.x, slime.collider.y, 120, {0, 255, 80, 35})
 
     return slime
 end

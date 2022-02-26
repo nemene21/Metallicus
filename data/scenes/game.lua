@@ -15,10 +15,10 @@ function gameReload()
 
     PAUSED_SCREEN_BG = love.graphics.newCanvas(WS[1], WS[2])
 
-    debugLine = "flyMode"
+    debugLine = ""
     debugLineOpen = false
 
-    debugDeleteTimer = newTimer(0.075)
+    debugDeleteTimer = newTimer(0.1)
 
     diedTimer = newTimer(4)
     
@@ -78,10 +78,7 @@ function game()
             end
 
         end
-
-        player:drawUI()
         
-        love.graphics.setCanvas(display)
         ROOM:processItems()
 
         ROOM:process()
@@ -97,12 +94,16 @@ function game()
 
         ROOM:processParticles()
 
+        player:resetStats()
+
         if player.hp > 0 then -- Draw player
             player:draw()
         else
             
             drawSprite(PLAYER_DEAD, player.collider.x, player.collider.y, math.sin(globalTimer * 5), 1)
         end
+
+        player:drawUI()
 
         ROOM:drawTiles()
 
