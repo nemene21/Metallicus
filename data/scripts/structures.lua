@@ -162,7 +162,7 @@ function processTeleporter(teleporter)
 
     if teleporter.pressed then -- Teleporting animation
 
-        bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset), 2)
+        bindCamera(clamp(teleporter.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(teleporter.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset), 2)
 
         UI_ALPHA = lerp(UI_ALPHA, 0, dt * 10)
         zoomInEffect = lerp(zoomInEffect, 1.2, dt * 2)
