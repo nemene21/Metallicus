@@ -22,7 +22,7 @@ function gameReload()
 
     diedTimer = newTimer(4)
     
-    playerDied = false; ambientLight = {80, 80, 80}
+    playerDied = false; ambientLight = {80, 80, 80}; UI_ALPHA = 255
 end
 
 function gameDie()
@@ -44,7 +44,7 @@ function game()
 
         else -- Death animation
 
-            bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset)) -- Camera to the middle
+            bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset), 3) -- Camera to the middle
             player.collider.y = player.collider.y - dt * 80
 
             diedTimer:process()
@@ -98,9 +98,6 @@ function game()
 
         if player.hp > 0 then -- Draw player
             player:draw()
-        else
-            
-            drawSprite(PLAYER_DEAD, player.collider.x, player.collider.y, math.sin(globalTimer * 5), 1)
         end
 
         player:drawUI()
@@ -109,6 +106,14 @@ function game()
 
         for id,P in ipairs(playerProjectiles) do P:draw() end
         for id,P in ipairs(enemyProjectiles) do P:draw() end
+
+        -- Draw dead player
+        if player.hp <= 0 then
+
+            love.graphics.setCanvas(particleCanvas)
+            drawSprite(PLAYER_DEAD, player.collider.x, player.collider.y, math.sin(globalTimer * 5), 1)
+            love.graphics.setCanvas(display)
+        end
 
         ROOM:drawEdge()
 

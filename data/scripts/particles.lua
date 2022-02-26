@@ -1,6 +1,15 @@
 
 -- DRAW PARTICLES
 
+function drawParticleShockwave(P,w)
+
+    love.graphics.setLineWidth(w * 0.2)
+
+    w = P.width - w
+
+    love.graphics.circle("line",P.x - camera[1],P.y - camera[2], w)
+end
+
 function drawParticleCircle(P,w)
     love.graphics.circle("fill",P.x - camera[1],P.y - camera[2], w)
 end
@@ -39,7 +48,8 @@ DRAWS = {
 ["circleGlow"] = drawParticleCircleGlow,
 ["square"] = drawParticleSquare,
 ["spark"] = drawParticleSpark,
-["text"] = drawParticleText
+["text"] = drawParticleText,
+["shockwave"] = drawParticleShockwave
 }
 -- INTERPOLATE WIDTH
 function interpolateParticleSine(w,lf,lfS)

@@ -145,9 +145,12 @@ ENEMY_PROJECTILE_IMAGES = {
 }
 
 ENEMY_PROJECTILE_PARTICLES = {
-    smallOrb = loadJson("data/particles/enemies/enemyBulletSpawned.json"),
-    mediumOrb = loadJson("data/particles/enemies/enemyBulletSpawned.json")
+    smallOrb = loadJson("data/particles/enemyProjectiles/enemyBulletSpawned.json"),
+    mediumOrb = loadJson("data/particles/enemyProjectiles/enemyBulletSpawned.json")
 }
+
+ENEMY_PROJECTILE_DIE_SHOCK = loadJson("data/particles/enemyProjectiles/enemyProjectileDieShock.json")
+ENEMY_PROJECTILE_DIE_CIRCLE = loadJson("data/particles/enemyProjectiles/enemyProjectileDieCircle.json")
 
 ENEMY_PROJECTILE_PARTICLES["mediumOrb"].spawnShape.data = 28
 ENEMY_PROJECTILE_PARTICLES["mediumOrb"].particleData.width.a = 16
@@ -198,6 +201,9 @@ function processEnemyProjectiles(enemyProjectiles)
         if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 then
             
             table.insert(kill, id); player.iFrames = 1
+
+            table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
+            table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
 
             local damage = math.floor(P.damage * (1 - player.damageReduction * 0.01))
 

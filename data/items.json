@@ -34,7 +34,7 @@
 
 "stone" : {
     "texture" : "stone",
-    "name" : "Stone", "rarity" : "mythic",
+    "name" : "Stone", "rarity" : "common",
 
     "holdMode" : "hold",
 
@@ -45,7 +45,7 @@
 
 "jelloRod" : {
     "texture" : "jelloRod",
-    "name" : "Jello rod", "rarity" : "mythic",
+    "name" : "Jello rod", "rarity" : "uncommon",
 
     "holdMode" : "shoot",
 
@@ -86,7 +86,7 @@
 
 "crystalRod" : {
     "texture" : "crystalRod",
-    "name" : "Crystal rod", "rarity" : "mythic",
+    "name" : "Crystal rod", "rarity" : "rare",
 
     "holdMode" : "shoot",
 

@@ -8,11 +8,20 @@ lastScreenshake = {0,0}; boundScreenshake = {0,0}
 
 -- Camera
 
-function bindCamera(x,y)
-    boundCamPos = {x - WS[1] * 0.5, y - WS[2] * 0.5}
+lastPriority = 0
+
+function bindCamera(x,y, priority)
+    if priority or 1 > lastPriority then
+
+        boundCamPos = {x - WS[1] * 0.5, y - WS[2] * 0.5}
+        lastPriority = priority
+
+    end
 end
 
 function processCamera()
+    lastPriority = 0
+    
     shakeTimer:process()
 
     if shakeTimer:isDone() then

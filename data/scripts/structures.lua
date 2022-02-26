@@ -160,21 +160,31 @@ function processTeleporter(teleporter)
 
     end
 
-    if teleporter.pressed then
+    if teleporter.pressed then -- Teleporting animation
+
+        bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset), 2)
+
+        UI_ALPHA = lerp(UI_ALPHA, 0, dt * 10)
+        zoomInEffect = lerp(zoomInEffect, 1.2, dt * 2)
 
         player.bonusForce = newVec((teleporter.x - player.collider.x) * 1.5, (teleporter.y - player.collider.y) * 1.5)
 
         transition = 1 - teleporter.animTimer.time / teleporter.animTimer.timeMax
         teleporter.animTimer:process()
 
+        love.graphics.setCanvas(particleCanvas)
+        drawSprite(IMAGE_TELEPORTER_LASER, teleporter.x, teleporter.y - 53, (clamp((1 - teleporter.animTimer.time / teleporter.animTimer.timeMax) * 5, 0, 1)) + math.sin(globalTimer) * 0.1, 600, 0, 1, 0.5, 1)
+
         teleporter.teleportParticles:process()
-        drawSprite(IMAGE_TELEPORTER_LASER, teleporter.x, teleporter.y - 50, (clamp((1 - teleporter.animTimer.time / teleporter.animTimer.timeMax) * 5, 0, 1)) + math.sin(globalTimer) * 0.1, 600, 0, 1, 0.5, 1)
         teleporter.teleportParticlesBurst:process()
 
         shine(teleporter.x, teleporter.y - 50, 400 * ((clamp((1 - teleporter.animTimer.time / teleporter.animTimer.timeMax) * 3, 0, 1)) + math.sin(globalTimer) * 0.1), {0, 149, 233})
     end
 
-    if teleporter.animTimer:isDone() then
+    if teleporter.animTimer:isDone() then -- Animation done
+
+        zoomInEffect = 1
+        UI_ALPHA = 255
 
         player.bonusForce = newVec(0, 0)
         player.vel = newVec(0, 0)

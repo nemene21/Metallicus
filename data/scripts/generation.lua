@@ -51,7 +51,7 @@ foreground = {
 }
 },
 
-layoutPath = "data/layouts/cave/", nLayouts = 1,
+layoutPath = "data/layouts/cave/", nLayouts = 2,
 
 ambientParticles = "data/particles/ambient/waterDrops.json",
 particlesPosition = {396, -100},
@@ -471,8 +471,6 @@ EDGE_UP = love.graphics.newImage("data/images/roomEdge/up.png")
 EDGE_DOWN = love.graphics.newImage("data/images/roomEdge/down.png")
 
 function roomDrawEdge(room)
-    love.graphics.setCanvas(particleCanvas)
-    clear(0,0,0,0)
     
     -- Door particles
 
@@ -512,6 +510,9 @@ function roomParticles(room)
     setColor(255, 255, 255)
     love.graphics.draw(particleCanvas)
     love.graphics.setShader()
+
+    love.graphics.setCanvas(particleCanvas)
+    clear(0,0,0,0)
 
 end
 
