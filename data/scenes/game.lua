@@ -186,9 +186,9 @@ function swtichRoom(num)
     ROOM = ROOMS[roomOn]
 
     if num > 0 then
-        player.collider.x = ROOM.entranceParticles.x + 16; player.collider.y = ROOM.entranceParticles.y + 48
+        player.collider.x = ROOM.entranceParticles.x + 32; player.collider.y = ROOM.entranceParticles.y + 48
     else
-        player.collider.x = ROOM.exitParticles.x - 16; player.collider.y = ROOM.exitParticles.y + 48
+        player.collider.x = ROOM.exitParticles.x - 32; player.collider.y = ROOM.exitParticles.y + 48
     end
 
     camera[1] = player.collider.x - 400; camera[2] = player.collider.y - 300

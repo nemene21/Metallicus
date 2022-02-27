@@ -394,7 +394,7 @@ function placeEnemies(biome, room, num, amount)
 
             while not valid do
 
-                posX = love.math.random(4, room.endRight)
+                posX = love.math.random(4, room.endRight - 3)
 
                 posY = love.math.random(room.endUp, room.endDown)
 
@@ -416,7 +416,7 @@ function placeEnemies(biome, room, num, amount)
             end
 
             -- Spawn the enemy
-            table.insert(room.enemies, buildEnemy(enemyChosen.name, posX * 48 - 24, posY * 48 + 24))
+            table.insert(room.enemies, buildEnemy(enemyChosen.name, posX * 48 + 24, posY * 48 + 24))
         end
 
     end
@@ -614,7 +614,7 @@ function processRoom(room)
         if player.collider.x < room.entranceParticles.x - 3 then swtichRoom(-1) end
     end
     if room.exitParticles ~= nil then
-        if player.collider.x > room.exitParticles.x + 3 then swtichRoom(1) end
+        if player.collider.x > room.exitParticles.x + 24 then swtichRoom(1) end
     end
 
     kill = {}
