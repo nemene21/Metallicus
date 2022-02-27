@@ -123,6 +123,9 @@ function generate(amount,biome)
 
         end
 
+        -- Place enemies
+        placeEnemies(biome, room, num, amount)
+
         -- Set bg
         room.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
         for x=room.endLeft,room.endRight do for y=room.endUp,room.endDown do room.bgTilemap:setTile(x,y,{1,love.math.random(1,3)}) end end -- Place tiles
@@ -199,9 +202,6 @@ function generate(amount,biome)
         
         -- Place decoration
         decorateRoom(room, biome)
-
-        -- Place enemies
-        placeEnemies(biome, room, num, amount)
 
         rooms[num + 1] = room
     end
@@ -394,9 +394,9 @@ function placeEnemies(biome, room, num, amount)
 
             while not valid do
 
-                posX = love.math.random(4, 12)
+                posX = love.math.random(4, room.endRight)
 
-                posY = love.math.random(0,10)
+                posY = love.math.random(room.endUp, room.endDown)
 
                 valid = room.tilemap:getTile(posX, posY) == nil
 
