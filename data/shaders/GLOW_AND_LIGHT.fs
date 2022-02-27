@@ -4,7 +4,7 @@ float multiplier = 0.005;
 int unintensity = 80;
 int iterations = size * size + unintensity;
 
-uniform float blurrSize = 1 / 600 * 24;
+uniform float blurrSize = 1 / 600 * 48;
 uniform float bloomIntensity = 0.075;
 
 uniform float grayscale = 0.0;

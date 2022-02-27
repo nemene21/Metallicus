@@ -46,7 +46,7 @@ function newPlayer(x,y,stats)
 
         walkSoundTimer = newTimer(0.2), speed = 300,
  
-        dashingFrames = 0, dashForce = 0, dashTimer = 0, dashJustRecharged = 1, dashSpeed = 700,
+        dashingFrames = 0, dashForce = 0, dashTimer = 0, dashJustRecharged = 1, dashSpeed = 700, dashInputTimer = 0,
 
         iFrames = 0, damageReduction = 0,
 
@@ -103,20 +103,21 @@ function processPlayer(player)
 
     player.dashingFrames = clamp(player.dashingFrames - dt, 0, 1) -- Dashing
     player.dashTimer = clamp(player.dashTimer - dt, 0, 1)
+    player.dashInputTimer = player.dashInputTimer - dt
 
-    if mouseJustPressed(2) and player.dashTimer == 0 then
+    if mouseJustPressed(2) then player.dashInputTimer = 0.4 end
 
-        if xInput ~= 0 then
-            player.dashingFrames = 0.2
+    if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
-            player.dashTimer = 1
+        player.dashingFrames = 0.2
 
-            player.dashForce = xInput * player.dashSpeed
+        player.dashTimer = 1
 
-            player.dashParticles.rotation = 180 * boolToInt(xInput > 0)
+        player.dashForce = xInput * player.dashSpeed
 
-            player.dashJustRecharged = 0
-        end
+        player.dashParticles.rotation = 180 * boolToInt(xInput > 0)
+
+        player.dashJustRecharged = 0
 
     end
 

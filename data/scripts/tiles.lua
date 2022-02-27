@@ -13,7 +13,11 @@ function drawTilemap(tilemap)
         local pos = splitString(id,",")
         local tileX = tonumber(pos[1]); local tileY = tonumber(pos[2])
         
-        drawFrame(tilemap.sheet,T[1],T[2],tileX*tilemap.tileSize,tileY*tilemap.tileSize, 1, 1, 0, 1, 0)
+        pos = newVec(tileX*tilemap.tileSize,tileY*tilemap.tileSize)
+
+        if pos.x > camera[1] - 48 and pos.x < camera[1] + 800 and pos.y > camera[2] - 48 and pos.y < camera[2] + 600 then
+            drawFrame(tilemap.sheet,T[1],T[2],pos.x,pos.y, 1, 1, 0, 1, 0)
+        end
     end
     -- drawColliders(tilemap.colliders)
 end
