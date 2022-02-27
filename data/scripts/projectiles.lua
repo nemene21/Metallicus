@@ -198,7 +198,7 @@ function processEnemyProjectiles(enemyProjectiles)
 
         P:process()
 
-        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 then
+        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 and player.dashingFrames == 0 then
             
             table.insert(kill, id); player.iFrames = 1
 

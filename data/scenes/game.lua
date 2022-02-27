@@ -22,7 +22,7 @@ function gameReload()
 
     diedTimer = newTimer(4)
     
-    playerDied = false; ambientLight = {80, 80, 80}; UI_ALPHA = 255
+    playerDied = false; ambientLight = {60, 60, 60}; UI_ALPHA = 255
 end
 
 function gameDie()

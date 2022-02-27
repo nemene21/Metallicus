@@ -9,6 +9,8 @@ PLAYER_DEAD = love.graphics.newImage("data/images/player/playerDie.png")
 PARTICLES_DIE_SPARK = loadJson("data/particles/player/playerDieSparkParticles.json")
 PARTICLES_DIE_CIRCLE = loadJson("data/particles/player/playerDieCircleParticles.json")
 
+PARTICLES_DASH = loadJson("data/particles/player/playerDash.json")
+
 HP_BAR = love.graphics.newImage("data/images/UI/hpBar.png")
 
 function newPlayer(x,y,stats)
@@ -42,7 +44,9 @@ function newPlayer(x,y,stats)
 
         inventoryOpen=false, slotOn = 1,
 
-        walkSoundTimer = newTimer(0.2),
+        walkSoundTimer = newTimer(0.2), speed = 300,
+ 
+        dashingFrames = 0, dashForce = 0, dashTimer = 0, dashJustRecharged = 1, dashSpeed = 700,
 
         iFrames = 0, damageReduction = 0,
 
@@ -55,7 +59,7 @@ function newPlayer(x,y,stats)
 
         bonusForce = newVec(0, 0), flyMode = false,
 
-        animation="idle", walkParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerWalk.json")); jumpParticles=loadJson("data/particles/player/playerJump.json")
+        animation="idle", dashParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerDash.json")), walkParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerWalk.json")); jumpParticles=loadJson("data/particles/player/playerJump.json")
     }
 end
 
@@ -72,21 +76,61 @@ function processPlayer(player)
     end
 
     -- Particles
-    love.graphics.setCanvas(particleCanvas)
+
     player.walkParticles:process()
-    love.graphics.setCanvas(display)
+
+    player.dashParticles.x = player.collider.x; player.dashParticles.y = player.collider.y
+    player.dashParticles.spawning = player.dashingFrames > 0
+    player.dashParticles:process()
 
     player.iFrames = clamp(player.iFrames - dt, 0, 1)
 
     -- Movement X
     local xInput = boolToInt(pressed("d") and not debugLineOpen) - boolToInt(pressed("a") and not debugLineOpen)
 
+    xInput = xInput * (1 - boolToInt(player.dashingFrames > 0))
+
     player.walkParticles.spawning = xInput ~= 0; player.walkParticles.x = player.collider.x; player.walkParticles.y = player.collider.y + 16
 
-    player.vel.x = lerp(player.vel.x, xInput * 300, dt * 8)
+    player.vel.x = lerp(player.vel.x, xInput * player.speed, dt * 8)
 
-    player.walkSoundTimer:process()
+
+
+    player.walkSoundTimer:process() -- Walking sound
     if player.walkSoundTimer:isDone() and xInput ~= 0 and player.collider.touching.y == 1 then player.walkSoundTimer:reset(); playSound("walk", love.math.random(30, 170) * 0.01) end
+    
+
+
+    player.dashingFrames = clamp(player.dashingFrames - dt, 0, 1) -- Dashing
+    player.dashTimer = clamp(player.dashTimer - dt, 0, 1)
+
+    if mouseJustPressed(2) and player.dashTimer == 0 then
+
+        if xInput ~= 0 then
+            player.dashingFrames = 0.2
+
+            player.dashTimer = 1
+
+            player.dashForce = xInput * player.dashSpeed
+
+            player.dashParticles.rotation = 180 * boolToInt(xInput > 0)
+
+            player.dashJustRecharged = 0
+        end
+
+    end
+
+    if player.dashingFrames == 0 then -- Slow down dash
+
+        player.dashForce = lerp(player.dashForce, 0, dt * 20)
+
+    else
+
+        player.vel.y = 0
+
+        if player.collider.touching.x ~= 0 then player.dashingFrames = 0 end
+
+    end
     
     -- Movement Y
 
@@ -102,8 +146,10 @@ function processPlayer(player)
 
     player.vel.y = math.min(player.vel.y + 1200 * dt * boolToInt(not player.flyMode),600) -- Gravity
     
-    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, player.vel, ROOM.tilemap.colliders)
-    else player.collider = moveRect(player.collider, newVec(player.vel.x + player.bonusForce.x, player.vel.y + player.bonusForce.y), ROOM.tilemap.collidersWithFalltrough) end
+    local velocity = newVec(player.vel.x + player.bonusForce.x + player.dashForce, player.vel.y + player.bonusForce.y)
+
+    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, velocity, ROOM.tilemap.colliders)
+    else player.collider = moveRect(player.collider, velocity, ROOM.tilemap.collidersWithFalltrough) end
 
     if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(not player.flyMode) end -- Grounded
 
@@ -177,6 +223,18 @@ function drawPlayer(player)
 
     -- Drawing the player
 
+    if player.dashTimer == 0 and player.dashJustRecharged < 0.1 then -- Flash at the dash recharge
+        player.dashJustRecharged = player.dashJustRecharged + dt
+
+        if player.iFrames == 0 then SHADERS.FLASH:send("intensity", 1); love.graphics.setShader(SHADERS.FLASH) end
+
+    end
+
+    if player.dashingFrames > 0 then
+        local intensity = player.dashingFrames / 0.2
+        SHADERS.FLASH:send("intensity", intensity * intensity); love.graphics.setShader(SHADERS.FLASH)
+    end
+
     setColor(255,255,255, 255 * (1 - math.abs(math.sin(3.14 * player.iFrames * 5))))
     lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
 
@@ -204,6 +262,8 @@ function drawPlayer(player)
     -- ARMS
     if handed < 1 then drawSprite(PLAYER_ARM, player.collider.x + player.armR.x * lookAt, player.collider.y + player.armR.y, lookAt, 1, player.armRR) end
     if handed < 2 then drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt, player.collider.y + player.armL.y, lookAt, 1, player.armLR) end
+
+    love.graphics.setShader()
 
     -- drawCollider(player.collider)
 end
