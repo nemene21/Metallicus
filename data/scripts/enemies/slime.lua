@@ -89,7 +89,8 @@ function slimeStatePrepare(slime, player)
         slime.vel.y = -600
     end
 
-    shine(slime.collider.x, slime.collider.y, 120, {255 * slime.nextStateTimer, 255 * (1 - slime.nextStateTimer), 80 * (1 - slime.nextStateTimer), 35})
+    local lightTimer = 1 - slime.nextStateTimer
+    shine(slime.collider.x, slime.collider.y, 120, {255 * lightTimer, 255 * (1 - lightTimer), 80 * (1 - lightTimer), 35})
 
     return slime
 end

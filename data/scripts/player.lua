@@ -198,7 +198,7 @@ function processPlayer(player)
         table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
     end
 
-    if not pressed("space") and not debugLineOpen and player.canCutJump then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
+    if not pressed("space") and not debugLineOpen and player.canCutJump and player.vel.y < 0 then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
 
     -- Set animation
     if player.collider.touching.y ~= 1 then
