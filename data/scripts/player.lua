@@ -105,7 +105,7 @@ function processPlayer(player)
     player.dashTimer = clamp(player.dashTimer - dt, 0, 1)
     player.dashInputTimer = player.dashInputTimer - dt
 
-    if mouseJustPressed(2) then player.dashInputTimer = 0.4 end
+    if mouseJustPressed(2) then player.dashInputTimer = 0.3 end
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
@@ -129,7 +129,7 @@ function processPlayer(player)
 
         player.vel.y = 0
 
-        if player.collider.touching.x ~= 0 then player.dashingFrames = 0 end
+        if player.collider.touching.x == clamp(player.dashForce, -1, 1) then player.dashingFrames = 0 end
 
     end
     
