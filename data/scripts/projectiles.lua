@@ -218,7 +218,7 @@ function processEnemyProjectiles(enemyProjectiles)
         
             })
 
-        else if P.pos.x < -200 or P.pos.x > 1500 or P.pos.y < -200 or P.pos.y > 1100 then table.insert(kill, id) end
+        else if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id) end
         
         end
 
