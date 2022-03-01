@@ -38,9 +38,9 @@ cave = {
     decorations = {
     background = {
 
-        newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,80}}),
+        newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,40}}),
         newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 4, 33, {0.5, 0}, 0, 0),
-        newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,40}})
+        newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,30}})
 
     },
 
@@ -50,6 +50,8 @@ cave = {
 
     }
     },
+
+    ambientLight = {60, 60, 60},
 
     layoutPath = "data/layouts/cave/", nLayouts = 2,
 
@@ -69,20 +71,16 @@ sporeCavern = {
     bgTilesetPath = "data/images/tilesets/cave/bg.png",
     
     materials = {rock = 100, wood = 100},
+
+    ambientLight = {20, 40, 100},
     
     decorations = {
     background = {
-    
-        newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,80}}),
-        newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 4, 33, {0.5, 0}, 0, 0),
-        newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,40}})
-    
+        newDecoration("stalagmite", {"sporeCavern/shroom1.png", "sporeCavern/shroom2.png"}, {0,27}, {{0,0,false}, {0,-1,false},{0,1,true}}, 2, 40, {0.5, 1}, 0.1, 0.8, none, {0, -24, 90, 0.12, 2.4, {100,100,255,40}}),
     },
     
     foreground = {
-    
-        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5)
-    
+
     }
     },
     
@@ -110,6 +108,8 @@ PARTICLES_BODY = loadJson("data/particles/enemies/bodyTravel.json")
 function generate(amount, biome)
     local rooms = {}
     local biome = BIOMES[biome]
+
+    ambientLight = biome.ambientLight
 
     for num=0,amount - 1 do
 
