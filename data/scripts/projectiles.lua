@@ -187,6 +187,7 @@ function drawEnemyProjectile(projectile)
     drawSprite(ENEMY_PROJECTILE_IMAGES[projectile.image], projectile.pos.x, projectile.pos.y, 1, 1, projectile.vel:getRot() / 180 * 3.14)
 
     shine(projectile.pos.x, projectile.pos.y, projectile.radius * 5 + math.sin(globalTimer * 3) * 24, projectile.glowColor)
+    love.graphics.setCanvas(display)
 end
 
 -- Process enemy projectiles

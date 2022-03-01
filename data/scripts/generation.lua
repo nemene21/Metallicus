@@ -55,8 +55,7 @@ cave = {
 
     layoutPath = "data/layouts/cave/", nLayouts = 2,
 
-    ambientParticles = "data/particles/ambient/waterDrops.json",
-    particlesPosition = {396, -100},
+    ambientParticles = "data/particles/ambient/waterDrops.json", particleOffset = newVec(0, - 350),
 
     enemies = {
     slime = {spawnOn = "ground", frequency = 100},
@@ -76,18 +75,21 @@ sporeCavern = {
     
     decorations = {
     background = {
-        newDecoration("stalagmite", {"sporeCavern/shroom1.png", "sporeCavern/shroom2.png"}, {0,27}, {{0,0,false}, {0,-1,false},{0,1,true}}, 2, 40, {0.5, 1}, 0.1, 0.8, none, {0, -24, 90, 0.12, 2.4, {100,100,255,40}}),
+        
+        newDecoration("shroom", {"sporeCavern/shroom1.png", "sporeCavern/shroom2.png", "sporeCavern/shroom3.png"}, {0,27}, {{0,0,false}, {0,-1,false},{0,1,true}}, 2, 40, {0.5, 1}, 0.1, 0.8, none, {0, -24, 90, 0.12, 2.4, {100,100,255,40}}),
+
     },
     
     foreground = {
+
+        newDecoration("shroomVine", {"sporeCavern/shroomVine1.png","sporeCavern/shroomVine2.png"}, {0,9}, {{0, 0, true}, {0, 1, false}}, 2, 33, {0.5, 0}, 0.2, 0.5)
 
     }
     },
     
     layoutPath = "data/layouts/cave/", nLayouts = 2,
     
-    ambientParticles = "data/particles/ambient/waterDrops.json",
-    particlesPosition = {396, -100},
+    ambientParticles = "data/particles/ambient/spores.json",
     
     enemies = {
     slime = {spawnOn = "ground", frequency = 100},
@@ -116,7 +118,9 @@ function generate(amount, biome)
         local room = {textPopUps = newParticleSystem(0, 0, loadJson("data/particles/textParticles.json")),processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 
         -- Ambient particles
-        room.ambientParticles = newParticleSystem(biome.particlesPosition[1], biome.particlesPosition[2], loadJson(biome.ambientParticles))
+        room.ambientParticles = newParticleSystem(0, 0, loadJson(biome.ambientParticles))
+
+        room.particleOffset = biome.particleOffset or newVec(0, 0)
 
         -- Set tilemap
         local layout = nil
@@ -474,7 +478,7 @@ function roomDrawBg(room)
 
         if #DECORATION_IMAGES[B.name] ~= 0 then drawSprite(DECORATION_IMAGES[B.name][B.textureId], B.x, B.y, 1, 1, math.sin(B.x + B.y + globalTimer * B.windSpeed) * B.wind, 1, B.centering[1], B.centering[2]) end
 
-        if B.light ~= nil then shine(B.x + B.light[1], B.y + B.light[2], B.light[3] * math.sin(globalTimer * B.light[5]) * B.light[4] + B.light[3], B.light[6]) end
+        if B.light ~= nil then shine(B.x + B.light[1], B.y + B.light[2], B.light[3] * math.sin(globalTimer * B.light[5]) * B.light[4] + B.light[3], B.light[6]); love.graphics.setCanvas(display) end
         if B.particles ~= nil then B.particles:process(); setColor(255, 255, 255) end
 
     end
@@ -513,6 +517,8 @@ function roomDrawEdge(room)
     if room.exitParticles ~= nil then room.exitParticles:process(); room.exitParticles.spawning = #room.enemies ~= 0  end
 
     -- Ambient particles
+    room.ambientParticles.x = camera[1] + 400 + room.particleOffset.x; room.ambientParticles.y = camera[2] + 300 + room.particleOffset.y
+
     room.ambientParticles:process()
 
     love.graphics.setShader(SHADERS.PIXEL_PERFECT)
@@ -595,6 +601,7 @@ end
 
 -- Bodies
 function roomProcessEnemyBodies(room)
+    love.graphics.setCanvas(display)
 
     kill = {}
 
@@ -664,6 +671,7 @@ end
 
 -- Items
 function roomProcessItems(room)
+    love.graphics.setCanvas(display)
 
     kill = {}
     for id,I in ipairs(room.items) do

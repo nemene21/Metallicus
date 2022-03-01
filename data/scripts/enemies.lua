@@ -25,6 +25,7 @@ function processEnemy(enemy)
 
     enemy.flash = lerp(enemy.flash, 0, dt * 6)
 
+    love.graphics.setCanvas(display)
     return enemy.states[enemy.state](enemy, player)
 end
 

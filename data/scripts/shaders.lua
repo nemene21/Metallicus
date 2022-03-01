@@ -52,7 +52,6 @@ function shine(x,y,r,color)
     love.graphics.setCanvas(lightImage)
     setColor(color[1],color[2],color[3],color[4] or 255 * 0.5)
     love.graphics.draw(LIGHT_ROUND,x - camera[1],y - camera[2],0,r/300,r/300,LIGHT_ROUND:getWidth() * 0.5,LIGHT_ROUND:getHeight() * 0.5)
-    love.graphics.setCanvas(display)
     setColor(255,255,255)
 end
 

@@ -51,7 +51,8 @@ function slimeStateIdle(slime, player)
     end
 
     shine(slime.collider.x, slime.collider.y, 120, {0, 255, 80, 35})
-
+    love.graphics.setCanvas(display)
+    
     return slime
 end
 
@@ -135,6 +136,7 @@ function slimeStateJump(slime, player)
     love.graphics.setShader()
 
     shine(slime.collider.x, slime.collider.y, 120, {0, 255, 80, 35})
+    love.graphics.setCanvas(display)
 
     return slime
 end

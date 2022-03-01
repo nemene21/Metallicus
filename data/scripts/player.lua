@@ -220,6 +220,8 @@ end
 function drawPlayer(player)
     shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100,90}) -- Light
 
+    love.graphics.setCanvas(display)
+
     player = PLAYER_ANIMATIONS[player.animation](player)
 
     -- Drawing the player
