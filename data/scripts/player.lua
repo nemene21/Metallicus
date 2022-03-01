@@ -152,7 +152,7 @@ function processPlayer(player)
     if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, velocity, ROOM.tilemap.colliders)
     else player.collider = moveRect(player.collider, velocity, ROOM.tilemap.collidersWithFalltrough) end
 
-    if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(not player.flyMode) end -- Grounded
+    if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(player.flyMode); player.canCutJump = false end -- Grounded
 
     player.jumpPressedTimer = player.jumpPressedTimer - dt             -- Jump time
     if justPressed("space") and not debugLineOpen and not player.flyMode then player.jumpPressedTimer = 0.15 end
