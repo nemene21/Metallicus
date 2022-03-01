@@ -30,40 +30,75 @@ end
 BIOMES = {
 
 cave = {
-tilesetPath = "data/images/tilesets/cave/tileset.png",
-bgTilesetPath = "data/images/tilesets/cave/bg.png",
+    tilesetPath = "data/images/tilesets/cave/tileset.png",
+    bgTilesetPath = "data/images/tilesets/cave/bg.png",
 
-materials = {rock = 100, wood = 100},
+    materials = {rock = 100, wood = 100},
 
-decorations = {
-background = {
+    decorations = {
+    background = {
 
-    newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,80}}),
-    newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 4, 33, {0.5, 0}, 0, 0),
-    newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,40}})
+        newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,80}}),
+        newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 4, 33, {0.5, 0}, 0, 0),
+        newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,40}})
+
+    },
+
+    foreground = {
+
+        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5)
+
+    }
+    },
+
+    layoutPath = "data/layouts/cave/", nLayouts = 2,
+
+    ambientParticles = "data/particles/ambient/waterDrops.json",
+    particlesPosition = {396, -100},
+
+    enemies = {
+    slime = {spawnOn = "ground", frequency = 100},
+    giantFirefly = {spawnOn = "air", frequency = 50}
+    },
+
+    nEnemies = {a = 3, b = 5},
 
 },
-
-foreground = {
-
-    newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5)
-
-}
-},
-
-layoutPath = "data/layouts/cave/", nLayouts = 2,
-
-ambientParticles = "data/particles/ambient/waterDrops.json",
-particlesPosition = {396, -100},
-
-enemies = {
-slime = {spawnOn = "ground", frequency = 100},
-giantFirefly = {spawnOn = "air", frequency = 50}
-},
-
-nEnemies = {a = 3, b = 5},
-
-}
+sporeCavern = {
+    tilesetPath = "data/images/tilesets/sporeCavern/tileset.png",
+    bgTilesetPath = "data/images/tilesets/cave/bg.png",
+    
+    materials = {rock = 100, wood = 100},
+    
+    decorations = {
+    background = {
+    
+        newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,80}}),
+        newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 4, 33, {0.5, 0}, 0, 0),
+        newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,40}})
+    
+    },
+    
+    foreground = {
+    
+        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5)
+    
+    }
+    },
+    
+    layoutPath = "data/layouts/cave/", nLayouts = 2,
+    
+    ambientParticles = "data/particles/ambient/waterDrops.json",
+    particlesPosition = {396, -100},
+    
+    enemies = {
+    slime = {spawnOn = "ground", frequency = 100},
+    giantFirefly = {spawnOn = "air", frequency = 50}
+    },
+    
+    nEnemies = {a = 3, b = 5},
+    
+    }
 
 }
 
@@ -72,7 +107,7 @@ PARTICLES_ENEMY_DIE_BLAST = loadJson("data/particles/enemies/enemyDieBlast.json"
 
 PARTICLES_BODY = loadJson("data/particles/enemies/bodyTravel.json")
 
-function generate(amount,biome)
+function generate(amount, biome)
     local rooms = {}
     local biome = BIOMES[biome]
 
