@@ -6,7 +6,7 @@ function gameReload()
 
     postPro = "GLOW_AND_LIGHT"
 
-    ROOMS = generate(6,"cave")
+    ROOMS = generate(6,"sporeCavern")
     ROOM = ROOMS[roomOn]
 
     playerProjectiles = {}; enemyProjectiles = {}
