@@ -199,20 +199,22 @@ quack = QUACK_COMMAND
 
 function SHOW_STATS()
 
+    local letterYOffset = 58
+
     love.graphics.setCanvas(UI_LAYER)
 
-    outlinedText(12, 12, 2, "FPS: "..tostring(love.timer.getFPS()), {255, 255, 255}, 1, 1)
+    outlinedText(12, 12 + letterYOffset, 2, "FPS: "..tostring(love.timer.getFPS()), {255, 255, 255}, 1, 1)
 
     local objects = #ROOM.enemies + 2 + #ROOM.decorations.background + #ROOM.decorations.foreground + #ROOM.particleSystems + #ROOM.items + #playerProjectiles + #enemyProjectiles
-    outlinedText(12, 36, 2, "OBJECTS:   "..tostring(objects), {255, 255, 255}, 1, 1)
+    outlinedText(12, 36 + letterYOffset, 2, "OBJECTS:   "..tostring(objects), {255, 255, 255}, 1, 1)
 
-    outlinedText(12, 60, 2, "ROOMS:   "..tostring(#ROOMS), {255, 255, 255}, 1, 1)
+    outlinedText(12, 60 + letterYOffset, 2, "ROOMS:   "..tostring(#ROOMS), {255, 255, 255}, 1, 1)
 
-    outlinedText(12, 84, 2, "SEED:   "..tostring(love.math.getRandomSeed()), {255, 255, 255}, 1, 1)
+    outlinedText(12, 84 + letterYOffset, 2, "SEED:   "..tostring(love.math.getRandomSeed()), {255, 255, 255}, 1, 1)
 
-    outlinedText(12, 108, 2, "SOUNDS PLAYING:   "..tostring(#SOUNDS_PLAYING), {255, 255, 255}, 1, 1)
+    outlinedText(12, 108 + letterYOffset, 2, "SOUNDS PLAYING:   "..tostring(#SOUNDS_PLAYING), {255, 255, 255}, 1, 1)
 
-    outlinedText(12, 132, 2, "GLOBAL TIMER:   "..tostring(round(globalTimer)), {255, 255, 255}, 1, 1)
+    outlinedText(12, 132 + letterYOffset, 2, "GLOBAL TIMER:   "..tostring(round(globalTimer)), {255, 255, 255}, 1, 1)
 
     love.graphics.setCanvas(display)
 

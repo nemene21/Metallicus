@@ -26,6 +26,6 @@
     "width" : {"a" : 8, "b" : 12},
     "lifetime" : {"a" : 1, "b" : 1.01},
     
-    "drawMode" : "circleGlow"
+    "drawMode" : "circle"
 }
 }

@@ -11,7 +11,7 @@
 
 "spawnShape" : {
     "mode" : "square",
-    "data" : [8, 600]
+    "data" : [8, 300]
 },
 
 "particleData" : {

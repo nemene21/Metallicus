@@ -42,8 +42,9 @@ function processLight() SHADERS.GLOW_AND_LIGHT:send("lightImage",lightImage) end
 function resetLight()
 
     love.graphics.setCanvas(lightImage)
-    clear(ambientLight[1] * 0.5,ambientLight[2] * 0.5,ambientLight[3] * 0.5)
+    clear(ambientLight[1] * 0.5, ambientLight[2] * 0.5,ambientLight[3] * 0.5)
     love.graphics.setCanvas()
+
 end
 
 function shine(x,y,r,color)

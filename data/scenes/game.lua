@@ -44,7 +44,7 @@ function game()
 
         else -- Death animation
 
-            bindCamera(clamp(player.collider.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset), 3) -- Camera to the middle
+            bindCamera(camera[1] + 400, camera[2] + 300, 3) -- Camera to the middle
             player.collider.y = player.collider.y - dt * 80
 
             diedTimer:process()

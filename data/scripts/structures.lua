@@ -174,6 +174,10 @@ function processTeleporter(teleporter)
 
         love.graphics.setCanvas(particleCanvas)
         drawSprite(IMAGE_TELEPORTER_LASER, teleporter.x, teleporter.y - 53, (clamp((1 - teleporter.animTimer.time / teleporter.animTimer.timeMax) * 5, 0, 1)) + math.sin(globalTimer) * 0.1, 600, 0, 1, 0.5, 1)
+        
+        love.graphics.setCanvas(lightImage)
+        setColor(255, 255, 255, 150)
+        drawSprite(IMAGE_TELEPORTER_LASER, teleporter.x, teleporter.y - 53, (clamp((1 - teleporter.animTimer.time / teleporter.animTimer.timeMax) * 5, 0, 1)) + math.sin(globalTimer) * 0.1, 600, 0, 1, 0.5, 1)
 
         teleporter.teleportParticles:process()
         teleporter.teleportParticlesBurst:process()
