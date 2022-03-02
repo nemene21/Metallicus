@@ -1,7 +1,8 @@
 
 MATERIAL_SPRITES = {
 rock = {love.graphics.newImage("data/images/structures/rock3.png"), love.graphics.newImage("data/images/structures/rock2.png"), love.graphics.newImage("data/images/structures/rock1.png")},
-wood = {love.graphics.newImage("data/images/structures/wood1.png"), love.graphics.newImage("data/images/structures/wood1.png"), love.graphics.newImage("data/images/structures/wood1.png")}
+wood = {love.graphics.newImage("data/images/structures/wood1.png"), love.graphics.newImage("data/images/structures/wood1.png"), love.graphics.newImage("data/images/structures/wood1.png")},
+shroomOre = {love.graphics.newImage("data/images/structures/shroomOre1.png"),love.graphics.newImage("data/images/structures/shroomOre1.png")}
 }
 
 DESTROY_RESOURCE_PARTICLES = loadJson("data/particles/resourceDestroyed.json")
@@ -10,7 +11,7 @@ STRUCTURE_ID = 0.5
 
 function newMaterial(x, y, name, drops, hitSound)
     STRUCTURE_ID = STRUCTURE_ID + 1
-    local mat = {x = x, y = y, name = name, process = processMaterial, draw = drawMaterial, hp = 50, id = STRUCTURE_ID, sprite = love.math.random(1,3), hitTimer = 0, drops = drops, hitSound = hitSound}
+    local mat = {x = x, y = y, name = name, process = processMaterial, draw = drawMaterial, hp = 50, id = STRUCTURE_ID, sprite = love.math.random(1,#MATERIAL_SPRITES[name]), hitTimer = 0, drops = drops, hitSound = hitSound}
 
     return mat
 end
@@ -102,8 +103,12 @@ function newWood(x, y)
     return newMaterial(x, y, "wood", {wood = 250}, "hitOre")
 end
 
+function newShroomOre(x, y)
+    return newMaterial(x, y, "shroomOre", {stone = 250}, "hitOre")
+end
+
 MATERIAL_CONSTRUCTORS = {
-    rock = newRock, wood = newWood
+    rock = newRock, wood = newWood, shroomOre = newShroomOre
 }
 
 --                                                       TELEPORTER

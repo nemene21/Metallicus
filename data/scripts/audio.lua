@@ -21,6 +21,8 @@ giantFireflyShoot = love.audio.newSource("data/sounds/SFX/enemies/giantFireflySh
 quack = love.audio.newSource("data/sounds/SFX/quack.wav", "stream") -- Quack
 }
 
+masterVolume = 0
+
 SOUNDS_NUM_PLAYING = {}
 for id,S in pairs(SOUNDS) do SOUNDS_NUM_PLAYING[id] = 0 end
     
@@ -29,7 +31,7 @@ SOUNDS_PLAYING = {}
 function playSound(string, pitch, maxPlays)
     if (maxPlays or 99) > SOUNDS_NUM_PLAYING[string]  then
         local pitch = pitch or 1
-        local NEW_SOUND = SOUNDS[string]:clone(); NEW_SOUND:setPitch(pitch); NEW_SOUND:play()
+        local NEW_SOUND = SOUNDS[string]:clone(); NEW_SOUND:setPitch(pitch); NEW_SOUND:setVolume(masterVolume); NEW_SOUND:play()
         table.insert(SOUNDS_PLAYING,{NEW_SOUND, string})
         SOUNDS_NUM_PLAYING[string] = SOUNDS_NUM_PLAYING[string] + 1
     end

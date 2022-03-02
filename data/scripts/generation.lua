@@ -69,7 +69,7 @@ sporeCavern = {
     tilesetPath = "data/images/tilesets/sporeCavern/tileset.png",
     bgTilesetPath = "data/images/tilesets/cave/bg.png",
     
-    materials = {rock = 100, wood = 100},
+    materials = {shroomOre = 100, wood = 100},
 
     ambientLight = {20, 40, 100},
     
