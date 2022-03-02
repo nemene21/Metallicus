@@ -18,7 +18,7 @@ function drawParticleCircleGlow(P,w)
 
     love.graphics.setColor(P.color.r,P.color.g,P.color.b,P.color.a)
     love.graphics.circle("fill",P.x - camera[1],P.y - camera[2], w)
-    shine(P.x + 2, P.y + 2, w * 4 + 3, {P.color.r * 255,P.color.g * 255,P.color.b * 255,P.color.a * 0.5 * 255})
+    --shine(P.x + 2, P.y + 2, w * 4 + 3, {P.color.r * 255,P.color.g * 255,P.color.b * 255,P.color.a * 0.5 * 255})
 end
 
 function drawParticleSquare(P,data)

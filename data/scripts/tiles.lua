@@ -9,7 +9,9 @@ function removeTilemapTile(tilemap,x,y) tilemap.tiles[tostring(x)..","..tostring
 -- Drawing
 function drawTilemap(tilemap)
 
-    for id,T in pairs(tilemap.tiles) do
+    for id,T in ipairs(tilemap.indexes) do
+        id = T; T = tilemap.tiles[id]
+        
         local pos = splitString(id,",")
         local tileX = tonumber(pos[1]); local tileY = tonumber(pos[2])
         
@@ -20,6 +22,12 @@ function drawTilemap(tilemap)
         end
     end
     -- drawColliders(tilemap.colliders)
+end
+
+function buildTilemapIndexes(tilemap)
+    tilemap.indexes = {}
+
+    for id, T in pairs(tilemap.tiles) do table.insert(tilemap.indexes, id) end
 end
 
 -- Build colliders (goes trough all tiles, places a collider on them in the tilemap.collided if they dont have a neightbour somewhere)
@@ -95,8 +103,11 @@ function newTilemap(texture,tileSize,tiles)
         draw=drawTilemap,
 
         colliders={}, collidersWithFalltrough={},
-        buildColliders=buildTilemapColliders
+        buildColliders=buildTilemapColliders,
+        buildIndexes=buildTilemapIndexes
     }
+
+    tilemap:buildIndexes()
 
     return tilemap
 end

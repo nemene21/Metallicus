@@ -6,6 +6,8 @@ function menuReload()
     BG = newTilemap(loadSpritesheet("data/images/tilesets/cave/bg.png", 16, 16), 48)
     for x=-1,16 do for y=-1,13 do BG:setTile(x,y,{1,love.math.random(1,3)}) end end -- Place tiles
 
+    BG:buildIndexes()
+
     PLAY_BUTTON = newButton(400, 300, "Play")
 
     camera = {0,0}; boundCamPos = {0,0}; zoomInEffect = 1; UI_ALPHA = 255

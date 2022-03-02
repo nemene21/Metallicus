@@ -82,7 +82,7 @@ sporeCavern = {
     
     foreground = {
 
-        newDecoration("shroomVine", {"sporeCavern/shroomVine1.png","sporeCavern/shroomVine2.png"}, {0,9}, {{0, 0, true}, {0, 1, false}}, 2, 33, {0.5, 0}, 0.2, 0.5)
+        newDecoration("shroomVine", {"sporeCavern/shroomVine1.png","sporeCavern/shroomVine2.png","sporeCavern/shroomVine3.png"}, {0,9}, {{0, 0, true}, {0, 1, false}}, 2, 33, {0.5, 0}, 0.2, 0.5)
 
     }
     },
@@ -221,6 +221,8 @@ function generate(amount, biome)
         end
 
         room.tilemap:buildColliders()
+        room.tilemap:buildIndexes()
+        room.bgTilemap:buildIndexes()
 
         -- Set entrance and exit particles
         if entrancePos ~= nil then room.entranceParticles = newParticleSystem(entrancePos.x - 48,entrancePos.y,loadJson("data/particles/doorParticles.json"))
