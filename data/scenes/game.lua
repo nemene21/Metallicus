@@ -193,6 +193,12 @@ function swtichRoom(num)
 
     camera[1] = player.collider.x - 400; camera[2] = player.collider.y - 300
 
+    for id, S in ipairs(ROOM.structures) do
+
+        if S.onEnter ~= nil then S:onEnter() end
+
+    end
+
     playerProjectiles = {}; enemyProjectiles = {}
 
 end

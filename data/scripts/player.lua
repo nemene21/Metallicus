@@ -22,10 +22,10 @@ function newPlayer(x,y,stats)
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["shroomHat"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["shroomOre"]); startingWeapon.amount = 24
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["shroomRobe"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["shroomOre"]); startingWeapon.amount = 8
     hotbar:addItem(startingWeapon)
 
     -- Adding slots to the equipment section
@@ -298,9 +298,9 @@ function drawPlayerUI(player)
     love.graphics.setCanvas(UI_LAYER)
 
     -- Draw hotbar
-    drawInventory(player.hotbar)
     drawSprite(HOLDING_ARROW, 42 + INVENTORY_SPACING * player.slotOn, 558, 1, 1, 0, 0)
-
+    drawInventory(player.hotbar)
+    
     -- Draw hp bar
     local barLenght = 186 * player.hp / player.hpMax
 

@@ -232,7 +232,7 @@ CRAFTING_RECEPIES = loadJson("data/craftingRecipies.json")
 function newAnvil(x, y)
 
     local anvil = {
-        take = takeAwayMaterialsAnvil, x = x, y = y, process = processAnvil, draw = drawAnvil, open = false, slots = {}, checkCrafts = checkAnvilCrafts, scroll = 0, scrollVel = 0
+        take = takeAwayMaterialsAnvil, x = x, y = y, process = processAnvil, draw = drawAnvil, open = false, slots = {}, checkCrafts = checkAnvilCrafts, onEnter = checkAnvilCrafts, scroll = 0, scrollVel = 0
     }
 
     for id, C in ipairs(CRAFTING_RECEPIES) do
@@ -372,7 +372,7 @@ function processAnvil(anvil)
         anvil.scrollVel = anvil.scrollVel + getScroll() * 12
 
         anvil.scroll = anvil.scroll + anvil.scrollVel
-        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, - 21 - 56 * (#anvil.slots - 10), 0), dt * 40)
+        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, - 21 - 56 * (#anvil.slots - 10), 0), dt * 30)
 
         -- Draw crafting slots
         for id, S in ipairs(anvil.slots) do
