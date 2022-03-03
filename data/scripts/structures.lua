@@ -232,7 +232,7 @@ CRAFTING_RECEPIES = loadJson("data/craftingRecipies.json")
 function newAnvil(x, y)
 
     local anvil = {
-        take = takeAwayMaterialsAnvil, x = x, y = y, process = processAnvil, draw = drawAnvil, open = false, slots = {}, checkCrafts = checkAnvilCrafts
+        take = takeAwayMaterialsAnvil, x = x, y = y, process = processAnvil, draw = drawAnvil, open = false, slots = {}, checkCrafts = checkAnvilCrafts, scroll = 0, scrollVel = 0
     }
 
     for id, C in ipairs(CRAFTING_RECEPIES) do
@@ -368,61 +368,69 @@ function processAnvil(anvil)
 
         if justPressed("f") or not (math.abs(player.collider.x - anvil.x) < 64 and math.abs(player.collider.y - anvil.y) < 64) or not player.inventoryOpen then anvil.open = false; player.inventoryOpen = false end
 
+        anvil.scrollVel = lerp(anvil.scrollVel, 0, dt * 10)
+        anvil.scrollVel = anvil.scrollVel + getScroll() * 12
+
+        anvil.scroll = anvil.scroll + anvil.scrollVel
+        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, - 21 - 56 * (#anvil.slots - 10), 0), dt * 40)
+
         -- Draw crafting slots
         for id, S in ipairs(anvil.slots) do
             
-            local posY = 21 + 56 * id
+            local posY = 21 + 56 * id + anvil.scroll
 
-            setColor(255, 255 * boolToInt(S.craftable), 255 * boolToInt(S.craftable))
-            drawSprite(SLOT_IMAGES["equipmentSlot"], 744, posY, S.scale, S.scale, 0, 0) -- Draw slot
-            drawSprite(ITEM_IMGES[S.name], 744, posY, S.scale, S.scale, 0, 0)
+            if posY < 624 and posY > -24 then
 
-            if S.amount ~= 1 then
+                setColor(255, 255 * boolToInt(S.craftable), 255 * boolToInt(S.craftable))
+                drawSprite(SLOT_IMAGES["equipmentSlot"], 744, posY, S.scale, S.scale, 0, 0) -- Draw slot
+                drawSprite(ITEM_IMGES[S.name], 744, posY, S.scale, S.scale, 0, 0)
 
-                outlinedText(768, posY + 5, 2, S.amount, {255,255,255}, 1, 1, 1)
+                if S.amount ~= 1 then
 
-            end
-            
-            for idMat, M in ipairs(S.materials) do -- Draw materials
+                    outlinedText(768, posY + 5, 2, S.amount, {255,255,255}, 1, 1, 1)
 
-                setColor(255, 255, 255)
-                drawSprite(ITEM_IMGES[M[1]], 744 - 21 - 56 * idMat, posY, 1, 1, 0, 0)
+                end
+                
+                for idMat, M in ipairs(S.materials) do -- Draw materials
 
-                outlinedText(768 - 21 - 56 * idMat, posY + 5, 2, M[2], {255, 255 * boolToInt(M[3]), 255 * boolToInt(M[3])}, 1, 1, 1)
+                    setColor(255, 255, 255)
+                    drawSprite(ITEM_IMGES[M[1]], 744 - 21 - 56 * idMat, posY, 1, 1, 0, 0)
 
-            end
+                    outlinedText(768 - 21 - 56 * idMat, posY + 5, 2, M[2], {255, 255 * boolToInt(M[3]), 255 * boolToInt(M[3])}, 1, 1, 1)
 
-            if xM > 720 and xM < 768 and yM > posY - 24 and yM < posY + 24 then -- If hovering over slot
-
-                S.scale = lerp(S.scale, 1.2, dt * 20)
-
-                if mouseJustPressed(1) and S.craftable then -- I pressed
-                    
-                    S.scale = 1.4
-
-                    -- Give the item
-                    local item = ITEMS[S.name]; item.amount = S.amount
-
-                    item = player.hotbar:addItem(item)
-
-                    if item.amount ~= 0 then player.inventory:addItem(item) end
-
-                    if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 24 * (boolToInt(player.collider.x - camera[1] < xM) * 2 - 1), player.collider.y, item)) end
-                    
-                    -- Remove the requrements
-
-                    anvil:take(id)
-
-                    -- Cheeck crafts again
-                    anvil:checkCrafts()
                 end
 
-            else
+                if xM > 720 and xM < 768 and yM > posY - 24 and yM < posY + 24 then -- If hovering over slot
 
-                S.scale = lerp(S.scale, 1, dt * 20)
+                    S.scale = lerp(S.scale, 1.2, dt * 20)
 
+                    if mouseJustPressed(1) and S.craftable then -- I pressed
+                        
+                        S.scale = 1.4
+
+                        -- Give the item
+                        local item = ITEMS[S.name]; item.amount = S.amount
+
+                        item = player.hotbar:addItem(item)
+
+                        if item.amount ~= 0 then player.inventory:addItem(item) end
+
+                        if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 24 * (boolToInt(player.collider.x - camera[1] < xM) * 2 - 1), player.collider.y, item)) end
+                        
+                        -- Remove the requrements
+
+                        anvil:take(id)
+
+                        -- Cheeck crafts again
+                        anvil:checkCrafts()
+                    end
+
+                else
+
+                    S.scale = lerp(S.scale, 1, dt * 20)
+
+                end
             end
-
         end
 
         love.graphics.setCanvas(display)
@@ -434,7 +442,7 @@ function processAnvil(anvil)
         drawSprite(IMAGE_F, anvil.x + 3, anvil.y - 86 + math.sin(globalTimer * 2) * 9)
         love.graphics.setCanvas(display)
 
-        if justPressed("f") then player.inventoryOpen = false; anvil.open = true; player.inventoryOpen = true end
+        if justPressed("f") then player.inventoryOpen = false; anvil.open = true; player.inventoryOpen = true; anvil.scroll = 0; anvil.scrollVel = 0 end
 
     end
 

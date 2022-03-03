@@ -23,5 +23,60 @@
     "name" : "shroomRobe",
     "materials" : [["shroomOre", 12]],
     "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 99999]],
+    "amount" : 1
+},
+{
+    "name" : "stone",
+    "materials" : [["wood", 3262637623]],
+    "amount" : 1
 }
 ]

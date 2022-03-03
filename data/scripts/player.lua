@@ -318,7 +318,7 @@ function drawPlayerUI(player)
 
     -- Scroll
 
-    if getScroll() ~= 0 then
+    if getScroll() ~= 0 and not player.inventoryOpen then
 
         -- playSound("scroll")
         player.slotOn = wrap(player.slotOn - getScroll(), 0, 4)
