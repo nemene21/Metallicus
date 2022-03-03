@@ -22,10 +22,10 @@ function newPlayer(x,y,stats)
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["headArmor"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["shroomHat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["bodyArmor"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["shroomRobe"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
     -- Adding slots to the equipment section
@@ -247,10 +247,10 @@ function drawPlayer(player)
 
     -- HEAD AND BODY
     drawSprite(PLAYER_BODY, player.collider.x + player.body.x * lookAt, player.collider.y + player.body.y, lookAt, 1, player.bodyR)
-    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt, player.collider.y + player.body.y, lookAt, 1, player.bodyR) end
+    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt + (player.wearing.slots["1,1"].item.xOffset or 0) * lookAt, player.collider.y + player.body.y + (player.wearing.slots["1,1"].item.yOffset or 0), lookAt, 1, player.bodyR) end
 
     drawSprite(PLAYER_HEAD, player.collider.x + player.head.x * lookAt, player.collider.y + player.head.y, lookAt, 1, player.headR)
-    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt, player.collider.y + player.head.y, lookAt, 1, player.headR) end
+    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt + (player.wearing.slots["1,0"].item.xOffset or 0) * lookAt, player.collider.y + player.head.y + (player.wearing.slots["1,0"].item.yOffset or 0), lookAt, 1, player.headR) end
 
     -- ITEM IN HAND
     local holding = tostring(player.slotOn)..",0"

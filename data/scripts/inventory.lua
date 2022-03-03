@@ -465,6 +465,9 @@ bodyArmor = love.graphics.newImage("data/images/items/bodyArmor.png"),
 headArmor = love.graphics.newImage("data/images/items/helmet.png"),
 blunderbuss = love.graphics.newImage("data/images/items/blunderbuss.png"),
 bat = love.graphics.newImage("data/images/items/bat.png"),
+shroomOre = love.graphics.newImage("data/images/items/shroomOre.png"),
+shroomHat = love.graphics.newImage("data/images/items/shroomHat.png"),
+shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png")
 }
 
 -- Add slot function

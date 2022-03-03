@@ -11,18 +11,27 @@ function handleCommand(cmd)
 
 end
 
+function ERROR(des)
+    print("<CMD_ERROR> - " .. des)
+end
+
 --                                                       COMMANDS
 
 function GIVE_COMMAND(cmd)
 
-    local item = deepcopyTable(ITEMS[cmd[2]]); item.amount = tonumber(cmd[3] or "1")
-
-    item = player.hotbar:addItem(item)
-
-    if item.amount ~= 0 then player.inventory:addItem(item) end
-
-    if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 24 * (boolToInt(player.collider.x - camera[1] < xM) * 2 - 1), player.collider.y, item)) end
+    local item = deepcopyTable(ITEMS[cmd[2]])
     
+    if item ~= nil then
+        item.amount = tonumber(cmd[3] or "1")
+
+        item = player.hotbar:addItem(item)
+
+        if item.amount ~= 0 then player.inventory:addItem(item) end
+
+        if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 24 * (boolToInt(player.collider.x - camera[1] < xM) * 2 - 1), player.collider.y, item)) end
+    else
+        ERROR("This item does not exist :/")
+    end
 end
 
 function WARP_COMMAND(cmd)

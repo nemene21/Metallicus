@@ -10,6 +10,17 @@
     "types" : ["item"]
 },
 
+"shroomOre" : {
+    "texture" : "shroomOre",
+    "name" : "Shroom Ore", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
 "stick" : {
     "texture" : "stick",
     "name" : "Stick", "rarity" : "common",
@@ -240,8 +251,22 @@
 
     "holdMode" : "hold",
 
-    "tooltipEquipName" : "when worn:",
     "stats" : {"def" : 20},
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
+"shroomRobe" : {
+    "texture" : "shroomRobe",
+    "name" : "Shroom Robe", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 20},
+    "yOffset" : 7,
+    "xOffset" : 1,
 
     "maxStack" : 1,
 
@@ -254,8 +279,22 @@
 
     "holdMode" : "hold",
 
-    "tooltipEquipName" : "when worn:",
     "stats" : {"def" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"shroomHat" : {
+    "texture" : "shroomHat",
+    "name" : "Shroom Hat", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10},
+
+    "yOffset" : -12,
 
     "maxStack" : 1,
 

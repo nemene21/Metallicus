@@ -13,5 +13,15 @@
     "name" : "jelloRod",
     "materials" : [["jello", 8], ["stick", 2]],
     "amount" : 1
+},
+{
+    "name" : "shroomHat",
+    "materials" : [["shroomOre", 8]],
+    "amount" : 1
+},
+{
+    "name" : "shroomRobe",
+    "materials" : [["shroomOre", 12]],
+    "amount" : 1
 }
 ]
