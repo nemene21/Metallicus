@@ -2,6 +2,9 @@
 -- All global values used in all scenes (display, textures, options, etc.)
 function love.load()
 
+    UI_ALPHA = 255
+    postPro = ""
+
     -- Get screenRes
     screenRes = {love.graphics.getWidth(),love.graphics.getHeight()}
 

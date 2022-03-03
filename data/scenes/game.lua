@@ -94,11 +94,11 @@ function game()
 
         ROOM:processParticles()
 
-        player:resetStats()
-
         if player.hp > 0 then -- Draw player
             player:draw()
         end
+
+        player:resetStats()
 
         player:drawUI()
 

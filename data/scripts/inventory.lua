@@ -252,11 +252,11 @@ end
 
 -- TOOLTIP
 STAT_NAMES = {
-dmg = "damage", def = "defense", attackTime = "attack speed"
+dmg = "damage", def = "defense", attackTime = "attack speed", mag = "magic damage"
 }
 
 STAT_MEASURES = {
-attackTime = "s", def = "%"
+attackTime = "s", def = "%", mag = "%"
 }
 
 TOOLTIP_OFFSET = 80
@@ -405,6 +405,9 @@ function MODE_SHOOT(player,headed,item)
         item.projectile.burstTimer = item.projectile.burstWait
         item.projectile.burstsLeft = item.projectile.burstsLeft - 1
 
+        -- Get multiplier
+        local multiplier = (100 + (player[item.damageType] or 0)) * 0.01
+
         local projectileOffset = newVec(36, 0); projectileOffset:rotate(rotation + item.projectile.offsetRotation * -turned)
 
         if item.projectile.particlesSpawn ~= nil then
@@ -415,7 +418,7 @@ function MODE_SHOOT(player,headed,item)
 
         for x=1, item.stats.amount or 1 do
             -- Summon projectile
-            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), item.stats.dmg, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
 
             if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
 

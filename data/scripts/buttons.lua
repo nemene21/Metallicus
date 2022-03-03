@@ -9,7 +9,7 @@ function processButton(btn)
 
     local pressed = false
 
-    if xM > btn.x - 96 and xM < btn.x + 96 and yM > btn.y - 24 and yM < btn.y + 24 then
+    if xM > btn.x - 96 and xM < btn.x + 96 and yM > btn.y - 36 and yM < btn.y + 36 then
 
         btn.animation = lerp(btn.animation, 1, dt * 10)
 

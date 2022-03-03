@@ -2,9 +2,7 @@
 function splashScreenReload()
     timer = 5; GRAVITY = 540; shouldFall = 1; squash = newVec(1,1); flash = 0; titleRotation = 1
     TITLE = love.graphics.newImage("data/images/splashScreen/title.png"); titleY = -80
-    STOMP_PARTICLES = newParticleSystem(400,325,loadJson("data/particles/splashScreen/splashScreenParticles.json"))
-    TUNE = love.audio.newSource("data/sound/SFX/splashScreen/intro.wav","stream")
-    TUNE:play()
+
 end
 
 function splashScreenDie()
@@ -21,12 +19,10 @@ function splashScreen()
     timer = timer - dt
     titleY = titleY + dt * GRAVITY * shouldFall
 
-    if titleY > 300 then titleY = 300; shouldFall = 0; squash.x = 1.4; squash.y = 0.75; flash = 1; STOMP_PARTICLES.ticks = 1 end
+    if titleY > 300 then titleY = 300; shouldFall = 0; squash.x = 1.4; squash.y = 0.75; flash = 1 end
 
     local speed = 15
     squash.x = lerp(squash.x,1,dt*speed); squash.y = lerp(squash.y,1,dt*speed); flash = lerp(flash,0,dt*speed*0.5)
-
-    STOMP_PARTICLES:process()
 
     setColor(0, 0, 0, 60)
     local scale = clamp(titleY,0,300)/300

@@ -48,7 +48,9 @@ function newPlayer(x,y,stats)
  
         dashingFrames = 0, dashForce = 0, dashTimer = 0, dashJustRecharged = 1, dashSpeed = 700, dashInputTimer = 0,
 
-        iFrames = 0, damageReduction = 0,
+        iFrames = 0,
+        
+        damageReduction = 0, magicDamage = 0,
 
         hp = 100, hpMax = 100, hpBarDelayed = 0, 
 
@@ -71,6 +73,7 @@ function processPlayer(player)
         if S.item ~= nil then
             if S.item.stats ~= nil then
                 player.damageReduction = player.damageReduction + S.item.stats.def or 0
+                player.magicDamage = player.magicDamage + S.item.stats.mag or 0
             end
         end
     end
@@ -279,6 +282,7 @@ function resetPlayerStats(player)
         if S.item ~= nil then
             if S.item.stats ~= nil then
                 player.damageReduction = player.damageReduction - S.item.stats.def or 0
+                player.magicDamage = player.magicDamage - S.item.stats.mag or 0
             end
         end
     end

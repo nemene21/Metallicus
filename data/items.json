@@ -68,6 +68,8 @@
         "attackTimer" : 0, "attackTime" : 0.3, "distance" : 16, "swing" : 0.25
     },
 
+    "damageType" : "magicDamage",
+
     "projectile" : {
         "speed" : 480,
         "range" : 99999,
@@ -108,6 +110,8 @@
     "holdData" : {
         "attackTimer" : 0, "distance" : 16, "swing" : 0.25
     },
+
+    "damageType" : "magicDamage",
 
     "projectile" : {
         "speed" : 480,
@@ -264,7 +268,7 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 20},
+    "stats" : {"def" : 20, "mag" : 15},
     "yOffset" : 7,
     "xOffset" : 1,
 
@@ -292,7 +296,7 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 10},
+    "stats" : {"def" : 10, "mag" : 20},
 
     "yOffset" : -12,
 
