@@ -131,6 +131,8 @@ function processPlayerProjectiles(playerProjectiles)
 
         else
             if P.lifetime < 0 then table.insert(kill,id); if P.particlesDie ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.particlesDie]))) end
+        else
+            if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id) end
         end
         end
 
@@ -199,7 +201,7 @@ function processEnemyProjectiles(enemyProjectiles)
 
         P:process()
 
-        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 and player.dashingFrames == 0 then
+        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 and player.dashingFrames == 0 and not playerDied then
             
             table.insert(kill, id); player.iFrames = 1
 
