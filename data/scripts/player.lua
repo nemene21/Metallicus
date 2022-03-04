@@ -22,12 +22,6 @@ function newPlayer(x,y,stats)
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["shroomOre"]); startingWeapon.amount = 24
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["shroomOre"]); startingWeapon.amount = 8
-    hotbar:addItem(startingWeapon)
-
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")
     wearing = addSlot(wearing,1,1,"bodyArmor","bodyArmor","equipmentSlot")
@@ -322,6 +316,23 @@ function drawPlayerUI(player)
 
         -- playSound("scroll")
         player.slotOn = wrap(player.slotOn - getScroll(), 0, 4)
+
+        local holding = tostring(player.slotOn)..",0"
+
+        if player.hotbar.slots[holding].item ~= nil then
+
+            if player.hotbar.slots[holding].item.holdData ~= nil then
+
+                -- Reset weapon cooldown and animation
+                if player.hotbar.slots[holding].item.holdData.attackTimer ~= nil then player.hotbar.slots[holding].item.holdData.attackTimer = player.hotbar.slots[holding].item.stats.attackTime end
+
+                if player.hotbar.slots[holding].item.holdData.rotation ~= nil then player.hotbar.slots[holding].item.holdData.rotation = player.hotbar.slots[holding].item.holdData.rotateTo end
+
+                if player.hotbar.slots[holding].item.holdData.spriteRotation ~= nil then player.hotbar.slots[holding].item.holdData.spriteRotation = player.hotbar.slots[holding].item.holdData.spriteRotateTo end
+
+            end
+
+        end
 
     end
 

@@ -372,7 +372,7 @@ function processAnvil(anvil)
         anvil.scrollVel = anvil.scrollVel + getScroll() * 12
 
         anvil.scroll = anvil.scroll + anvil.scrollVel
-        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, - 21 - 56 * (#anvil.slots - 10), 0), dt * 30)
+        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, clamp(- 21 - 56 * (#anvil.slots - 10), -600, 0), 0), dt * 30)
 
         -- Draw crafting slots
         for id, S in ipairs(anvil.slots) do
