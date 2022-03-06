@@ -157,6 +157,7 @@ function processTeleporter(teleporter)
         if justPressed("f") then
 
             teleporter.pressed = true
+
             shake(8, 55, 0.1)
 
             playSound("teleport")
@@ -201,7 +202,7 @@ function processTeleporter(teleporter)
 
         roomOn = 1
 
-        ROOMS = generate(8,"cave")
+        ROOMS = generate(8,fetchNextBiome())
         ROOM = ROOMS[roomOn]
     
         playerProjectiles = {}; enemyProjectiles = {}
@@ -377,7 +378,7 @@ function processAnvil(anvil)
         -- Draw crafting slots
         for id, S in ipairs(anvil.slots) do
             
-            local posY = 21 + 56 * id + anvil.scroll
+            local posY = 56 * id + anvil.scroll
 
             if posY < 624 and posY > -24 then
 

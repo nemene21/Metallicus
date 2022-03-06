@@ -77,6 +77,18 @@ function STATS_COMMAND(cmd)
 
 end
 
+function SAY_COMMAND(cmd)
+
+    text = ""
+
+    for id, word in ipairs(cmd) do
+        if id ~= 1 then text = text.." "..word end
+    end
+
+    player:say(text)
+
+end
+
 function DIE_COMMAND(cmd)
 
     player.hp = 0
@@ -92,6 +104,12 @@ end
 function QUACK_COMMAND(cmd)
 
     playSound("quack")
+
+end
+
+function SET_QUAKE_COMMAND(cmd)
+
+    timeUntillQuake = tonumber(cmd[2] or timeUntillQuake)
 
 end
 
@@ -178,6 +196,16 @@ function HELP_COMMAND(cmd)
     print("\n ---------------------------------------------------- \n")
 
     print([[
+    setQuake:
+       
+       args: time
+
+       desc: Sets the quake time
+    ]])
+
+    print("\n ---------------------------------------------------- \n")
+
+    print([[
     quack:
        
        args: _
@@ -203,6 +231,10 @@ clearRoom = CLEAR_ROOM_COMMAND,
 
 die = DIE_COMMAND,
 
+setQuake = SET_QUAKE_COMMAND,
+
+say = SAY_COMMAND,
+
 quack = QUACK_COMMAND
 }
 
@@ -224,6 +256,8 @@ function SHOW_STATS()
     outlinedText(12, 108 + letterYOffset, 2, "SOUNDS PLAYING:   "..tostring(#SOUNDS_PLAYING), {255, 255, 255}, 1, 1)
 
     outlinedText(12, 132 + letterYOffset, 2, "GLOBAL TIMER:   "..tostring(round(globalTimer)), {255, 255, 255}, 1, 1)
+
+    outlinedText(12, 156 + letterYOffset, 2, "UNTIL QUAKE:   "..tostring(round(timeUntillQuake)), {255, 255, 255}, 1, 1)
 
     love.graphics.setCanvas(display)
 

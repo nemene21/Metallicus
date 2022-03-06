@@ -3,6 +3,30 @@ require "data.scripts.structures"
 
 DECORATION_IMAGES = {}
 
+BIOME_ORDER = {}
+
+function fetchNextBiome()
+
+    for id, B in pairs(BIOME_ORDER) do
+
+        if B ~= 0 then
+
+            BIOME_ORDER[id] = BIOME_ORDER[id] - 1
+            return id
+
+        end
+
+    end
+
+end
+
+function resetBiomes()
+    BIOME_ORDER = {
+        cave = 3,
+        sporeCavern = -1
+    }
+end
+
 function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light)
 
     -- LIGHT:
@@ -113,6 +137,9 @@ function generate(amount, biome)
 
     ambientLight = biome.ambientLight
 
+    timeUntillQuake = (18 * amount) * 0.33
+    quakeWarnings = 3
+
     for num=0,amount - 1 do
 
         local room = {textPopUps = newParticleSystem(0, 0, loadJson("data/particles/textParticles.json")),processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
@@ -121,6 +148,8 @@ function generate(amount, biome)
         room.ambientParticles = newParticleSystem(0, 0, loadJson(biome.ambientParticles))
 
         room.particleOffset = biome.particleOffset or newVec(0, 0)
+
+        room.playerTookHits = 0
 
         -- Set tilemap
         local layout = nil
@@ -569,6 +598,12 @@ function roomProcessEnemies(room)
         if E.hp < 1 then table.insert(kill,id)
 
             shake(12 * E.knockBackResistance, 2, 0.1)
+            if love.math.random(0, 100) > 90 then
+
+                local say = {"That "..E.name.." stood no chance!", "Get rekt B)", "Destroyed >:D"}
+                player:say(say[love.math.random(1, #say)])
+
+            end
         
             local particlesAdding = deepcopyTable(PARTICLES_ENEMY_DIE_BLAST)
             particlesAdding.rotation = E.knockback:getRot()
@@ -592,6 +627,30 @@ function roomProcessEnemies(room)
 
             end
 
+            if #room.enemies - #kill == 0 then
+
+                local say = {
+                    {"That was easy!", "Sweeped >:D", "Get out of my lobby!"},
+                    {"Alright clear :I", "Moving on, moving on...", "Ow, that hurt :("},
+                    {"I should avoid bullets...", "I am in bad at dodging :(", "I should get better at the game!"}
+                }
+
+                if room.playerTookHits == 0 then
+
+                    player:say(say[1][love.math.random(1, 3)])
+
+                else if room.playerTookHits < 3 then
+
+                    player:say(say[2][love.math.random(1, 3)])
+
+                else
+
+                    player:say(say[3][love.math.random(1, 3)])
+
+                end end
+
+            end
+
             table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, particlesAdding))
 
             if E.hasNoBodyOnDeath == nil then table.insert(room.enemyBodies, {image=E.image, collider=E.collider, vel=newVec(E.knockback.x * 2, E.knockback.y * 2), hp=1, particles=newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(PARTICLES_BODY))}) end
@@ -603,17 +662,15 @@ end
 
 -- Bodies
 function roomProcessEnemyBodies(room)
-    love.graphics.setCanvas(display)
+    love.graphics.setCanvas(particleCanvas)
 
     kill = {}
 
     SHADERS.FLASH:send("intensity", 1); love.graphics.setShader(SHADERS.FLASH)
+
     for id,E in ipairs(room.enemyBodies) do
 
         E.collider = moveRect(E.collider, E.vel, room.tilemap.collidersWithFalltrough)
-
-        E.particles.x = E.collider.x; E.particles.y = E.collider.y
-        E.particles:process()
 
         E.vel.x = lerp(E.vel.x, 0, dt * 0.1)
         E.vel.y = math.min(E.vel.y + dt * 1200, 800)
@@ -622,6 +679,9 @@ function roomProcessEnemyBodies(room)
         if E.collider.touching.y ~= 0 then E.collider.y = E.collider.y - E.vel.y * dt; E.vel.y = E.vel.y * -0.8; E.hp = E.hp - 1 end
 
         drawSprite(ENEMY_IMAGES[E.image], E.collider.x, E.collider.y, 1, 1, E.vel:getLen() * 0.001 * (boolToInt(E.vel.x > 0) * 2 - 1))
+
+        E.particles.x = E.collider.x; E.particles.y = E.collider.y
+        E.particles:process()
 
         if E.hp <= 0 then
             
@@ -641,6 +701,7 @@ function roomProcessEnemyBodies(room)
     end room.enemyBodies = wipeKill(kill, room.enemyBodies)
     love.graphics.setShader()
 
+    love.graphics.setCanvas(display)
 end
 
 -- Processing

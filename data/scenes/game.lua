@@ -1,12 +1,19 @@
 
 function gameReload()
+
+    resetBiomes()
     
     player = newPlayer(300,540,{})
+
     roomOn = 1
 
     postPro = "GLOW_AND_LIGHT"
 
-    ROOMS = generate(6,"sporeCavern")
+    timeUntillWarning = 0
+    quakeWarnings = 3
+    quakeProjectileTimer = 0
+
+    ROOMS = generate(6,fetchNextBiome())
     ROOM = ROOMS[roomOn]
 
     playerProjectiles = {}; enemyProjectiles = {}
@@ -38,6 +45,7 @@ function game()
     -- Loop
     if not paused then
         ROOM:drawBg()
+
 
         if player.hp > 0 then
             player:process()
@@ -106,6 +114,49 @@ function game()
 
         for id,P in ipairs(playerProjectiles) do P:draw() end
         for id,P in ipairs(enemyProjectiles) do P:draw() end
+
+        -- Earthquake
+        timeUntillQuake = timeUntillQuake - dt
+        if timeUntillQuake < 0 then
+            
+            timeUntillQuake = (18 * #ROOMS) * 0.33
+            quakeWarnings = quakeWarnings - 1
+
+            if quakeWarnings ~= 0 then
+                local say = {"The ground is shaking D:", "Shiver me timbers!", "Oww thats a big shake :/"}
+                player:say(say[love.math.random(1, #say)], 4)
+
+                shake(14, 12, 0.15, 4)
+            else
+
+                local say = {"This time it is for real!", "The cave is going to collapse :(", "AAAAaaaaAAAAaaaa!!!"}
+                player:say(say[love.math.random(1, #say)], 4)
+
+            end
+        end
+
+        if quakeWarnings == 0 then
+
+            shake(4, 2, 0.5, 4)
+
+            quakeProjectileTimer = quakeProjectileTimer - dt
+
+            if quakeProjectileTimer < 0 then
+
+                quakeProjectileTimer = 0.25
+
+                if love.math.random(1,2) == 2 then
+                    
+                    table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(love.math.random(ROOM.endLeft.x, ROOM.endRight.x), ROOM.endUp.y + 10), 200, -90, 24, 10, {255,200,200}))
+                
+                else
+
+                    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(love.math.random(ROOM.endLeft.x, ROOM.endRight.x), ROOM.endUp.y + 10), 200, -90, 18, 10, {255,200,200}))
+
+                end
+            end
+
+        end
 
         -- Draw dead player
         if player.hp <= 0 then

@@ -202,7 +202,9 @@ function processEnemyProjectiles(enemyProjectiles)
         P:process()
 
         if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 and player.dashingFrames == 0 and not playerDied then
-            
+
+            ROOM.playerTookHits = ROOM.playerTookHits + 1
+
             table.insert(kill, id); player.iFrames = 1
 
             table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))

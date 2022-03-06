@@ -21,7 +21,7 @@ giantFireflyShoot = love.audio.newSource("data/sounds/SFX/enemies/giantFireflySh
 quack = love.audio.newSource("data/sounds/SFX/quack.wav", "stream") -- Quack
 }
 
-masterVolume = 1
+masterVolume = 0
 
 SOUNDS_NUM_PLAYING = {}
 for id,S in pairs(SOUNDS) do SOUNDS_NUM_PLAYING[id] = 0 end

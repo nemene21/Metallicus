@@ -181,9 +181,9 @@
     "types" : ["item"]
 },
 
-"sword" : {
-    "texture" : "sword",
-    "name" : "Sword", "rarity" : "uncommon",
+"stoneSword" : {
+    "texture" : "stoneSword",
+    "name" : "Stone Sword", "rarity" : "uncommon",
 
     "holdMode" : "slash",
     "armRTaken" : true, "armLTaken" : false,
@@ -249,9 +249,9 @@
     "types" : ["item"]
 },
 
-"bodyArmor" : {
-    "texture" : "bodyArmor",
-    "name" : "Chestplate", "rarity" : "rare",
+"stoneArmor" : {
+    "texture" : "stoneArmor",
+    "name" : "Stone Armor", "rarity" : "rare",
 
     "holdMode" : "hold",
 
@@ -260,6 +260,19 @@
     "maxStack" : 1,
 
     "types" : ["item","bodyArmor"]
+},
+
+"stoneHelmet" : {
+    "texture" : "stoneHelmet",
+    "name" : "Stone Helmet", "rarity" : "epic",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
 },
 
 "shroomRobe" : {
@@ -275,19 +288,6 @@
     "maxStack" : 1,
 
     "types" : ["item","bodyArmor"]
-},
-
-"headArmor" : {
-    "texture" : "headArmor",
-    "name" : "Helmet", "rarity" : "epic",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 10},
-
-    "maxStack" : 1,
-
-    "types" : ["item","headArmor"]
 },
 
 "shroomHat" : {

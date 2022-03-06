@@ -5,12 +5,19 @@ PARTICLES_ENEMY_HIT = loadJson("data/particles/enemies/enemyhit.json")
 
 ENEMY_ID = 0
 
+ENEMY_NAMES = {
+slime="slime",
+giantFirefly="giant firefly"
+}
+
 function buildEnemy(name, x, y)
 
     local enemy = enemies[name](x, y)
     enemy.process = processEnemy
     enemy.hit = hitEnemy; enemy.flash = 0
     
+    enemy.name = ENEMY_NAMES[name]
+
     enemy.ID = ENEMY_ID
     ENEMY_ID = ENEMY_ID + 1
 

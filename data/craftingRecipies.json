@@ -5,13 +5,23 @@
     "amount" : 2
 },
 {
-    "name" : "sword",
-    "materials" : [["stone", 4], ["stick", 2]],
+    "name" : "stoneSword",
+    "materials" : [["stone", 6], ["stick", 4]],
+    "amount" : 1
+},
+{
+    "name" : "stoneArmor",
+    "materials" : [["stone", 12]],
+    "amount" : 1
+},
+{
+    "name" : "stoneHelmet",
+    "materials" : [["stone", 8]],
     "amount" : 1
 },
 {
     "name" : "jelloRod",
-    "materials" : [["jello", 8], ["stick", 2]],
+    "materials" : [["jello", 12], ["stick", 4]],
     "amount" : 1
 },
 {
@@ -22,61 +32,6 @@
 {
     "name" : "shroomRobe",
     "materials" : [["shroomOre", 12]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 99999]],
-    "amount" : 1
-},
-{
-    "name" : "stone",
-    "materials" : [["wood", 3262637623]],
     "amount" : 1
 }
 ]

@@ -32,11 +32,13 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
 
     return {
-        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
+        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
 
         collider=newRect(x,y,30,46), justLanded = false,
 
         inventoryOpen=false, slotOn = 1,
+        
+        text = "", lettersLoaded = "", letterTimer = 0, speakTimer = 0, textFadeTimer = 0, textPriority = 0,
 
         walkSoundTimer = newTimer(0.2), speed = 300,
  
@@ -66,8 +68,8 @@ function processPlayer(player)
 
         if S.item ~= nil then
             if S.item.stats ~= nil then
-                player.damageReduction = player.damageReduction + S.item.stats.def or 0
-                player.magicDamage = player.magicDamage + S.item.stats.mag or 0
+                player.damageReduction = player.damageReduction + (S.item.stats.def or 0)
+                player.magicDamage = player.magicDamage + (S.item.stats.mag or 0)
             end
         end
     end
@@ -211,9 +213,6 @@ end
 
 
 
-
-
-
 function drawPlayer(player)
     shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100,90}) -- Light
 
@@ -268,6 +267,10 @@ function drawPlayer(player)
     -- drawCollider(player.collider)
 end
 
+
+
+
+
 function resetPlayerStats(player)
 
     -- Update stats
@@ -275,8 +278,8 @@ function resetPlayerStats(player)
 
         if S.item ~= nil then
             if S.item.stats ~= nil then
-                player.damageReduction = player.damageReduction - S.item.stats.def or 0
-                player.magicDamage = player.magicDamage - S.item.stats.mag or 0
+                player.damageReduction = player.damageReduction - (S.item.stats.def or 0)
+                player.magicDamage = player.magicDamage - (S.item.stats.mag or 0)
             end
         end
     end
@@ -286,10 +289,62 @@ end
 
 
 
+function sayPlayer(player, text, priority)
+
+    if player.textPriority < (priority or 1) then
+        player.textPriority = priority or 1
+
+        player.text = text
+        player.speakTimer = #splitString(text) * 1.6
+        player.lettersLoaded = ""
+        player.letterTimer = 0
+        player.textFadeTimer = 0
+    end
+
+end
+
 function drawPlayerUI(player)
-    -- Inventory and camera
 
     love.graphics.setCanvas(UI_LAYER)
+    -- Player talking
+
+    player.speakTimer = player.speakTimer - dt
+    if player.speakTimer < 0 then
+
+        player.textFadeTimer = player.textFadeTimer - dt * 6
+    else
+
+        player.textFadeTimer = clamp(player.textFadeTimer + dt * 6, 0, 1)
+
+        player.textPriority = 0
+
+    end
+
+    player.letterTimer = player.letterTimer + dt * 20
+    if player.text ~= "" then
+
+        if #player.lettersLoaded < player.letterTimer and #player.text ~= #player.lettersLoaded then
+
+            player.lettersLoaded = player.text:sub(1, round(player.letterTimer))
+
+        end
+
+        local offset = 6
+        local w = FONT:getWidth(player.text) + offset * 2; local h = FONT:getHeight(player.text) + offset * 2
+
+        setColor(0, 0, 0, 255 * player.textFadeTimer)
+        love.graphics.rectangle("fill", player.collider.x - camera[1], player.collider.y - 80 - camera[2], w, h, 8, 8)
+
+        love.graphics.circle("fill", player.collider.x - camera[1] + 18, player.collider.y - 50 - camera[2], 12)
+        love.graphics.circle("fill", player.collider.x - camera[1] + 8, player.collider.y - 30 - camera[2], 6)
+        
+        normalText(player.collider.x + offset - camera[1], player.collider.y - 80 + offset - camera[2], player.lettersLoaded, {255, 255, 255, 255 * player.textFadeTimer}, 1, 1, 0, 0)
+
+        setColor(255, 255, 255)
+
+    end
+
+    -- Inventory and camera
 
     -- Draw hotbar
     drawSprite(HOLDING_ARROW, 42 + INVENTORY_SPACING * player.slotOn, 558, 1, 1, 0, 0)

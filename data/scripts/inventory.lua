@@ -457,18 +457,23 @@ equipmentSlot=love.graphics.newImage("data/images/UI/inventory/equipmentSlot.png
 }
 
 ITEM_IMGES = {
-wood = love.graphics.newImage("data/images/items/wood.png"),
+
+wood = love.graphics.newImage("data/images/items/wood.png"), -- Wood
 stick = love.graphics.newImage("data/images/items/stick.png"),
-jello = love.graphics.newImage("data/images/items/jello.png"),
-jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
-crystalRod = love.graphics.newImage("data/images/items/crystalRod.png"),
-stone = love.graphics.newImage("data/images/items/stone.png"),
-sword = love.graphics.newImage("data/images/items/sword.png"),
-bodyArmor = love.graphics.newImage("data/images/items/bodyArmor.png"),
-headArmor = love.graphics.newImage("data/images/items/helmet.png"),
-blunderbuss = love.graphics.newImage("data/images/items/blunderbuss.png"),
 bat = love.graphics.newImage("data/images/items/bat.png"),
-shroomOre = love.graphics.newImage("data/images/items/shroomOre.png"),
+
+jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
+jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
+
+stone = love.graphics.newImage("data/images/items/stone.png"),            -- Stone
+stoneArmor = love.graphics.newImage("data/images/items/stoneArmor.png"),
+stoneHelmet = love.graphics.newImage("data/images/items/stoneHelmet.png"),
+stoneSword = love.graphics.newImage("data/images/items/stoneSword.png"),
+
+blunderbuss = love.graphics.newImage("data/images/items/blunderbuss.png"), -- Misc
+crystalRod = love.graphics.newImage("data/images/items/crystalRod.png"),
+
+shroomOre = love.graphics.newImage("data/images/items/shroomOre.png"), -- Shroom
 shroomHat = love.graphics.newImage("data/images/items/shroomHat.png"),
 shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png")
 }
