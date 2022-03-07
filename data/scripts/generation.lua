@@ -22,7 +22,7 @@ end
 
 function resetBiomes()
     BIOME_ORDER = {
-        cave = 3,
+        cave = -1,
         sporeCavern = -1
     }
 end
@@ -101,6 +101,7 @@ sporeCavern = {
     background = {
         
         newDecoration("shroom", {"sporeCavern/shroom1.png", "sporeCavern/shroom2.png", "sporeCavern/shroom3.png"}, {0,27}, {{0,0,false}, {0,-1,false},{0,1,true}}, 2, 40, {0.5, 1}, 0.1, 0.8, none, {0, -24, 90, 0.12, 2.4, {100,100,255,40}}),
+        newDecoration("shroomLantern", {"sporeCavern/shroomLantern.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {-2, 12, "data/particles/decorations/shroomLantern.json"}, {0, 0, 180, 0.12, 2.4, {180,180,255,40}}),
 
     },
     
@@ -631,7 +632,7 @@ function roomProcessEnemies(room)
 
                 local say = {
                     {"That was easy!", "Sweeped >:D", "Get out of my lobby!"},
-                    {"Alright clear :I", "Moving on, moving on...", "Ow, that hurt :("},
+                    {"Alright clear :I", "I got hit :(", "Ow, that hurt :("},
                     {"I should avoid bullets...", "I am in bad at dodging :(", "I should get better at the game!"}
                 }
 
