@@ -152,10 +152,15 @@ function generate(amount, biome)
 
         room.playerTookHits = 0
 
+        room.structures = {}
+
         -- Set tilemap
         local layout = nil
         if num == 0 then 
             layout = "data/layouts/start.json"
+
+            table.insert(room.structures, ENTERABLES.house(420, 576))
+
         else if num == amount - 1 then
 
                 layout = "data/layouts/end.json"
@@ -213,8 +218,6 @@ function generate(amount, biome)
 
         room.endDown = newVec(room.endWidth * 0.5, room.endDown * 48 + 96)
 
-
-        room.structures = {}
 
         if num == 0 then
             table.insert(room.structures, newTeleporter(300, 580, true))
