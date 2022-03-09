@@ -1,5 +1,5 @@
 {
-"spawning" : true, "amount" : {"a" : 1, "b" : 2},
+"spawning" : false, "amount" : {"a" : 1, "b" : 2},
 
 "timer" : 0, "ticks" : -1, "tickSpeed" : {"a" : 0.1, "b" : 0.11},
 

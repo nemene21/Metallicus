@@ -233,16 +233,18 @@ end
 function swtichRoom(num)
     transition = 1
 
+    ambientLight = BIOMES[fetchNextBiome(false)].ambientLight
+
     roomOn = roomOn + num
     ROOM = ROOMS[roomOn]
 
     if num > 0 then
         player.collider.x = ROOM.entranceParticles.x + 32; player.collider.y = ROOM.entranceParticles.y + 48
-    else
+    else if num < 0 then
         player.collider.x = ROOM.exitParticles.x - 32; player.collider.y = ROOM.exitParticles.y + 48
-    end
+    end end
 
-    camera[1] = player.collider.x - 400; camera[2] = player.collider.y - 300
+    camera[1] = player.collider.x; camera[2] = player.collider.y - 300
 
     for id, S in ipairs(ROOM.structures) do
 

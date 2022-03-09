@@ -5,13 +5,14 @@ DECORATION_IMAGES = {}
 
 BIOME_ORDER = {}
 
-function fetchNextBiome()
+function fetchNextBiome(degrade)
+    local degrade = degrade or true
 
     for id, B in pairs(BIOME_ORDER) do
 
         if B ~= 0 then
 
-            BIOME_ORDER[id] = BIOME_ORDER[id] - 1
+            if degrade then BIOME_ORDER[id] = BIOME_ORDER[id] - 1 end
             return id
 
         end
