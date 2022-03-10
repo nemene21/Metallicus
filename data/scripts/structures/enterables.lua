@@ -121,6 +121,7 @@ function drawEnterable(enterable)
             ambientLight = enterable.ambientLight or {200, 200, 200}
             transition = 1
             player.collider.x = ROOM.entranceParticles.x + 12; player.collider.y = ROOM.entranceParticles.y + 48
+            player.walkParticles.particles = {}
             
         end
 
