@@ -117,7 +117,7 @@ function game()
 
         -- Earthquake
         timeUntillQuake = timeUntillQuake - dt
-        if timeUntillQuake < 0 then
+        if timeUntillQuake < 0 and quakeWarnings ~= 0 then
             
             timeUntillQuake = (18 * #ROOMS) * 0.33
             quakeWarnings = quakeWarnings - 1
@@ -137,11 +137,11 @@ function game()
 
         if quakeWarnings == 0 then
 
-            shake(4, 2, 0.5, 4)
+            shake(4 - 3 * boolToInt(ROOM.stopQuake), 2, 0.5, 4)
 
             quakeProjectileTimer = quakeProjectileTimer - dt
 
-            if quakeProjectileTimer < 0 then
+            if quakeProjectileTimer < 0 and not ROOM.stopQuake then
 
                 quakeProjectileTimer = 0.25
 

@@ -26,6 +26,8 @@ function resetBiomes()
         cave = -1,
         sporeCavern = -1
     }
+
+    firstRoomEver = true
 end
 
 function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light)
@@ -169,6 +171,18 @@ function generate(amount, biome)
             else
                 layout = biome.layoutPath..tostring(love.math.random(1,biome.nLayouts + 1))..".json"
         end end
+
+        if firstRoomEver then
+
+            firstRoomEver = false
+            layout = "data/layouts/firstRoom.json"
+
+            player.collider.x = 276; player.collider.y = -360
+
+            bindCamera(276, -360)
+            camera = (boundCamPos)
+
+        end
 
         room.tilemap = newTilemap(loadSpritesheet(biome.tilesetPath, 16, 16), 48, loadJson(layout))
 
