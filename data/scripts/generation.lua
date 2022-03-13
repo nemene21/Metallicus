@@ -162,11 +162,10 @@ function generate(amount, biome)
         if num == 0 then 
             layout = "data/layouts/start.json"
 
-            table.insert(room.structures, ENTERABLES.house(420, 576))
-
         else if num == amount - 1 then
 
                 layout = "data/layouts/end.json"
+                table.insert(room.structures, ENTERABLES.house(420, 576))
 
             else
                 layout = biome.layoutPath..tostring(love.math.random(1,biome.nLayouts + 1))..".json"
@@ -176,6 +175,11 @@ function generate(amount, biome)
 
             firstRoomEver = false
             layout = "data/layouts/firstRoom.json"
+
+            table.insert(room.structures, newTextDisplayer(400, 250, "A and S to move"))
+            table.insert(room.structures, newTextDisplayer(400, 350, "Space and right click to jump and dash!"))
+
+            playSound("enter")
 
             player.collider.x = 276; player.collider.y = -360
 
@@ -237,8 +241,7 @@ function generate(amount, biome)
         if num == 0 then
             table.insert(room.structures, newTeleporter(300, 580, true))
         else if num == amount - 1 then
-            table.insert(room.structures, newTeleporter(560, 580))
-            table.insert(room.structures, newAnvil(350, 580))
+
         else
             placeMaterials(room, biome)
         end end

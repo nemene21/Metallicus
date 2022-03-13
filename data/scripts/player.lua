@@ -164,12 +164,13 @@ function processPlayer(player)
 
         if player.justLanded == false then
 
+            local impulse = player.vel.y / 600
+            --playSound("fall", 1, nil, impulse * 0.25)
+
             player.justLanded = true
             table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) -- Fall particles
 
             -- Move body parts due to force
-
-            local impulse = player.vel.y / 600
             shake(4 * impulse, 1, 90)
 
             player.armL.y = player.armL.y + impulse * 13

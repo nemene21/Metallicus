@@ -1,7 +1,7 @@
 
 
 
-function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, particles, particleOffset, stopQuake)
+function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, particles, particleOffset, stopQuake, structures)
     -- GENERATE THE ROOM
     local enterableRoom = {textPopUps = newParticleSystem(0, 0, loadJson("data/particles/textParticles.json")),processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processEnterableRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 
@@ -13,7 +13,7 @@ function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, proces
 
     enterableRoom.particleOffset = particleOffset or newVec(0, 0)
     
-    enterableRoom.structures = {} -- Structures and tilemaps
+    enterableRoom.structures = structures or {} -- Structures and tilemaps
 
     enterableRoom.tilemap = newTilemap(loadSpritesheet(tileTexture, 16, 16), 48, roomData)
     enterableRoom.bgTilemap = newTilemap(loadSpritesheet(tileTexture, 16, 16), 48)
@@ -143,7 +143,7 @@ end
 
 function newHouse(x, y)
 
-    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), "data/images/tilesets/houseTileset.png", newRect(-39, -33, 24, 60), drawEnterable, processEnterable, "data/particles/blankParticles.json",nil, true)
+    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), "data/images/tilesets/houseTileset.png", newRect(-39, -33, 24, 60), drawEnterable, processEnterable, "data/particles/blankParticles.json",nil, true, {newTeleporter(560, 580), newAnvil(350, 580)})
 
 end
 

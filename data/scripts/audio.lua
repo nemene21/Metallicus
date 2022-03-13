@@ -1,6 +1,8 @@
 
 SOUNDS = {
 walk = love.audio.newSource("data/sounds/SFX/player/walk.wav", "stream"), -- Player sounds
+enter = love.audio.newSource("data/sounds/SFX/player/enter.wav", "stream"),
+fall = love.audio.newSource("data/sounds/SFX/player/fall.wav", "stream"),
 
 hitOre = love.audio.newSource("data/sounds/SFX/structures/hitOre.wav", "stream"), -- Structure sounds
 teleport = love.audio.newSource("data/sounds/SFX/structures/teleport.wav", "stream"),
@@ -28,10 +30,10 @@ for id,S in pairs(SOUNDS) do SOUNDS_NUM_PLAYING[id] = 0 end
     
 SOUNDS_PLAYING = {}
     
-function playSound(string, pitch, maxPlays)
+function playSound(string, pitch, maxPlays, vol)
     if (maxPlays or 99) > SOUNDS_NUM_PLAYING[string]  then
         local pitch = pitch or 1
-        local NEW_SOUND = SOUNDS[string]:clone(); NEW_SOUND:setPitch(pitch); NEW_SOUND:setVolume(masterVolume); NEW_SOUND:play()
+        local NEW_SOUND = SOUNDS[string]:clone(); NEW_SOUND:setPitch(pitch); NEW_SOUND:setVolume((vol or 1) * masterVolume); NEW_SOUND:play()
         table.insert(SOUNDS_PLAYING,{NEW_SOUND, string})
         SOUNDS_NUM_PLAYING[string] = SOUNDS_NUM_PLAYING[string] + 1
     end

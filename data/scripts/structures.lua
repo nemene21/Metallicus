@@ -14,3 +14,7 @@ require "data.scripts.structures.enterables"
 --                                                          ANVIL
 
 require "data.scripts.structures.anvil"
+
+--                                                          TEXT DISPLAYERS
+
+require "data.scripts.structures.textDisplayers"
