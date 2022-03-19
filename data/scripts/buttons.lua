@@ -33,3 +33,31 @@ function processButton(btn)
     love.graphics.setShader()
     return pressed
 end
+
+
+interactIconScale = 0; interacting = false
+
+interactLastPos = newVec(0, 0)
+
+function processInteract()
+
+    interactIconScale = lerp(interactIconScale, boolToInt(interacting), dt * 20)
+
+    if interactIconScale > 0 and not interacting then
+
+        drawInteract(interactLastPos.x, interactLastPos.y)
+
+    end
+
+    interacting = false
+
+end
+
+function drawInteract(x, y, fromProcess)
+
+    interacting = true; interactLastPos = newVec(x, y)
+    
+    local sine = math.sin(globalTimer * 2)
+    drawSprite(IMAGE_F, x, y + sine * 10, (1 + math.sin(globalTimer * 10) * 0.1) * interactIconScale, (1 + math.sin(globalTimer * 10 + 3.14) * 0.1) * interactIconScale)
+
+end

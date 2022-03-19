@@ -21,6 +21,29 @@
     "types" : ["item"]
 },
 
+"flyDust" : {
+    "texture" : "flyDust",
+    "name" : "Fly Dust", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
+"totemOfFloat" : {
+    "texture" : "totemOfFloat",
+    "name" : "Totem of Float", "rarity" : "uncommon",
+
+    "holdMode" : "totem",
+    "effect" : "float",
+
+    "maxStack" : 1,
+
+    "types" : ["item"]
+},
+
 "stick" : {
     "texture" : "stick",
     "name" : "Stick", "rarity" : "common",
@@ -54,6 +77,19 @@
     "types" : ["item"]
 },
 
+"slimyShroomSoup" : {
+    "texture" : "slimyShroomSoup",
+    "name" : "Slimy Shroom Soup", "rarity" : "uncommon",
+
+    "holdMode" : "consumable",
+
+    "stats" : {"hp" : 8},
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
 "jelloRod" : {
     "texture" : "jelloRod",
     "name" : "Jello rod", "rarity" : "uncommon",
@@ -65,7 +101,7 @@
     "armRTaken" : true, "armLTaken" : false,
 
     "holdData" : {
-        "attackTimer" : 0, "attackTime" : 0.3, "distance" : 16, "swing" : 0.25
+        "attackTimer" : 0, "distance" : 16, "swing" : 0.25
     },
 
     "damageType" : "magicDamage",
@@ -93,6 +129,52 @@
     },
 
     "stats" : {"dmg" : 15, "attackTime" : 0.3},
+
+    "types" : ["item"]
+},
+"mushboomRod" : {
+    "texture" : "mushboomRod",
+    "name" : "Mushboom Rod", "rarity" : "rare",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 16, "swing" : 0.25
+    },
+
+    "damageType" : "magicDamage",
+
+    "projectile" : {
+        "speed" : 550,
+        "range" : 99999,
+        "gravity" : 600,
+
+        "offsetRotation" : 40,
+
+        "collides" : true, "bounces" : 1,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 14,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 0,
+
+        "sound" : "slash", "texture" : "mushboomShot", "particles" : "mushboomShot", "particlesDie" : "mushboomDie", "particlesSpawn" : "mushboom"
+    },
+
+    "explosion" : {
+        "dmg" : 30, "radius" : 96, "particles" : "mushboomExplosion"
+    },
+
+    "stats" : {"dmg" : 15, "attackTime" : 1.2},
 
     "types" : ["item"]
 },
@@ -293,6 +375,21 @@
 "shroomHat" : {
     "texture" : "shroomHat",
     "name" : "Shroom Hat", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10, "mag" : 20},
+
+    "yOffset" : -12,
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"archerHat" : {
+    "texture" : "archerHat",
+    "name" : "Archer Hat", "rarity" : "uncommon",
 
     "holdMode" : "hold",
 

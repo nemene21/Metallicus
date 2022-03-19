@@ -5,17 +5,24 @@ PLAYER_PROJECTILE_IMAGES = {
 basicSlash = loadSpritesheet("data/images/projectiles/player/basicSlash.png",24,16),
 slimeShot = loadSpritesheet("data/images/projectiles/player/slimeShot.png",8,8),
 crystalShot = loadSpritesheet("data/images/projectiles/player/crystalShot.png",8,6),
+mushboomShot = loadSpritesheet("data/images/projectiles/player/mushboomShot.png",12,10),
 bullet = loadSpritesheet("data/images/projectiles/player/bullet.png",13,8)
 }
 
 PLAYER_PROJECTILE_PARTICLES = {
 slimeShot = loadJson("data/particles/playerProjectiles/slimeShot.json"),
+mushboomShot = loadJson("data/particles/playerProjectiles/mushboomShot.json"),
 crystalShot = loadJson("data/particles/playerProjectiles/crystalShot.json")
 }
 
 PLAYER_PROJECTILE_PARTICLES_DIE = {
 slimeShot = loadJson("data/particles/playerProjectiles/slimeShotDie.json"),
 bullet = loadJson("data/particles/playerProjectiles/bulletDie.json"),
+
+mushboom = loadJson("data/particles/playerProjectiles/mushboomSpawn.json"),
+mushboomDie = loadJson("data/particles/playerProjectiles/mushboomDie.json"),
+mushboomExplosion = loadJson("data/particles/playerProjectiles/mushboomExplosion.json"),
+
 crystalShot = loadJson("data/particles/playerProjectiles/crystalShotDie.json")
 }
 
@@ -109,6 +116,50 @@ function processPlayerProjectiles(playerProjectiles)
             if P.particlesDie ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.particlesDie]))) end
             table.insert(kill,id)
 
+            if P.explosion ~= nil then
+
+                for id, E in ipairs(ROOM.enemies) do
+
+                    if rectCollidingCircle(E.collider, P.pos.x, P.pos.y, P.explosion.radius) then
+
+                        local vec = newVec(E.collider.x - P.pos.x, E.collider.y - P.pos.y)
+
+                        E:hit(P.explosion.dmg, vec:getLen() * 3, vec:getRot())
+
+                    end
+
+                end
+
+                for id, S in ipairs(ROOM.structures) do
+
+                    if S.name ~= nil then if MATERIAL_CONSTRUCTORS[S.name] ~= nil then
+
+                        if newVec(P.pos.x - S.x, P.pos.y - S.y):getLen() < (36 + P.explosion.radius) then
+    
+                            S.hp = S.hp - P.explosion.dmg
+                            S.hitTimer = 0.2
+
+                            table.insert(ROOM.textPopUps.particles,{
+                                x = S.x + love.math.random(-24, 24), y = S.y + love.math.random(-24, 24) - 24,
+                                vel = newVec(0, -100), width = tostring(P.explosion.dmg),
+                                lifetime = 1, lifetimeStart = 1,
+                                color = {r=255,g=0,b=0,a=1},
+                                rotation = 0
+                            
+                            })
+                            
+                            playSound(S.hitSound, love.math.random(80, 120) * 0.01)
+
+                        end
+
+                    end end
+
+                end
+
+                if P.explosion.particles ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.explosion.particles]))) end
+                
+            end
+
         else
             for enemyId,E in ipairs(ROOM.enemies) do
 
@@ -125,12 +176,57 @@ function processPlayerProjectiles(playerProjectiles)
 
             end
         end
+
         if P.pirice <= 0 then
             if P.particlesDie ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.particlesDie]))) end
             table.insert(kill,id)
 
+            if P.explosion ~= nil then
+
+                for id, E in ipairs(ROOM.enemies) do
+
+                    if rectCollidingCircle(E.collider, P.pos.x, P.pos.y, P.explosion.radius) then
+
+                        local vec = newVec(E.collider.x - P.pos.x, E.collider.y - P.pos.y)
+
+                        E:hit(P.explosion.dmg, vec:getLen() * 3, vec:getRot())
+
+                    end
+
+                end
+
+                for id, S in ipairs(ROOM.structures) do
+
+                    if S.name ~= nil then if MATERIAL_CONSTRUCTORS[S.name] ~= nil then
+
+                        if newVec(P.pos.x - S.x, P.pos.y - S.y):getLen() < (36 + P.explosion.radius) then
+    
+                            S.hp = S.hp - P.explosion.dmg
+                            S.hitTimer = 0.2
+
+                            table.insert(ROOM.textPopUps.particles,{
+                                x = S.x + love.math.random(-24, 24), y = S.y + love.math.random(-24, 24) - 24,
+                                vel = newVec(0, -100), width = tostring(P.explosion.dmg),
+                                lifetime = 1, lifetimeStart = 1,
+                                color = {r=255,g=0,b=0,a=1},
+                                rotation = 0
+                            
+                            })
+                            
+                            playSound(S.hitSound, love.math.random(80, 120) * 0.01)
+
+                        end
+
+                    end end
+
+                end
+
+                if P.explosion.particles ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.explosion.particles]))) end
+                
+            end
+
         else
-            if P.lifetime < 0 then table.insert(kill,id); if P.particlesDie ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.particlesDie]))) end
+            if P.lifetime < 0 then table.insert(kill,id); if P.particlesDie ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.explosion.particles]))) end
         else
             if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id) end
         end
@@ -201,7 +297,7 @@ function processEnemyProjectiles(enemyProjectiles)
 
         P:process()
 
-        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius - 3) and player.iFrames == 0 and player.dashingFrames == 0 and not playerDied then
+        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius * 0.8) and player.iFrames == 0 and player.dashingFrames == 0 and not playerDied then
 
             ROOM.playerTookHits = ROOM.playerTookHits + 1
 

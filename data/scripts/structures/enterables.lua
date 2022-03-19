@@ -116,7 +116,7 @@ function drawEnterable(enterable)
 
     if isRectColliding(enterable.doorCollider, player.collider) then
 
-        drawSprite(IMAGE_F, enterable.doorCollider.x + 2, enterable.doorCollider.y - enterable.doorCollider.h * 0.5 - 24 + math.sin(globalTimer * 2) * 9)
+        drawInteract(enterable.doorCollider.x + 2, enterable.doorCollider.y - enterable.doorCollider.h * 0.5 - 24)
 
         if justPressed("f") then
 

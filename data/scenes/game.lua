@@ -30,6 +30,8 @@ function gameReload()
     diedTimer = newTimer(4)
     
     playerDied = false; UI_ALPHA = 255
+
+    mouseRot = 0; mouseScale = 1
 end
 
 function gameDie()
@@ -102,16 +104,17 @@ function game()
 
         ROOM:processParticles()
 
+        attackMouseLine = nil
         if player.hp > 0 then -- Draw player
             player:draw()
         end
 
         player:resetStats()
-
+    
         player:drawUI()
 
         ROOM:drawTiles()
-
+        
         for id,P in ipairs(playerProjectiles) do P:draw() end
         for id,P in ipairs(enemyProjectiles) do P:draw() end
 
@@ -222,9 +225,31 @@ function game()
     love.graphics.setCanvas(UI_LAYER)
     love.graphics.setColor(1,1,1)
 
-    local mouseRot = 0; local mouseScale = 1
+    mouseScale = lerp(mouseScale, 1, dt * 12)
+    mouseRot = lerp(mouseRot, 0, dt * 12)
+
     love.graphics.draw(mouse[mouseMode], xM, yM, mouseRot, SPRSCL * mouseScale, SPRSCL * mouseScale, mouse[mouseMode]:getWidth() * mCentered, mouse[mouseMode]:getHeight() * mCentered)
+    
+    --print(attackMouseLine)
+    if attackMouseLine ~= nil and not player.inventoryOpen then
+
+        love.graphics.setLineWidth(5)
+
+        attackMouseLine = clamp(attackMouseLine, 0, 1)
+
+        setColor(100, 100, 100, 160)
+        love.graphics.line(xM - 12, yM + 24, xM + 12, yM + 24)
+
+        love.graphics.setLineWidth(4)
+        setColor(255, 255, 255)
+        love.graphics.line(xM - 12, yM + 24, xM - 12 + 24 * attackMouseLine, yM + 24)
+
+    end
+    
+    
     love.graphics.setCanvas(display)
+
+    processInteract()
 
     -- Return scene
     return sceneAt
@@ -233,7 +258,7 @@ end
 function swtichRoom(num)
     transition = 1
 
-    ambientLight = BIOMES[fetchNextBiome(false)].ambientLight
+    ambientLight = BIOMES[biomeOn].ambientLight
 
     roomOn = roomOn + num
     ROOM = ROOMS[roomOn]

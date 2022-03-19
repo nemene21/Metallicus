@@ -33,7 +33,7 @@ function checkCollisions(rect,motion,collidesWith)
     local collided = {}
 
     -- Loop trough every rect you want to check collision with, if they are touching, add it to a list, return the list
-    for id,R in pairs(collidesWith) do
+    for id,R in ipairs(collidesWith) do
 
         if not isRectColliding({x = rect.x - motion.x * dt, y = rect.y - motion.y * dt, w = rect.w, h = rect.h},R) and isRectColliding(rect,R) then
             table.insert(collided,R)
@@ -53,7 +53,7 @@ function moveRect(rect,motion,collidesWith)
     local collided = checkCollisions(rect,motion,collidesWith)
 
     -- Clamp rect according to the collided rects boundries
-    for id,R in pairs(collided) do
+    for id,R in ipairs(collided) do
         if motion.x < 0 and R.cL then
             rect.x = R.x + R.w * 0.5 + rect.w * 0.5; rect.touching.x = -1
         else if motion.x > 0 and R.cR then
@@ -68,7 +68,7 @@ function moveRect(rect,motion,collidesWith)
     local collided = checkCollisions(rect,motion,collidesWith)
     
     -- Clamp rect according to the collided rects boundries
-    for id,R in pairs(collided) do
+    for id,R in ipairs(collided) do
         if motion.y < 0 and R.cDW then
             rect.y = R.y + R.h * 0.5 + rect.h * 0.5; rect.touching.y = -1
         else if motion.y > 0 and R.cUP then

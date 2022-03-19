@@ -38,7 +38,7 @@ function processTeleporter(teleporter)
     if math.abs(player.collider.x - teleporter.x) < 64 and math.abs(player.collider.y - teleporter.y) < 64 and not teleporter.pressed then
 
         love.graphics.setCanvas(UI_LAYER)
-        drawSprite(IMAGE_F, teleporter.x + 3, teleporter.y - 86 + math.sin(globalTimer * 2) * 9)
+        drawInteract(teleporter.x + 3, teleporter.y - 86 + math.sin(globalTimer * 2) * 9)
         love.graphics.setCanvas(display)
 
         if justPressed("f") then

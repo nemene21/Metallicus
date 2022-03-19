@@ -5,6 +5,8 @@ DECORATION_IMAGES = {}
 
 BIOME_ORDER = {}
 
+biomeOn = ""
+
 function fetchNextBiome(degrade)
     local degrade = degrade or true
 
@@ -13,6 +15,7 @@ function fetchNextBiome(degrade)
         if B ~= 0 then
 
             if degrade then BIOME_ORDER[id] = BIOME_ORDER[id] - 1 end
+            biomeOn = id
             return id
 
         end
@@ -23,7 +26,7 @@ end
 
 function resetBiomes()
     BIOME_ORDER = {
-        cave = -1,
+        cave = 0,
         sporeCavern = -1
     }
 
@@ -78,7 +81,7 @@ cave = {
     }
     },
 
-    ambientLight = {60, 60, 60},
+    ambientLight = {50, 50, 50},
 
     layoutPath = "data/layouts/cave/", nLayouts = 2,
 
@@ -96,9 +99,9 @@ sporeCavern = {
     tilesetPath = "data/images/tilesets/sporeCavern/tileset.png",
     bgTilesetPath = "data/images/tilesets/cave/bg.png",
     
-    materials = {shroomOre = 100, wood = 100},
+    materials = {shroomOre = 150, wood = 100},
 
-    ambientLight = {20, 40, 100},
+    ambientLight = {15, 35, 80},
     
     decorations = {
     background = {
@@ -121,7 +124,7 @@ sporeCavern = {
     
     enemies = {
     slime = {spawnOn = "ground", frequency = 100},
-    giantFirefly = {spawnOn = "air", frequency = 50}
+    battlefly = {spawnOn = "air", frequency = 80}
     },
     
     nEnemies = {a = 3, b = 5},
@@ -138,6 +141,8 @@ PARTICLES_BODY = loadJson("data/particles/enemies/bodyTravel.json")
 function generate(amount, biome)
     local rooms = {}
     local biome = BIOMES[biome]
+
+    player.text = ""; player.lettersLoaded = ""; player.letterTimer = 0; player.speakTimer = 0; player.textFadeTimer = 0; player.textPriority = 0
 
     ambientLight = biome.ambientLight
 
@@ -221,7 +226,20 @@ function generate(amount, biome)
 
         -- Set bg
         room.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
-        for x=room.endLeft,room.endRight do for y=room.endUp,room.endDown do room.bgTilemap:setTile(x,y,{1,love.math.random(1,3)}) end end -- Place tiles
+        for x=room.endLeft,room.endRight do for y=room.endUp,room.endDown do
+
+            if
+                room.tilemap:getTile(x + 1, y) == nil or
+                room.tilemap:getTile(x - 1, y) == nil or
+                room.tilemap:getTile(x, y + 1) == nil or
+                room.tilemap:getTile(x, y - 1) == nil
+            then
+
+                room.bgTilemap:setTile(x,y,{1,love.math.random(1,3)})
+
+            end
+
+        end end -- Place tiles
 
         -- Get the edges actual position and width
 
@@ -308,7 +326,7 @@ function placeMaterials(room, biome)
     local maxFrequency = 0
     for id, S in pairs(biome.materials) do maxFrequency = maxFrequency + S end
 
-    for x=0, love.math.random(0, 2) do
+    for x=0, love.math.random(0, 3) do
 
         local frequencyChosen = love.math.random(0, maxFrequency)
 
@@ -546,12 +564,14 @@ end
 function roomDrawTiles(room) setColor(255,255,255); room.tilemap:draw()
 
     for id, F in ipairs(room.decorations.foreground) do
+        
         setColor(255,255,255)
         if #DECORATION_IMAGES[F.name] ~= 0 then drawSprite(DECORATION_IMAGES[F.name][F.textureId], F.x, F.y, 1, 1, math.sin(F.x + F.y + globalTimer * F.windSpeed) * F.wind, 1, F.centering[1], F.centering[2]) end
 
         if F.light ~= nil then shine(F.x + F.light.x, F.y + F.light.y, F.light[3] * math.sin(globalTimer * F.light[5]) * F.light[4] + F.light[3], F.light[6]) end
 
     end
+
     love.graphics.setCanvas(UI_LAYER)
     room.textPopUps:process()
     love.graphics.setCanvas(display)
@@ -645,14 +665,14 @@ function roomProcessEnemies(room)
 
                 local item = ITEMS[id]; item.amount = amount
 
-                table.insert(room.items, newItem(E.collider.x + love.math.random(-24, 24), E.collider.y + love.math.random(-24, 0), item))
+                table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, item))
 
             end
 
             if #room.enemies - #kill == 0 then
 
                 local say = {
-                    {"That was easy!", "Sweeped >:D", "Get out of my lobby!"},
+                    {"That was easy!", "Sweeped >:D", "Wooosh!"},
                     {"Alright clear :I", "I got hit :(", "Ow, that hurt :("},
                     {"I should avoid bullets...", "I am in bad at dodging :(", "I should get better at the game!"}
                 }

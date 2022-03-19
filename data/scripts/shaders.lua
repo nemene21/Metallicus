@@ -37,7 +37,9 @@ ambientLight = {80,80,80}
 
 LIGHT_ROUND = love.graphics.newImage("data/images/roundLight.png")
 
-function processLight() SHADERS.GLOW_AND_LIGHT:send("lightImage",lightImage) end
+lights = {}
+
+function processLight() SHADERS.GLOW_AND_LIGHT:send("lightImage",lightImage); lights = {} end
 
 function resetLight()
 
@@ -48,12 +50,26 @@ function resetLight()
 end
 
 function shine(x,y,r,color)
+    table.insert(lights, {x, y, r, color})
+end
+
+function drawAllLights()
+
+    love.graphics.setCanvas(lightImage)
+
+    for id, L in ipairs(lights) do
+
+        drawLight(L[1], L[2], L[3], L[4])
+
+    end
+end
+
+function drawLight(x,y,r,color)
 
     local color = color or {255,255,255,255}
-    love.graphics.setCanvas(lightImage)
     setColor(color[1],color[2],color[3],color[4] or 255 * 0.5)
     love.graphics.draw(LIGHT_ROUND,x - camera[1],y - camera[2],0,r/300,r/300,LIGHT_ROUND:getWidth() * 0.5,LIGHT_ROUND:getHeight() * 0.5)
-    setColor(255,255,255)
+
 end
 
 -- Table of all post process effects you want, example: postPro = {"PIXEL_PERFECT","GLOW"}

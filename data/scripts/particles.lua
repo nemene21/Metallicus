@@ -17,15 +17,16 @@ end
 
 function drawParticleCircleGlow(P,w)
 
+    local scale = w * 0.25
+    
+    love.graphics.setBlendMode("add")
+    love.graphics.setColor(P.color.r * 1.2,P.color.g * 1.2,P.color.b * 1.2,P.color.a)
+    drawSprite(PARTICLE_LIGHT, P.x, P.y, scale, scale, 0)
+    love.graphics.setBlendMode("alpha")
+
     love.graphics.setColor(P.color.r,P.color.g,P.color.b,P.color.a)
     love.graphics.circle("fill",P.x - camera[1],P.y - camera[2], w)
 
-    love.graphics.setCanvas(lightImage)
-
-    local scale = w * 0.1
-    drawSprite(PARTICLE_LIGHT, P.x + 2, P.y + 2, scale, scale)
-
-    love.graphics.setCanvas(particleCanvas)
 end
 
 function drawParticleSquare(P,data)

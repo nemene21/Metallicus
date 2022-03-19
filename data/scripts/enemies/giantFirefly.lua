@@ -97,4 +97,5 @@ function giantFireflyStateCircle(giantFirefly)
 
     shine(giantFirefly.collider.x - 9 * turned, giantFirefly.collider.y, 100, {255, 170, 50, 40})
     love.graphics.setCanvas(display)
+    love.graphics.setCanvas(display)
 end

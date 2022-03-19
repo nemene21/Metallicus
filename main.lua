@@ -21,6 +21,9 @@ function love.load()
 
     love.window.setTitle(title)
 
+    local icon = love.image.newImageData("data/images/icon.png")
+    love.window.setIcon(icon); icon = nil
+
     -- Imports
     json = require "data.scripts.json"; require "data.scripts.misc"; require "data.scripts.loading"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
     require "data.scripts.buttons"; require "data.scripts.enemies"; require "data.scripts.projectiles"; require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
@@ -98,6 +101,7 @@ function love.draw()
         transition = 1
     end
 
+    drawAllLights()
     processCamera(); processLight()
 
     love.graphics.setCanvas(postProCanvas)

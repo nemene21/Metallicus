@@ -11,7 +11,7 @@ function buildSlime(x, y)
 
         collider = newRect(x,y,48,30), vel = newVec(0,200),
         
-        state = "idle", nextStateTimer = love.math.random(3,5),
+        state = "idle", nextStateTimer = love.math.random(1,3),
 
         scaleX = 1, scaleY = 1,
 
@@ -92,6 +92,7 @@ function slimeStatePrepare(slime, player)
 
     local lightTimer = 1 - slime.nextStateTimer
     shine(slime.collider.x, slime.collider.y, 120, {255 * lightTimer, 255 * (1 - lightTimer), 80 * (1 - lightTimer), 35})
+    love.graphics.setCanvas(display)
 
     return slime
 end

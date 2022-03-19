@@ -73,7 +73,10 @@ function processInventory(inventory)
     inventory.hovered = false
     local slotHovered = nil
 
-    for id,S in pairs(inventory.slots) do
+    for id,S in ipairs(inventory.slotIndexes) do
+
+        id = S; S = inventory.slots[id]
+
         -- PROCESSING
 
         -- If getting hovered
@@ -185,34 +188,35 @@ end
 function drawInventory(inventory)
 
     -- DRAW
-    for id,S in pairs(inventory.slots) do
+    for id,S in ipairs(inventory.slotIndexes) do
+        
+        id = S; S = inventory.slots[id]
+        -- Get pos
+        local pos = splitString(id,",")
+        local slotX = tonumber(pos[1]); local slotY = tonumber(pos[2])
 
-    -- Get pos
-    local pos = splitString(id,",")
-    local slotX = tonumber(pos[1]); local slotY = tonumber(pos[2])
+        -- Draw slot
+        if S.item == nil then setColor(140,140,140) else setColor(255,255,255) end
 
-    -- Draw slot
-    if S.item == nil then setColor(140,140,140) else setColor(255,255,255) end
+        drawSprite(SLOT_IMAGES[S.image], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
 
-    drawSprite(SLOT_IMAGES[S.image], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
+        if S.icon ~= nil then drawSprite(SLOT_ICONS[S.icon], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0) end
 
-    if S.icon ~= nil then drawSprite(SLOT_ICONS[S.icon], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0) end
+        -- Draw item and item count, if there is one
+        if S.item ~= nil then
+            setColor(255,255,255)
+            drawSprite(ITEM_IMGES[S.item.texture], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
 
-    -- Draw item and item count, if there is one
-    if S.item ~= nil then
-        setColor(255,255,255)
-        drawSprite(ITEM_IMGES[S.item.texture], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
+            if S.item.amount ~= 1 then
+                local count = tostring(S.item.amount)
+                outlinedText(math.floor(slotX * INVENTORY_SPACING + inventory.x) + 24, math.floor(slotY * INVENTORY_SPACING + inventory.y) + 5, 2, count, {255,255,255}, 1, 1, 1)
+            end
 
-        if S.item.amount ~= 1 then
-            local count = tostring(S.item.amount)
-            outlinedText(math.floor(slotX * INVENTORY_SPACING + inventory.x) + 24, math.floor(slotY * INVENTORY_SPACING + inventory.y) + 5, 2, count, {255,255,255}, 1, 1, 1)
+            setColor(255,255,255)
         end
 
-        setColor(255,255,255)
-    end
-
-    S.scale = lerp(S.scale,S.scaleTo,dt*20)
-    S.scaleTo = 1
+        S.scale = lerp(S.scale,S.scaleTo,dt*20)
+        S.scaleTo = 1
 
     end
 end
@@ -322,8 +326,43 @@ function holdItem(player,headed,item) return HOLD_MODES[item.holdMode](player,he
 -- Hold states
 
 function MODE_HOLD(player,headed,item)
+
     -- Draw
     drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
+
+    return item
+end
+
+function MODE_TOTEM(player,headed,item)
+    -- Draw
+    drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
+
+    if mousePressed(1) then
+
+        TOTEM_EFFECTS[item.effect](item)
+
+    end
+
+    return item
+end
+
+function MODE_CONSUME(player,headed,item)
+    -- Draw
+    drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
+
+    if mouseJustPressed(1) then
+
+        item.amount = item.amount - 1
+
+        for id, S in pairs(item.stats) do
+
+            player[id] = player[id] + S
+
+        end
+
+        if item.amount == 0 then item = nil end
+
+    end
 
     return item
 end
@@ -339,6 +378,8 @@ function MODE_SLASH(player,headed,item)
     -- Shoot
     item.holdData.attackTimer = item.holdData.attackTimer - dt
     if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+        mouseScale = 2.5; mouseRot = 3.14
+
         -- Reset attack timer
         item.holdData.attackTimer = item.stats.attackTime
         item.projectile.burstsLeft = item.stats.burst or 1
@@ -360,6 +401,12 @@ function MODE_SLASH(player,headed,item)
         for x=1, item.stats.amount or 1 do
             -- Summon projectile
             local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM); rotation = rotation:getRot()
+
+            if item.explosion ~= nil then
+
+                projectile.explosion = deepcopyTable(item.explosion)
+
+            end
 
             local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
 
@@ -393,6 +440,8 @@ function MODE_SHOOT(player,headed,item)
     -- Shoot
     item.holdData.attackTimer = item.holdData.attackTimer - dt
     if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+        mouseScale = 2.5; mouseRot = 3.14
+
         -- Reset attack timer
         item.holdData.attackTimer = item.stats.attackTime
         item.projectile.burstsLeft = item.stats.burst or 1
@@ -420,6 +469,12 @@ function MODE_SHOOT(player,headed,item)
             -- Summon projectile
             local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
 
+            if item.explosion ~= nil then
+
+                projectile.explosion = deepcopyTable(item.explosion)
+
+            end
+
             if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
 
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
@@ -436,8 +491,20 @@ function MODE_SHOOT(player,headed,item)
     return item
 end
 
+-- TOTEM EFFECTS
+
+function TOTEM_EFFECT_FLOAT(totem)
+
+    player.usingFloat = true
+
+end
+
 HOLD_MODES = {
-hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT
+hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, totem=MODE_TOTEM
+}
+
+TOTEM_EFFECTS = {
+float=TOTEM_EFFECT_FLOAT
 }
 
 -- Images for all items and icons in the game currently!
@@ -475,7 +542,14 @@ crystalRod = love.graphics.newImage("data/images/items/crystalRod.png"),
 
 shroomOre = love.graphics.newImage("data/images/items/shroomOre.png"), -- Shroom
 shroomHat = love.graphics.newImage("data/images/items/shroomHat.png"),
-shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png")
+shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png"),
+slimyShroomSoup = love.graphics.newImage("data/images/items/slimyShroomSoup.png"),
+mushboomRod = love.graphics.newImage("data/images/items/mushboomRod.png"),
+
+flyDust = love.graphics.newImage("data/images/items/flyDust.png"), -- Flydust
+totemOfFloat = love.graphics.newImage("data/images/items/totemOfFloat.png"),
+
+archerHat = love.graphics.newImage("data/images/items/archerHat.png")
 }
 
 -- Add slot function
@@ -491,6 +565,8 @@ function addSlot(inventory,x,y,type,icon,image)
 
         image=image
     }
+
+    table.insert(inventory.slotIndexes, tostring(x)..","..tostring(y))
 
     return inventory
 end

@@ -7,7 +7,8 @@ ENEMY_ID = 0
 
 ENEMY_NAMES = {
 slime="slime",
-giantFirefly="giant firefly"
+giantFirefly="giant firefly",
+battlefly="battlefly"
 }
 
 function buildEnemy(name, x, y)
@@ -32,7 +33,7 @@ function processEnemy(enemy)
 
     enemy.flash = lerp(enemy.flash, 0, dt * 6)
 
-    love.graphics.setCanvas(display)
+    setColor(255, 255, 255)
     return enemy.states[enemy.state](enemy, player)
 end
 
@@ -72,6 +73,11 @@ GIANT_FIREFLY = {
     head = love.graphics.newImage("data/images/enemies/giantFirefly/head.png"),
     wing = love.graphics.newImage("data/images/enemies/giantFirefly/wing.png"),
     body = love.graphics.newImage("data/images/enemies/giantFirefly/body.png")
+},
+
+BATTLEFLY = {
+    body = love.graphics.newImage("data/images/enemies/battlefly/body.png"),
+    wing = love.graphics.newImage("data/images/enemies/battlefly/wing.png")
 }
 }
 
@@ -81,10 +87,11 @@ PARTICLES_FIREFLY = loadJson("data/particles/decorations/fireflies.json")
 --                                                           BUILDS AND STATES FOR EVERY ENEMY
 
 -- Cave
-require "data.scripts.enemies.slime"; require "data.scripts.enemies.giantFirefly"
+require "data.scripts.enemies.slime"; require "data.scripts.enemies.giantFirefly"; require "data.scripts.enemies.battlefly"
 
 enemies = {
 slime = buildSlime,
-giantFirefly = buildGiantFirefly
+giantFirefly = buildGiantFirefly,
+battlefly = buildBattlefly
 }
 

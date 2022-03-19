@@ -242,6 +242,8 @@ function SHOW_STATS()
 
     local letterYOffset = 58
 
+    local statsGraphics = love.graphics.getStats()
+
     love.graphics.setCanvas(UI_LAYER)
 
     outlinedText(12, 12 + letterYOffset, 2, "FPS: "..tostring(love.timer.getFPS()), {255, 255, 255}, 1, 1)
@@ -257,7 +259,9 @@ function SHOW_STATS()
 
     outlinedText(12, 132 + letterYOffset, 2, "GLOBAL TIMER:   "..tostring(round(globalTimer)), {255, 255, 255}, 1, 1)
 
-    outlinedText(12, 156 + letterYOffset, 2, "UNTIL QUAKE:   "..tostring(round(timeUntillQuake)), {255, 255, 255}, 1, 1)
+    outlinedText(12, 156 + letterYOffset, 2, "DRAW CALLS:   "..tostring(round(statsGraphics.drawcalls)), {255, 255, 255}, 1, 1)
+
+    outlinedText(12, 180 + letterYOffset, 2, "CANVAS SWITCHES:   "..tostring(round(statsGraphics.canvasswitches)), {255, 255, 255}, 1, 1)
 
     love.graphics.setCanvas(display)
 

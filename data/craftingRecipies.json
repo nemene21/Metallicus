@@ -5,6 +5,11 @@
     "amount" : 2
 },
 {
+    "name" : "slimyShroomSoup",
+    "materials" : [["jello", 6], ["shroomOre", 6], ["wood", 2]],
+    "amount" : 1
+},
+{
     "name" : "stoneSword",
     "materials" : [["stone", 6], ["stick", 4]],
     "amount" : 1
@@ -25,6 +30,11 @@
     "amount" : 1
 },
 {
+    "name" : "mushboomRod",
+    "materials" : [["shroomOre", 12], ["stick", 4]],
+    "amount" : 1
+},
+{
     "name" : "shroomHat",
     "materials" : [["shroomOre", 8]],
     "amount" : 1
@@ -32,6 +42,11 @@
 {
     "name" : "shroomRobe",
     "materials" : [["shroomOre", 12]],
+    "amount" : 1
+},
+{
+    "name" : "totemOfFloat",
+    "materials" : [["wood", 8], ["flyDust", 12]],
     "amount" : 1
 }
 ]

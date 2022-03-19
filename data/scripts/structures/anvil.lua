@@ -135,7 +135,7 @@ function processAnvil(anvil)
 
         love.graphics.setCanvas(UI_LAYER)
 
-        drawSprite(IMAGE_F, anvil.x + 3, anvil.y - 86 + math.sin(globalTimer * 2) * 9)
+        drawInteract(anvil.x + 3, anvil.y - 86)
 
         if justPressed("f") or not (math.abs(player.collider.x - anvil.x) < 64 and math.abs(player.collider.y - anvil.y) < 64) or not player.inventoryOpen then anvil.open = false; player.inventoryOpen = false end
 
@@ -210,7 +210,7 @@ function processAnvil(anvil)
     if  math.abs(player.collider.x - anvil.x) < 64 and math.abs(player.collider.y - anvil.y) < 64 then
 
         love.graphics.setCanvas(UI_LAYER)
-        drawSprite(IMAGE_F, anvil.x + 3, anvil.y - 86 + math.sin(globalTimer * 2) * 9)
+        drawInteract(anvil.x + 3, anvil.y - 86)
         love.graphics.setCanvas(display)
 
         if justPressed("f") then player.inventoryOpen = false; anvil.open = true; player.inventoryOpen = true; anvil.scroll = 0; anvil.scrollVel = 0 end

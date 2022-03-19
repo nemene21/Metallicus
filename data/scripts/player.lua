@@ -21,7 +21,7 @@ function newPlayer(x,y,stats)
     
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
-
+    
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")
     wearing = addSlot(wearing,1,1,"bodyArmor","bodyArmor","equipmentSlot")
@@ -31,14 +31,14 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,2,1,"ring","ring","equipmentSlot")
     wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
 
-    return {
+    local player = {
         vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
 
         collider=newRect(x,y,30,46), justLanded = false,
 
         inventoryOpen=false, slotOn = 1,
         
-        text = "", lettersLoaded = "", letterTimer = 0, speakTimer = 0, textFadeTimer = 0, textPriority = 0,
+        text = "", lettersLoaded = "", letterTimer = 0, speakTimer = 0, textFadeTimer = 0, textPriority = 0, textPos = newVec(0, 0),
 
         walkSoundTimer = newTimer(0.2), speed = 300,
  
@@ -59,6 +59,8 @@ function newPlayer(x,y,stats)
 
         animation="idle", dashParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerDash.json")), walkParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerWalk.json")); jumpParticles=loadJson("data/particles/player/playerJump.json")
     }
+
+    return player
 end
 
 function processPlayer(player)
@@ -73,6 +75,8 @@ function processPlayer(player)
             end
         end
     end
+
+    player.hp = clamp(player.hp, 0, player.hpMax)
 
     -- Particles
 
@@ -134,38 +138,36 @@ function processPlayer(player)
     
     -- Movement Y
 
-    if player.flyMode then
+    local flying = player.flyMode or player.usingFloat
+    if flying then
 
         local yInput = boolToInt(pressed("s") and not debugLineOpen) - boolToInt(pressed("w") and not debugLineOpen)
         player.vel.y = lerp(player.vel.y, yInput * 300, dt * 8)
 
     end
+    player.usingFloat = false
 
     player.downPressedTimer = player.downPressedTimer - dt -- Fall trough platform
     if pressed("s") and not debugLineOpen then player.downPressedTimer = 0.3 end
 
-    player.vel.y = math.min(player.vel.y + 1200 * dt * boolToInt(not player.flyMode),600) -- Gravity
+    player.vel.y = math.min(player.vel.y + 1200 * dt * boolToInt(not flying),600) -- Gravity
     
-    local velocity = newVec(player.vel.x + player.bonusForce.x + player.dashForce, player.vel.y + player.bonusForce.y)
-
-    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, velocity, ROOM.tilemap.colliders)
-    else player.collider = moveRect(player.collider, velocity, ROOM.tilemap.collidersWithFalltrough) end
-
-    if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(player.flyMode); player.canCutJump = false end -- Grounded
+    if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(flying); player.canCutJump = false end -- Grounded
 
     player.jumpPressedTimer = player.jumpPressedTimer - dt             -- Jump time
-    if justPressed("space") and not debugLineOpen and not player.flyMode then player.jumpPressedTimer = 0.15 end
+    if justPressed("space") and not debugLineOpen and not flying then player.jumpPressedTimer = 0.15 end
 
     if player.vel.y > 0 then player.canCutJump = false end
 
     player.coyoteTime = player.coyoteTime - dt                             -- Coyote time
-    if player.collider.touching.y == 1 then
+    if player.collider.touching.y == 1 and not flying then
         player.canCutJump = false
 
         if player.justLanded == false then
 
             local impulse = player.vel.y / 600
-            --playSound("fall", 1, nil, impulse * 0.25)
+
+            --playSound("fall", love.math.random(80, 120) * 0.01, None, impulse)
 
             player.justLanded = true
             table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) -- Fall particles
@@ -193,15 +195,24 @@ function processPlayer(player)
     if player.jumpPressedTimer > 0 and player.coyoteTime > 0 then -- Jump
         player.vel.y = -620; player.coyoteTime = 0
 
-        player.canCutJump = true
+        player.canCutJump = true; playSound("jump", love.math.random(80, 120) * 0.01)
 
         table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
     end
 
     if not pressed("space") and not debugLineOpen and player.canCutJump and player.vel.y < 0 then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
 
+
+    -- Move rect
+
+    local velocity = newVec(player.vel.x + player.bonusForce.x + player.dashForce, player.vel.y + player.bonusForce.y)
+
+    if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, velocity, ROOM.tilemap.colliders)
+    else player.collider = moveRect(player.collider, velocity, ROOM.tilemap.collidersWithFalltrough) end
+
+
     -- Set animation
-    if player.collider.touching.y ~= 1 then
+    if player.collider.touching.y ~= 1 or flymode then
         if player.vel.y > 0 then player.animation="fall" else player.animation="jump" end
     else
     if xInput ~= 0 then player.animation="run" else player.animation="idle" end
@@ -236,7 +247,7 @@ function drawPlayer(player)
     end
 
     setColor(255,255,255, 255 * (1 - math.abs(math.sin(3.14 * player.iFrames * 5))))
-    lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
+    local lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
 
     -- LEGS
     drawSprite(PLAYER_ARM, player.collider.x + player.legL.x * lookAt, player.collider.y + player.legL.y, lookAt, 1, player.legLR)
@@ -253,10 +264,18 @@ function drawPlayer(player)
     local holding = tostring(player.slotOn)..",0"
     local handed = 0
 
-    if player.hotbar.slots[holding].item ~= nil then
-        player.hotbar.slots[holding].item = holdItem(player,lookAt,player.hotbar.slots[holding].item)
-        handed = handed + boolToInt(player.hotbar.slots[holding].item.armRTaken)
-        handed = handed + boolToInt(player.hotbar.slots[holding].item.armLTaken)
+    local inHandItem = player.hotbar.slots[holding].item
+
+    if inHandItem ~= nil then
+        handed = handed + boolToInt(inHandItem.armRTaken)
+        handed = handed + boolToInt(inHandItem.armLTaken)
+        inHandItem = holdItem(player,lookAt,inHandItem)
+
+        if inHandItem.holdData ~= nil then if inHandItem.holdData.attackTimer ~= nil then
+            
+            attackMouseLine = inHandItem.holdData.attackTimer / inHandItem.stats.attackTime
+
+        end end
     end
 
     -- ARMS
@@ -321,6 +340,9 @@ function drawPlayerUI(player)
 
     end
 
+    player.textPos.x = lerp(player.textPos.x, player.collider.x - camera[1], dt * 6)
+    player.textPos.y = lerp(player.textPos.y, player.collider.y - 80 - camera[2], dt * 6)
+
     player.letterTimer = player.letterTimer + dt * 20
     if player.text ~= "" then
 
@@ -334,12 +356,12 @@ function drawPlayerUI(player)
         local w = FONT:getWidth(player.text) + offset * 2; local h = FONT:getHeight(player.text) + offset * 2
 
         setColor(0, 0, 0, 255 * player.textFadeTimer)
-        love.graphics.rectangle("fill", player.collider.x - camera[1], player.collider.y - 80 - camera[2], w, h, 8, 8)
+        love.graphics.rectangle("fill", player.textPos.x, player.textPos.y, w, h, 8, 8)
 
-        love.graphics.circle("fill", player.collider.x - camera[1] + 18, player.collider.y - 50 - camera[2], 12)
-        love.graphics.circle("fill", player.collider.x - camera[1] + 8, player.collider.y - 30 - camera[2], 6)
+        love.graphics.circle("fill", player.textPos.x + 18, player.textPos.y + 30, 12 + math.sin(globalTimer * 4 + 1.14))
+        love.graphics.circle("fill", player.textPos.x + 8, player.textPos.y + 50, 6 + math.sin(globalTimer * 4) * 2)
         
-        normalText(player.collider.x + offset - camera[1], player.collider.y - 80 + offset - camera[2], player.lettersLoaded, {255, 255, 255, 255 * player.textFadeTimer}, 1, 1, 0, 0)
+        normalText(player.textPos.x + offset, player.textPos.y + offset, player.lettersLoaded, {255, 255, 255, 255 * player.textFadeTimer}, 1, 1, 0, 0)
 
         setColor(255, 255, 255)
 
