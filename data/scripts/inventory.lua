@@ -88,7 +88,7 @@ function processInventory(inventory)
             S.scaleTo = 1.15
 
             -- Left click
-            if mouseJustPressed(1) and not pressed("lshift") then
+            if mouseJustPressed(1) or justPressedTrigger[2] then
                 inventory.justUpdated = true
 
                 S.scale = 1.3; playSound("inventoryClick")
@@ -134,7 +134,7 @@ function processInventory(inventory)
             end
             
             -- Right click
-            if mouseJustPressed(2) and not pressed("lshift") then
+            if mouseJustPressed(2) or justPressedTrigger[1] then
                 inventory.justUpdated = true
 
                 S.scale = 1.3; playSound("inventoryClick")
@@ -337,7 +337,7 @@ function MODE_TOTEM(player,headed,item)
     -- Draw
     drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
 
-    if mousePressed(1) then
+    if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) then
 
         TOTEM_EFFECTS[item.effect](item)
 
@@ -350,7 +350,7 @@ function MODE_CONSUME(player,headed,item)
     -- Draw
     drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
 
-    if mouseJustPressed(1) then
+    if mouseJustPressed(1) or justPressedTrigger[2] then
 
         item.amount = item.amount - 1
 
@@ -377,7 +377,7 @@ function MODE_SLASH(player,headed,item)
     
     -- Shoot
     item.holdData.attackTimer = item.holdData.attackTimer - dt
-    if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+    if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
         mouseScale = 2.5; mouseRot = 3.14
 
         -- Reset attack timer
@@ -439,7 +439,7 @@ function MODE_SHOOT(player,headed,item)
 
     -- Shoot
     item.holdData.attackTimer = item.holdData.attackTimer - dt
-    if mousePressed(1) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+    if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
         mouseScale = 2.5; mouseRot = 3.14
 
         -- Reset attack timer

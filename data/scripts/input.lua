@@ -26,20 +26,53 @@ function setMouseJustPressed(button) lastMouseButtonPressed = button end
 
 -- JOYSTICK
 
-function joystickPressed(id,button) return JOYSTICKS[id]:isGamepadDown(button) end
+function joystickPressed(id,button) if JOYSTICKS[id] ~= nil then return JOYSTICKS[id]:isGamepadDown(button) end end
 
-function joystickJustPressed(id,button) return JOYSTICK_LAST_PRESSES[id] == button end
+function joystickJustPressed(id,button) if JOYSTICKS[id] ~= nil then return JOYSTICK_LAST_PRESSES[id] == button end end
+
+justPressedTrigger = {false, false}
+holdingTriggers = {false, false}
+
+function joystickJustPressedTriggerProcess(id)
+
+    local axis = joystickGetAxis(id, 3)
+
+    justPressedTrigger = {false, false}
+
+    if axis.x > 0.4 then
+
+        if not holdingTriggers[1] then justPressedTrigger[1] = true end
+        holdingTriggers[1] = true
+
+    else
+
+        holdingTriggers[1] = false
+
+    end
+
+    if axis.y > 0.4 then
+
+        if not holdingTriggers[2] then justPressedTrigger[2] = true end
+        holdingTriggers[2] = true
+        
+    else
+
+        holdingTriggers[2] = false
+
+    end
+
+end
 
 function joystickGetAxis(id,axis)
 
-    if idInTable(JOYSTICKS,id) then
-    axis = axis * 2
+    if JOYSTICKS[id] ~= nil then
+        axis = axis * 2
 
-    local x = JOYSTICKS[id]:getAxis(axis - 1)
-    local y = JOYSTICKS[id]:getAxis(axis)
+        local x = JOYSTICKS[id]:getAxis(axis - 1)
+        local y = JOYSTICKS[id]:getAxis(axis)
 
-    return newVec(x,y)
+        return newVec(x,y)
     end
 
-    return 0
+    return newVec(0, 0)
 end

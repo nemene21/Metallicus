@@ -15,9 +15,9 @@ HP_BAR = love.graphics.newImage("data/images/UI/hpBar.png")
 
 function newPlayer(x,y,stats)
 
-    local inventory = newInventory(42,600 - INVENTORY_SPACING - 12 - 152,5,3)
+    local inventory = newInventory(42,600 - INVENTORY_SPACING - 154,5,3)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
-    local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 12,600 - INVENTORY_SPACING - 12 - 152,0,0)
+    local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
@@ -44,11 +44,13 @@ function newPlayer(x,y,stats)
  
         dashingFrames = 0, dashForce = 0, dashTimer = 0, dashJustRecharged = 1, dashSpeed = 700, dashInputTimer = 0,
 
+        lastJoystickMousePos = newVec(0, 0), lastInventoryJoystickMousePos = newVec(0, 0), lastInventoryJoystickMousePosLerp = newVec(INVENTORY_SPACING * 0.5 + 12, 600 - 0.5 * INVENTORY_SPACING - 12),
+
         iFrames = 0,
         
         damageReduction = 0, magicDamage = 0,
 
-        hp = 100, hpMax = 100, hpBarDelayed = 0, 
+        hp = 100, hpMax = 100, hpBarDelayed = 0,
 
         downPressedTimer=0, jumpPressedTimer=0, coyoteTime=0, canCutJump = false,
 
@@ -88,8 +90,53 @@ function processPlayer(player)
 
     player.iFrames = clamp(player.iFrames - dt, 0, 1)
 
+    -- Controller mouse
+    local mouseJoyAxis = joystickGetAxis(1, 2)
+
+    if not player.inventoryOpen then
+        if mouseJoyAxis.x ~= 0 and mouseJoyAxis.y ~= 0 then
+
+            xM = player.lastJoystickMousePos.x; yM = player.lastJoystickMousePos.y
+
+            if mouseJoyAxis:getLen() > 0.65 then
+
+                local mouseOffset = newVec(200, 0):rotate(mouseJoyAxis:getRot())
+                xM = player.collider.x - camera[1] + mouseOffset.x
+                yM = player.collider.y - camera[2] + mouseOffset.y
+
+                player.lastJoystickMousePos = newVec(xM, yM)
+
+            end
+
+        end
+
+    end
+
     -- Movement X
-    local xInput = boolToInt(pressed("d") and not debugLineOpen) - boolToInt(pressed("a") and not debugLineOpen)
+    local moveJoyAxis = joystickGetAxis(1, 1)
+    local joyMoveX = 0
+
+    local joyMoveXExists = moveJoyAxis ~= nil
+
+    local xInput = 0
+
+    if joyMoveXExists then
+        local joyMoveX = moveJoyAxis.x
+
+        if math.abs(joyMoveX) < 0.15 then
+
+            xInput = boolToInt(pressed("d")) - boolToInt(pressed("a"))
+        else
+
+            xInput = boolToInt(joyMoveX > 0) * 2 - 1
+
+        end
+    
+    else
+
+        xInput = boolToInt(pressed("d")) - boolToInt(pressed("a"))
+
+    end
 
     xInput = xInput * (1 - boolToInt(player.dashingFrames > 0))
 
@@ -108,7 +155,7 @@ function processPlayer(player)
     player.dashTimer = clamp(player.dashTimer - dt, 0, 1)
     player.dashInputTimer = player.dashInputTimer - dt
 
-    if mouseJustPressed(2) then player.dashInputTimer = 0.3 end
+    if mouseJustPressed(2) or joystickJustPressed(1, 8) then player.dashInputTimer = 0.3 end
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
@@ -148,14 +195,16 @@ function processPlayer(player)
     player.usingFloat = false
 
     player.downPressedTimer = player.downPressedTimer - dt -- Fall trough platform
-    if pressed("s") and not debugLineOpen then player.downPressedTimer = 0.3 end
+    if (pressed("s") or moveJoyAxis.y > 0.8) and not debugLineOpen then player.downPressedTimer = 0.3 end
 
     player.vel.y = math.min(player.vel.y + 1200 * dt * boolToInt(not flying),600) -- Gravity
     
     if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(flying); player.canCutJump = false end -- Grounded
 
     player.jumpPressedTimer = player.jumpPressedTimer - dt             -- Jump time
-    if justPressed("space") and not debugLineOpen and not flying then player.jumpPressedTimer = 0.15 end
+
+    local jumpPressed = justPressed("space") or justPressedTrigger[1] and not player.inventoryOpen
+    if jumpPressed and not debugLineOpen and not flying then player.jumpPressedTimer = 0.15 end
 
     if player.vel.y > 0 then player.canCutJump = false end
 
@@ -200,7 +249,7 @@ function processPlayer(player)
         table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
     end
 
-    if not pressed("space") and not debugLineOpen and player.canCutJump and player.vel.y < 0 then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
+    if not (pressed("space") or (joystickGetAxis(1, 3).x > 0.4)) and not debugLineOpen and player.canCutJump and player.vel.y < 0 then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
 
 
     -- Move rect
@@ -389,11 +438,14 @@ function drawPlayerUI(player)
     outlinedText(12 + 10 * math.sin(3.14 * player.iFrames), 28, 2, tostring(player.hp).."/"..tostring(player.hpMax), {255, 255, 255}, 1.25, 1.25, 0, 0.5)
 
     -- Scroll
+    local joystickScroll = boolToInt(joystickJustPressed(1, 10)) - boolToInt(joystickJustPressed(1, 11))
 
-    if getScroll() ~= 0 and not player.inventoryOpen then
+    local scrolling = getScroll() ~= 0 or joystickScroll ~= 0
 
-        -- playSound("scroll")
+    if scrolling and not player.inventoryOpen then
+
         player.slotOn = wrap(player.slotOn - getScroll(), 0, 4)
+        player.slotOn = wrap(player.slotOn - joystickScroll, 0, 4)
 
         local holding = tostring(player.slotOn)..",0"
 
@@ -415,7 +467,7 @@ function drawPlayerUI(player)
     end
 
     -- Open / close
-    if justPressed("e") and not debugLineOpen then
+    if (justPressed("e") or joystickJustPressed(1, 4)) and not debugLineOpen then
         
         player.inventoryOpen = not player.inventoryOpen
 
@@ -434,6 +486,21 @@ function drawPlayerUI(player)
 
     -- Process inventory when open
     if player.inventoryOpen then
+
+        player.lastInventoryJoystickMousePos.x = lerp(player.lastInventoryJoystickMousePos.x, player.lastInventoryJoystickMousePosLerp.x, dt * 10)
+        player.lastInventoryJoystickMousePos.y = lerp(player.lastInventoryJoystickMousePos.y, player.lastInventoryJoystickMousePosLerp.y, dt * 10)
+
+        if joystickJustPressed(1, 12) then player.lastInventoryJoystickMousePosLerp.y = player.lastInventoryJoystickMousePosLerp.y - INVENTORY_SPACING end
+        if joystickJustPressed(1, 13) then player.lastInventoryJoystickMousePosLerp.y = player.lastInventoryJoystickMousePosLerp.y + INVENTORY_SPACING end
+        if joystickJustPressed(1, 14) then player.lastInventoryJoystickMousePosLerp.x = player.lastInventoryJoystickMousePosLerp.x - INVENTORY_SPACING end
+        if joystickJustPressed(1, 15) then player.lastInventoryJoystickMousePosLerp.x = player.lastInventoryJoystickMousePosLerp.x + INVENTORY_SPACING end
+
+        if JOYSTICKS[1] ~= nil then
+
+            xM = player.lastInventoryJoystickMousePos.x; yM = player.lastInventoryJoystickMousePos.y
+
+        end
+
         mouseMode = "pointer"; mCentered = 0
 
         local hoveredSlot = nil

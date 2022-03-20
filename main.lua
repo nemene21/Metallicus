@@ -69,6 +69,8 @@ end
 -- Play scenes
 function love.draw()
 
+    joystickJustPressedTriggerProcess(1)
+
     -- Time and resetting
     dt = math.min(love.timer.getDelta(), MIN_DELTA) * timeMult
     globalTimer = globalTimer + dt
