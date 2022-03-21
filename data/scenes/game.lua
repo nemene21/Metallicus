@@ -93,6 +93,8 @@ function game()
 
         ROOM:processEnemies()
 
+        ROOM:process()
+
         ROOM:processEnemyBodies()
         
         -- Projectiles
@@ -110,8 +112,6 @@ function game()
         player:resetStats()
     
         player:drawUI()
-
-        ROOM:process()
 
         ROOM:drawTiles()
         
