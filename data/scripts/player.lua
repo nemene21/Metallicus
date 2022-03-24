@@ -19,13 +19,16 @@ function newPlayer(x,y,stats)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
-    local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["totemOfFloat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")
     wearing = addSlot(wearing,1,1,"bodyArmor","bodyArmor","equipmentSlot")
-    wearing = addSlot(wearing,1,2,"shield","shield","equipmentSlot")
+    wearing = addSlot(wearing,1,2,"activeItem","shield","equipmentSlot")
 
     wearing = addSlot(wearing,2,0,"ring","ring","equipmentSlot")
     wearing = addSlot(wearing,2,1,"ring","ring","equipmentSlot")
@@ -421,6 +424,29 @@ function drawPlayerUI(player)
     -- Draw hotbar
     drawSprite(HOLDING_ARROW, 42 + INVENTORY_SPACING * player.slotOn, 558, 1, 1, 0, 0)
     drawInventory(player.hotbar)
+
+    -- Draw active item
+    local activeItemSlot = player.wearing.slots["1,2"]
+    if activeItemSlot ~= nil then
+        local activeItem = activeItemSlot.item
+
+        if activeItem ~= nil then
+            setColor(255, 255, 255)
+            SHADERS.ACTIVE_ITEM:send("ratio", 1 - activeItem.charge)
+            love.graphics.setShader(SHADERS.ACTIVE_ITEM)
+
+            activeItem.flashTimer = clamp(activeItem.flashTimer - dt * 4, 0, 1)
+
+            if activeItem.charge == 1 and not activeItem.alreadyActivated then activeItem.alreadyActivated = true; activeItem.flashTimer = 1 end -- Activate animation
+
+            if activeItem.charge < 1 then activeItem.alreadyActivated = false end
+
+            if activeItem.flashTimer > 0.2 then love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1) end
+
+            drawSprite(ITEM_IMGES[activeItem.texture], 730, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer, 3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer, math.sin(globalTimer * 2) * 0.2, 0)
+            love.graphics.setShader()
+        end
+    end
     
     -- Draw hp bar
     local barLenght = 186 * player.hp / player.hpMax

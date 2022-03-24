@@ -96,11 +96,11 @@ function game()
         ROOM:process()
 
         ROOM:processEnemyBodies()
-        
-        -- Projectiles
 
         processPlayerProjectiles(playerProjectiles)
         processEnemyProjectiles(enemyProjectiles)
+        
+        -- Projectiles
 
         ROOM:processParticles()
 
@@ -113,9 +113,10 @@ function game()
     
         player:drawUI()
 
-        ROOM:drawTiles()
-        
         for id,P in ipairs(playerProjectiles) do P:draw() end
+
+        ROOM:drawTiles()
+
         for id,P in ipairs(enemyProjectiles) do P:draw() end
 
         -- Earthquake

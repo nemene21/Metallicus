@@ -18,6 +18,8 @@ SHADERS = {
     GRAYSCALE = love.graphics.newShader((love.filesystem.read("data/shaders/GRAYSCALE.fs")))
     ,
     BLUR = love.graphics.newShader((love.filesystem.read("data/shaders/BLUR.fs")))
+    ,
+    ACTIVE_ITEM = love.graphics.newShader((love.filesystem.read("data/shaders/ACTIVE_ITEM.fs")))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])

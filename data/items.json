@@ -41,7 +41,12 @@
 
     "maxStack" : 1,
 
-    "types" : ["item"]
+    "charge" : 0,
+    "chargeSpeed" : 300,
+    "alreadyActivated" : false,
+    "flashTimer" : 0,
+
+    "types" : ["item", "activeItem"]
 },
 
 "stick" : {
@@ -259,6 +264,47 @@
     },
 
     "stats" : {"dmg" : 25, "attackTime" : 1.5, "amount" : 4},
+
+    "types" : ["item"]
+},
+
+"woodenBow" : {
+    "texture" : "woodenBow",
+    "name" : "Wooden Bow", "rarity" : "common",
+
+    "holdMode" : "bow",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : true,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 24, "swing" : 0
+    },
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 9999,
+        "gravity" : 200,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 8,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 2,
+
+        "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow"
+    },
+
+    "stats" : {"dmg" : 25, "attackTime" : 0.5, "amount" : 1},
 
     "types" : ["item"]
 },

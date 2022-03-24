@@ -485,9 +485,79 @@ function MODE_SHOOT(player,headed,item)
             table.insert(playerProjectiles,projectile)
         end
     end
+end
+
+function MODE_BOW(player,headed,item)
+
+    local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM + 8); rotation = rotation:getRot() + 180
+    local pos = newVec(item.holdData.distance, 0); pos:rotate(rotation)
+    
+    local turned = boolToInt((player.collider.x - camera[1] - xM) < 0) * 2 - 1
+    
+    -- Shoot
+    item.holdData.attackTimer = item.holdData.attackTimer - dt
+    if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+        mouseScale = 2.5; mouseRot = 3.14
+    
+        -- Reset attack timer
+        item.holdData.attackTimer = item.stats.attackTime
+        item.projectile.burstsLeft = item.stats.burst or 1
+    
+    end
+    
+    item.projectile.burstTimer = item.projectile.burstTimer - dt
+    
+    if item.projectile.burstsLeft > 0 and item.projectile.burstTimer <= 0 then
+        item.projectile.burstTimer = item.projectile.burstWait
+        item.projectile.burstsLeft = item.projectile.burstsLeft - 1
+    
+        -- Get multiplier
+        local multiplier = (100 + (player[item.damageType] or 0)) * 0.01
+    
+        local projectileOffset = newVec(36, 0); projectileOffset:rotate(rotation + item.projectile.offsetRotation * -turned)
+    
+        if item.projectile.particlesSpawn ~= nil then
+                
+            table.insert(ROOM.particleSystems, newParticleSystem(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[item.projectile.particlesSpawn])))
+                
+        end
+    
+        for x=1, item.stats.amount or 1 do
+            -- Summon projectile
+            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+    
+            if item.explosion ~= nil then
+    
+                projectile.explosion = deepcopyTable(item.explosion)
+    
+            end
+    
+            if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
+    
+            if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
+    
+            shake(2, 1, 0.15, rotation)
+            if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+    
+            table.insert(playerProjectiles,projectile)
+        end
+    end
 
     -- Draw
-    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y + 8, 1 - 0.25 * clamp(item.holdData.attackTimer, 0, item.stats.attackTime) / item.stats.attackTime, turned, math.sin(clamp(item.holdData.attackTimer, 0, item.stats.attackTime) / item.stats.attackTime * 3.14 * 3) * item.holdData.swing + rotation / 180 * 3.14, 1, 0, 1)
+    local stringOffset = newVec(16, 0); stringOffset:rotate(rotation + 90)
+
+    local stringMiddle = clamp(item.holdData.attackTimer / item.stats.attackTime, 0.4, 1)
+    local arrowScale = 1 - clamp((item.holdData.attackTimer / item.stats.attackTime) * 4, 0, 1)
+
+    love.graphics.setLineWidth(6); setColor(24, 20, 37)
+    love.graphics.line(player.collider.x + pos.x - stringOffset.x - camera[1], player.collider.y + pos.y - stringOffset.y - camera[2], player.collider.x + pos.x * stringMiddle - camera[1], player.collider.y + pos.y * stringMiddle - camera[2], player.collider.x + pos.x + stringOffset.x - camera[1], player.collider.y + pos.y + stringOffset.y - camera[2])
+
+    love.graphics.setLineWidth(2); setColor(255, 255, 255)
+    love.graphics.line(player.collider.x + pos.x - stringOffset.x - camera[1], player.collider.y + pos.y - stringOffset.y - camera[2], player.collider.x + pos.x * stringMiddle - camera[1], player.collider.y + pos.y * stringMiddle - camera[2], player.collider.x + pos.x + stringOffset.x - camera[1], player.collider.y + pos.y + stringOffset.y - camera[2])
+
+    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, 1, rotation / 180 * 3.14 - 0.78)
+    drawFrame(PLAYER_PROJECTILE_IMAGES[item.projectile.texture], 1, 1, player.collider.x + pos.x, player.collider.y + pos.y , arrowScale, arrowScale, rotation / 180 * 3.14)
+
     return item
 end
 
@@ -500,7 +570,7 @@ function TOTEM_EFFECT_FLOAT(totem)
 end
 
 HOLD_MODES = {
-hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, totem=MODE_TOTEM
+hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, totem=MODE_TOTEM, bow=MODE_BOW
 }
 
 TOTEM_EFFECTS = {
@@ -528,6 +598,7 @@ ITEM_IMGES = {
 wood = love.graphics.newImage("data/images/items/wood.png"), -- Wood
 stick = love.graphics.newImage("data/images/items/stick.png"),
 bat = love.graphics.newImage("data/images/items/bat.png"),
+woodenBow = love.graphics.newImage("data/images/items/woodenBow.png"),
 
 jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
 jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),

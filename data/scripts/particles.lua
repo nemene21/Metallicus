@@ -17,10 +17,10 @@ end
 
 function drawParticleCircleGlow(P,w)
 
-    local scale = w * 0.25
+    local scale = w * 0.3
     
     love.graphics.setBlendMode("add")
-    love.graphics.setColor(P.color.r * 1.2,P.color.g * 1.2,P.color.b * 1.2,P.color.a)
+    love.graphics.setColor(P.color.r * 0.2,P.color.g * 0.2,P.color.b * 0.2,P.color.a)
     drawSprite(PARTICLE_LIGHT, P.x, P.y, scale, scale, 0)
     love.graphics.setBlendMode("alpha")
 

@@ -6,7 +6,9 @@ basicSlash = loadSpritesheet("data/images/projectiles/player/basicSlash.png",24,
 slimeShot = loadSpritesheet("data/images/projectiles/player/slimeShot.png",8,8),
 crystalShot = loadSpritesheet("data/images/projectiles/player/crystalShot.png",8,6),
 mushboomShot = loadSpritesheet("data/images/projectiles/player/mushboomShot.png",12,10),
-bullet = loadSpritesheet("data/images/projectiles/player/bullet.png",13,8)
+bullet = loadSpritesheet("data/images/projectiles/player/bullet.png",13,8),
+
+woodenArrow = loadSpritesheet("data/images/projectiles/player/woodenArrow.png",14,5),
 }
 
 PLAYER_PROJECTILE_PARTICLES = {
@@ -22,6 +24,8 @@ bullet = loadJson("data/particles/playerProjectiles/bulletDie.json"),
 mushboom = loadJson("data/particles/playerProjectiles/mushboomSpawn.json"),
 mushboomDie = loadJson("data/particles/playerProjectiles/mushboomDie.json"),
 mushboomExplosion = loadJson("data/particles/playerProjectiles/mushboomExplosion.json"),
+
+arrow = loadJson("data/particles/playerProjectiles/arrow.json"),
 
 crystalShot = loadJson("data/particles/playerProjectiles/crystalShotDie.json")
 }

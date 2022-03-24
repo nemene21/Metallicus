@@ -62,6 +62,17 @@ function hitEnemy(enemy,damage,strenght,dir)
         rotation = 0
 
     })
+
+    -- Draw active item
+    local activeItemSlot = player.wearing.slots["1,2"]
+    if activeItemSlot ~= nil then
+        local activeItem = activeItemSlot.item
+
+        if activeItem ~= nil then
+            activeItem.charge = clamp(activeItem.charge + damage / activeItem.chargeSpeed, 0, 1)
+        end
+    end
+    
 end
 
 --                                                                   IMAGES AND STUFF
