@@ -301,7 +301,7 @@
         "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
         "spread" : 2,
 
-        "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow"
+        "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
 
     "stats" : {"dmg" : 25, "attackTime" : 0.5, "amount" : 1},
