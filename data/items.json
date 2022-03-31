@@ -36,12 +36,14 @@
     "texture" : "totemOfFloat",
     "name" : "Totem of Float", "rarity" : "uncommon",
 
-    "holdMode" : "totem",
-    "effect" : "float",
+    "holdMode" : "hold",
+
+    "effect" : "addFloat", "floatAdding" : 10,
+    "noChargeTimer" : 0, "noChargeTimerMax" : 10,
 
     "maxStack" : 1,
 
-    "charge" : 0,
+    "charge" : 1,
     "chargeSpeed" : 300,
     "alreadyActivated" : false,
     "flashTimer" : 0,

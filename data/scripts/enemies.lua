@@ -63,7 +63,7 @@ function hitEnemy(enemy,damage,strenght,dir)
 
     })
 
-    -- Draw active item
+    -- Add to active item charge
     local activeItemSlot = player.wearing.slots["1,2"]
     if activeItemSlot ~= nil then
         local activeItem = activeItemSlot.item

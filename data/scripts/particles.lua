@@ -17,12 +17,7 @@ end
 
 function drawParticleCircleGlow(P,w)
 
-    local scale = w * 0.3
-    
-    love.graphics.setBlendMode("add")
-    love.graphics.setColor(P.color.r * 0.2,P.color.g * 0.2,P.color.b * 0.2,P.color.a)
-    drawSprite(PARTICLE_LIGHT, P.x, P.y, scale, scale, 0)
-    love.graphics.setBlendMode("alpha")
+    shine(P.x + 2, P.y + 2, w * 3 + 3, {P.color.r * 255, P.color.g * 255, P.color.b * 255, P.color.a * 255})
 
     love.graphics.setColor(P.color.r,P.color.g,P.color.b,P.color.a)
     love.graphics.circle("fill",P.x - camera[1],P.y - camera[2], w)

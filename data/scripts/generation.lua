@@ -26,7 +26,7 @@ end
 
 function resetBiomes()
     BIOME_ORDER = {
-        cave = 0,
+        cave = 3,
         sporeCavern = -1
     }
 

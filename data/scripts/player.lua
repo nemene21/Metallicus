@@ -9,8 +9,6 @@ PLAYER_DEAD = love.graphics.newImage("data/images/player/playerDie.png")
 PARTICLES_DIE_SPARK = loadJson("data/particles/player/playerDieSparkParticles.json")
 PARTICLES_DIE_CIRCLE = loadJson("data/particles/player/playerDieCircleParticles.json")
 
-PARTICLES_DASH = loadJson("data/particles/player/playerDash.json")
-
 HP_BAR = love.graphics.newImage("data/images/UI/hpBar.png")
 
 function newPlayer(x,y,stats)
@@ -40,10 +38,12 @@ function newPlayer(x,y,stats)
         collider=newRect(x,y,30,46), justLanded = false,
 
         inventoryOpen=false, slotOn = 1,
+
+        hasActiveItem=false, activeItemOffset=0, activeItemAppear=0,
         
         text = "", lettersLoaded = "", letterTimer = 0, speakTimer = 0, textFadeTimer = 0, textPriority = 0, textPos = newVec(0, 0),
 
-        walkSoundTimer = newTimer(0.2), speed = 300,
+        walkSoundTimer = newTimer(0.2), speed = 300, float = 0, floatParticles = newParticleSystem(x, y, loadJson("data/particles/player/playerFly.json")),
  
         dashingFrames = 0, dashForce = 0, dashTimer = 0, dashJustRecharged = 1, dashSpeed = 700, dashInputTimer = 0,
 
@@ -84,6 +84,9 @@ function processPlayer(player)
     player.hp = clamp(player.hp, 0, player.hpMax)
 
     -- Particles
+    
+    player.floatParticles.x = player.collider.x; player.floatParticles.y = player.collider.y
+    player.floatParticles:process()
 
     player.walkParticles:process()
 
@@ -141,7 +144,7 @@ function processPlayer(player)
 
     end
 
-    xInput = xInput * (1 - boolToInt(player.dashingFrames > 0))
+    xInput = xInput * (1 - boolToInt(player.dashingFrames > 0)) * boolToInt(not debugLineOpen)
 
     player.walkParticles.spawning = xInput ~= 0; player.walkParticles.x = player.collider.x; player.walkParticles.y = player.collider.y + 16
 
@@ -188,14 +191,18 @@ function processPlayer(player)
     
     -- Movement Y
 
-    local flying = player.flyMode or player.usingFloat
+    player.float = player.float - dt
+
+    local flying = player.flyMode or (player.float > 0)
+
+    player.floatParticles.spawning = flying
+
     if flying then
 
         local yInput = boolToInt(pressed("s") and not debugLineOpen) - boolToInt(pressed("w") and not debugLineOpen)
         player.vel.y = lerp(player.vel.y, yInput * 300, dt * 8)
 
     end
-    player.usingFloat = false
 
     player.downPressedTimer = player.downPressedTimer - dt -- Fall trough platform
     if (pressed("s") or moveJoyAxis.y > 0.8) and not debugLineOpen then player.downPressedTimer = 0.3 end
@@ -426,14 +433,32 @@ function drawPlayerUI(player)
     drawInventory(player.hotbar)
 
     -- Draw active item
+
     local activeItemSlot = player.wearing.slots["1,2"]
     if activeItemSlot ~= nil then
         local activeItem = activeItemSlot.item
 
         if activeItem ~= nil then
+
+            if player.hasActiveItem == false then
+
+                player.hasActiveItem = true
+
+                activeItem.charge = 0; player.activeItemAppear = 0
+
+            end
+
+            if justPressed("lshift") and activeItem.charge == 1 and activeItem.noChargeTimer < 0 then
+
+                activeItem.charge = 0
+                ACTIVE_ITEM_EFFECTS[activeItem.effect](activeItem)
+                activeItem.noChargeTimer = activeItem.noChargeTimerMax
+
+            end
+
+            player.activeItemAppear = lerp(player.activeItemAppear, 1, dt * 6)
+
             setColor(255, 255, 255)
-            SHADERS.ACTIVE_ITEM:send("ratio", 1 - activeItem.charge)
-            love.graphics.setShader(SHADERS.ACTIVE_ITEM)
 
             activeItem.flashTimer = clamp(activeItem.flashTimer - dt * 4, 0, 1)
 
@@ -441,12 +466,45 @@ function drawPlayerUI(player)
 
             if activeItem.charge < 1 then activeItem.alreadyActivated = false end
 
-            if activeItem.flashTimer > 0.2 then love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1) end
+            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            
+            love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
+            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            
+            if activeItem.flashTimer > 0.2 then
 
-            drawSprite(ITEM_IMGES[activeItem.texture], 730, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer, 3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer, math.sin(globalTimer * 2) * 0.2, 0)
+                love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
+
+            else
+
+                SHADERS.ACTIVE_ITEM:send("ratio", 1 - activeItem.charge); love.graphics.setShader(SHADERS.ACTIVE_ITEM)
+                
+                if activeItem.noChargeTimer >= 0 then
+
+                    activeItem.noChargeTimer = activeItem.noChargeTimer - dt
+
+                    activeItem.charge = 0
+                    setColor(100, 100, 100)
+                    SHADERS.ACTIVE_ITEM:send("ratio", 1 - activeItem.noChargeTimer / activeItem.noChargeTimerMax); love.graphics.setShader(SHADERS.ACTIVE_ITEM)
+
+                end
+            
+            end
+            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             love.graphics.setShader()
+
+        else
+
+            player.hasActiveItem = false
+
         end
+
     end
+
+    player.activeItemOffset = lerp(player.activeItemOffset, 0, dt * 2)
     
     -- Draw hp bar
     local barLenght = 186 * player.hp / player.hpMax

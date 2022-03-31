@@ -333,19 +333,6 @@ function MODE_HOLD(player,headed,item)
     return item
 end
 
-function MODE_TOTEM(player,headed,item)
-    -- Draw
-    drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
-
-    if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) then
-
-        TOTEM_EFFECTS[item.effect](item)
-
-    end
-
-    return item
-end
-
 function MODE_CONSUME(player,headed,item)
     -- Draw
     drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
@@ -561,21 +548,11 @@ function MODE_BOW(player,headed,item)
     return item
 end
 
--- TOTEM EFFECTS
-
-function TOTEM_EFFECT_FLOAT(totem)
-
-    player.usingFloat = true
-
-end
-
 HOLD_MODES = {
-hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, totem=MODE_TOTEM, bow=MODE_BOW
+hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, bow=MODE_BOW
 }
 
-TOTEM_EFFECTS = {
-float=TOTEM_EFFECT_FLOAT
-}
+require "data.scripts.activeItemEffects"
 
 -- Images for all items and icons in the game currently!
 

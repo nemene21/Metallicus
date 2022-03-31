@@ -133,6 +133,8 @@ function processAnvil(anvil)
 
     if anvil.open then
 
+        player.activeItemOffset = lerp(player.activeItemOffset, -336, dt * 6)
+
         love.graphics.setCanvas(UI_LAYER)
 
         drawInteract(anvil.x + 3, anvil.y - 86)

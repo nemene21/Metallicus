@@ -92,7 +92,7 @@ function love.draw()
     love.graphics.clear(0,0,0,0)
 
     love.graphics.setColor(1,1,1,1); love.graphics.setCanvas(display)
-    love.graphics.clear(0,0,0,1)
+    love.graphics.clear (0,0,0,1)
 
     --------------------------------------------------------------------------SCENE CALLED
     sceneNew = scenes[scene][1]()

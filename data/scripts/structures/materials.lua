@@ -43,6 +43,15 @@ function processMaterial(mat)
                 mat.hp = mat.hp - P.damage
                 mat.hitTimer = 0.2
                 P.pirice = P.pirice - 1
+
+                local activeItemSlot = player.wearing.slots["1,2"]
+                if activeItemSlot ~= nil then
+                    local activeItem = activeItemSlot.item
+            
+                    if activeItem ~= nil then
+                        activeItem.charge = clamp(activeItem.charge + P.damage / activeItem.chargeSpeed, 0, 1)
+                    end
+                end
     
                 table.insert(P.hitlist, mat.id)
     
