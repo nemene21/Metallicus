@@ -193,7 +193,24 @@ function generate(amount, biome)
 
         end
 
-        room.tilemap = newTilemap(loadSpritesheet(biome.tilesetPath, 16, 16), 48, loadJson(layout))
+        local levelPreset = loadJson(layout)
+        room.tilemap = newTilemap(loadSpritesheet(biome.tilesetPath, 16, 16), 48, levelPreset.tiles)
+
+        -- Place structures from the preset
+
+        for _, S in ipairs(layout.structures) do
+            local bonusAttributes = []
+
+            for id, att in ipairs(S) do
+                
+                if id > 3 then
+                    table.insert(bonusAttributes, att)
+                end
+
+            end
+
+            table.insert(room.structures, IN_ROOM_SCTRUCTURES[S[1]](S[2], S[3]), bonusAttributes)
+        end
 
         
         local first = true

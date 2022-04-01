@@ -18,3 +18,13 @@ require "data.scripts.structures.anvil"
 --                                                          TEXT DISPLAYERS
 
 require "data.scripts.structures.textDisplayers"
+
+--                                                          TRAPS
+
+require "data.scripts.structures.spinTrap"
+
+IN_ROOM_SCTRUCTURES = {
+
+spinTrap = newSpinTrap
+
+}
