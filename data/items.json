@@ -51,6 +51,52 @@
     "types" : ["item", "activeItem"]
 },
 
+"quiver" : {
+    "texture" : "quiver",
+    "name" : "Quiver", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "effectProcess" : "projectileBurst",
+    "effect" : "projectileBurst", "burst" : 0, "burstAdding" : 10,
+    "burstSpeed" : 0.04, "burstTimer" : 0,
+
+    "maxStack" : 1,
+
+    "noChargeTimer" : 0, "noChargeTimerMax" : 5,
+
+    "charge" : 1,
+    "chargeSpeed" : 600,
+    "alreadyActivated" : false,
+    "flashTimer" : 0,
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 9999,
+        "gravity" : 200,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 8,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 2,
+
+        "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
+    },
+
+    "stats" : {"dmg" : 25},
+
+    "types" : ["item", "activeItem"]
+},
+
 "stick" : {
     "texture" : "stick",
     "name" : "Stick", "rarity" : "common",

@@ -20,7 +20,7 @@ function newPlayer(x,y,stats)
     local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["totemOfFloat"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["quiver"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
@@ -474,6 +474,13 @@ function drawPlayerUI(player)
         local activeItem = activeItemSlot.item
 
         if activeItem ~= nil then
+
+            local process = ACTIVE_ITEM_PROCESSES[activeItem.effectProcess or "NONE"]
+            if process ~= nil then
+
+                process(activeItem)
+
+            end
 
             if player.hasActiveItem == false then
 

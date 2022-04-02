@@ -576,6 +576,7 @@ wood = love.graphics.newImage("data/images/items/wood.png"), -- Wood
 stick = love.graphics.newImage("data/images/items/stick.png"),
 bat = love.graphics.newImage("data/images/items/bat.png"),
 woodenBow = love.graphics.newImage("data/images/items/woodenBow.png"),
+quiver = love.graphics.newImage("data/images/items/quiver.png"),
 
 jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
 jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
