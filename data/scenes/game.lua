@@ -165,6 +165,7 @@ function game()
         -- Draw dead player
         if player.hp <= 0 then
 
+            setColor(255, 255, 255)
             love.graphics.setCanvas(particleCanvas)
             drawSprite(PLAYER_DEAD, player.collider.x, player.collider.y, math.sin(globalTimer * 5), 1)
             love.graphics.setCanvas(display)

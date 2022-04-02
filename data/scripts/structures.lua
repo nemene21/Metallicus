@@ -23,7 +23,7 @@ require "data.scripts.structures.textDisplayers"
 
 require "data.scripts.structures.spinTrap"
 
-IN_ROOM_SCTRUCTURES = {
+IN_ROOM_STRUCTURES = {
 
 spinTrap = newSpinTrap
 

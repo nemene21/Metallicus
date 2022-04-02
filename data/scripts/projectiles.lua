@@ -311,27 +311,14 @@ function processEnemyProjectiles(enemyProjectiles)
 
         P:process()
 
-        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius * 0.8) and player.iFrames == 0 and player.dashingFrames == 0 and not playerDied then
+        if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius * 0.8) then
 
-            ROOM.playerTookHits = ROOM.playerTookHits + 1
-
-            table.insert(kill, id); player.iFrames = 1
+            table.insert(kill, id)
 
             table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
             table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
 
-            local damage = math.floor(P.damage * (1 - player.damageReduction * 0.01))
-
-            player.hp = player.hp - damage
-
-            table.insert(ROOM.textPopUps.particles,{
-                x = player.collider.x + love.math.random(-12, 12), y = player.collider.y + love.math.random(-12, 12),
-                vel = newVec(0, -100), width = tostring(damage),
-                lifetime = 1, lifetimeStart = 1,
-                color = {r=255,g=0,b=0,a=1},
-                rotation = 0
-        
-            })
+            player:hit(P.damage)
 
         else if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id) end
         

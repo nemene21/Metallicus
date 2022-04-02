@@ -33,7 +33,7 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
 
     local player = {
-        vel=newVec(0,0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
+        vel=newVec(0, 0), knockback = newVec(0, 0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
 
         collider=newRect(x,y,30,46), justLanded = false,
 
@@ -62,13 +62,46 @@ function newPlayer(x,y,stats)
 
         bonusForce = newVec(0, 0), flyMode = false,
 
-        animation="idle", dashParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerDash.json")), walkParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerWalk.json")); jumpParticles=loadJson("data/particles/player/playerJump.json")
+        animation="idle", dashParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerDash.json")), walkParticles=newParticleSystem(x,y,loadJson("data/particles/player/playerWalk.json")); jumpParticles=loadJson("data/particles/player/playerJump.json"),
+        
+        hit = hitPlayer
     }
 
     return player
 end
 
+function hitPlayer(player, damage, knockback)
+
+    if player.iFrames == 0 and player.dashingFrames == 0 and not playerDied then
+
+        local knockback = knockback or newVec(0, 0)
+        player.knockback.x = player.knockback.x + knockback.x
+        player.knockback.y = player.knockback.y + knockback.y
+
+        player.iFrames = 1
+
+        ROOM.playerTookHits = (ROOM.playerTookHits or 0) + 1
+
+        damage = damage * (1 - player.damageReduction * 0.01)
+
+        player.hp = player.hp - damage * (1 - player.damageReduction * 0.01)
+
+        table.insert(ROOM.textPopUps.particles,{
+            x = player.collider.x + love.math.random(-12, 12), y = player.collider.y + love.math.random(-12, 12),
+            vel = newVec(0, -100), width = tostring(damage),
+            lifetime = 1, lifetimeStart = 1,
+            color = {r=255,g=0,b=0,a=1},
+            rotation = 0
+
+        })
+    end
+
+end
+
 function processPlayer(player)
+
+    player.knockback.x = lerp(player.knockback.x, 0, dt * 3)
+    player.knockback.y = lerp(player.knockback.y, 0, dt * 3)
 
     -- Update stats
     for id, S in pairs(player.wearing.slots) do
@@ -229,7 +262,7 @@ function processPlayer(player)
             --playSound("fall", love.math.random(80, 120) * 0.01, None, impulse)
 
             player.justLanded = true
-            table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) -- Fall particles
+            if impulse > 0.1 then table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) end -- Fall particles
 
             -- Move body parts due to force
             shake(4 * impulse, 1, 90)
@@ -264,11 +297,13 @@ function processPlayer(player)
 
     -- Move rect
 
-    local velocity = newVec(player.vel.x + player.bonusForce.x + player.dashForce, player.vel.y + player.bonusForce.y)
+    local velocity = newVec(player.vel.x + player.bonusForce.x + player.dashForce + player.knockback.x, player.vel.y + player.bonusForce.y + player.knockback.x)
 
     if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, velocity, ROOM.tilemap.colliders)
     else player.collider = moveRect(player.collider, velocity, ROOM.tilemap.collidersWithFalltrough) end
 
+    if player.collider.touching.x ~= 0 then player.knockback.x = -0.8 * player.knockback.x end
+    if player.collider.touching.y ~= 0 then player.knockback.y = -0.8 * player.knockback.y end
 
     -- Set animation
     if player.collider.touching.y ~= 1 or flymode then
@@ -512,6 +547,7 @@ function drawPlayerUI(player)
     if barLenght > player.hpBarDelayed then player.hpBarDelayed = barLenght
     else if player.iFrames == 0 then player.hpBarDelayed = lerp(player.hpBarDelayed, barLenght, dt * 10) end end
 
+    setColor(255, 255, 255)
     love.graphics.rectangle("fill", 7, 7, player.hpBarDelayed, 42)
 
     setColor(200, 40, 40)

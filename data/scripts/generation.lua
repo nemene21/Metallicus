@@ -198,18 +198,10 @@ function generate(amount, biome)
 
         -- Place structures from the preset
 
-        for _, S in ipairs(layout.structures) do
-            local bonusAttributes = []
+        for _, S in ipairs(levelPreset.structures) do
 
-            for id, att in ipairs(S) do
-                
-                if id > 3 then
-                    table.insert(bonusAttributes, att)
-                end
+            table.insert(room.structures, IN_ROOM_STRUCTURES[S[1]](S[2], S[3], S))
 
-            end
-
-            table.insert(room.structures, IN_ROOM_SCTRUCTURES[S[1]](S[2], S[3]), bonusAttributes)
         end
 
         
