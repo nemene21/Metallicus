@@ -391,6 +391,40 @@
     "types" : ["item"]
 },
 
+"steelDagger" : {
+    "texture" : "steelDagger",
+    "name" : "Steel Dagger", "rarity" : "uncommon",
+
+    "holdMode" : "slash",
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "rotation" : 60, "rotateTo" : 60,"roatationDefault" : 60, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+    },
+
+    "projectile" : {
+        "speed" : 400,
+        "range" : 60,
+        "followPlayer" : 1,
+        "collides" : false, "bounces" : 1,
+
+        "radius" : 18,
+        "pirice" : 999,
+        "knockback" : 300,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 4,
+
+        "sound" : "slash", "texture" : "daggerSlash"
+    },
+
+    "stats" : {"dmg" : 15, "attackTime" : 0.4},
+
+    "maxStack" : 1, 
+
+    "types" : ["item"]
+},
+
 "bat" : {
     "texture" : "bat",
     "name" : "Bat", "rarity" : "common",
@@ -445,6 +479,21 @@
     "holdMode" : "hold",
 
     "stats" : {"def" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"goldenHelmet" : {
+    "texture" : "goldenHelmet",
+    "name" : "Golden Helmet", "rarity" : "epic",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10},
+
+    "yOffset" : -9,
 
     "maxStack" : 1,
 

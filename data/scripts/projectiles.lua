@@ -3,6 +3,8 @@
 
 PLAYER_PROJECTILE_IMAGES = {
 basicSlash = loadSpritesheet("data/images/projectiles/player/basicSlash.png",24,16),
+daggerSlash = loadSpritesheet("data/images/projectiles/player/daggerSlash.png",24,12),
+
 slimeShot = loadSpritesheet("data/images/projectiles/player/slimeShot.png",8,8),
 crystalShot = loadSpritesheet("data/images/projectiles/player/crystalShot.png",8,6),
 mushboomShot = loadSpritesheet("data/images/projectiles/player/mushboomShot.png",12,10),
@@ -104,7 +106,6 @@ function drawPlayerProjectile(projectile)
 
     setColor(255, 255, 255)
     drawFrame(PLAYER_PROJECTILE_IMAGES[projectile.sheet], interpolatePlayerProjectile(projectile.interpolation, projectile.frames, projectile.lifetime, projectile.lifetimeStart), 1, projectile.pos.x, projectile.pos.y, 1, 1, projectile.vel:getRot() / 180 * 3.14)
-
 end
 
 -- Process player projectiles
@@ -313,12 +314,13 @@ function processEnemyProjectiles(enemyProjectiles)
 
         if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius * 0.8) then
 
-            table.insert(kill, id)
+            if player:hit(P.damage) then
+                table.insert(kill, id)
 
-            table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
-            table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
+                table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
+                table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
 
-            player:hit(P.damage)
+            end
 
         else if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id) end
         

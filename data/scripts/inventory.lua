@@ -586,6 +586,10 @@ stoneArmor = love.graphics.newImage("data/images/items/stoneArmor.png"),
 stoneHelmet = love.graphics.newImage("data/images/items/stoneHelmet.png"),
 stoneSword = love.graphics.newImage("data/images/items/stoneSword.png"),
 
+steelDagger = love.graphics.newImage("data/images/items/steelDagger.png"), -- Steel
+
+goldenHelmet = love.graphics.newImage("data/images/items/goldenHelmet.png"), -- Gold
+
 blunderbuss = love.graphics.newImage("data/images/items/blunderbuss.png"), -- Misc
 crystalRod = love.graphics.newImage("data/images/items/crystalRod.png"),
 

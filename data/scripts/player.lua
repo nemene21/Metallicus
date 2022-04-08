@@ -17,10 +17,13 @@ function newPlayer(x,y,stats)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
-    local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["steelDagger"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
     local startingWeapon = deepcopyTable(ITEMS["quiver"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["goldenHelmet"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
@@ -82,9 +85,9 @@ function hitPlayer(player, damage, knockback)
 
         ROOM.playerTookHits = (ROOM.playerTookHits or 0) + 1
 
-        damage = damage * (1 - player.damageReduction * 0.01)
+        damage = math.floor(damage * (1 - player.damageReduction * 0.01))
 
-        player.hp = player.hp - damage * (1 - player.damageReduction * 0.01)
+        player.hp = player.hp - damage
 
         table.insert(ROOM.textPopUps.particles,{
             x = player.collider.x + love.math.random(-12, 12), y = player.collider.y + love.math.random(-12, 12),
@@ -94,6 +97,10 @@ function hitPlayer(player, damage, knockback)
             rotation = 0
 
         })
+
+        return true
+    else
+        return false
     end
 
 end
@@ -464,6 +471,7 @@ function drawPlayerUI(player)
     -- Inventory and camera
 
     -- Draw hotbar
+    setColor(255, 255, 255)
     drawSprite(HOLDING_ARROW, 42 + INVENTORY_SPACING * player.slotOn, 558, 1, 1, 0, 0)
     drawInventory(player.hotbar)
 

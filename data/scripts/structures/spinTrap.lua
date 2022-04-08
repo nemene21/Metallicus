@@ -61,7 +61,7 @@ function drawSpinTrap(spinTrap)
 
     if rectCollidingCircle(player.collider, ballPos.x, ballPos.y, 26) then
 
-        player:hit(12, newVec(1200, 0):rotate(spinTrap.rotation / 3.14 * 180 + 90))
+        player:hit(10, newVec(1200, 0):rotate(spinTrap.rotation / 3.14 * 180 + 90))
 
     end
 
