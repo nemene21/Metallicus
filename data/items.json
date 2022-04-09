@@ -38,13 +38,13 @@
 
     "holdMode" : "hold",
 
-    "effect" : "addFloat", "floatAdding" : 10,
-    "noChargeTimer" : 0, "noChargeTimerMax" : 10,
+    "effect" : "addFloat", "floatAdding" : 12,
+    "noChargeTimer" : 0, "noChargeTimerMax" : 12,
 
     "maxStack" : 1,
 
     "charge" : 1,
-    "chargeSpeed" : 300,
+    "chargeSpeed" : 500,
     "alreadyActivated" : false,
     "flashTimer" : 0,
 
@@ -63,10 +63,10 @@
 
     "maxStack" : 1,
 
-    "noChargeTimer" : 0, "noChargeTimerMax" : 5,
+    "noChargeTimer" : 0, "noChargeTimerMax" : 3,
 
     "charge" : 1,
-    "chargeSpeed" : 600,
+    "chargeSpeed" : 500,
     "alreadyActivated" : false,
     "flashTimer" : 0,
 
@@ -87,7 +87,7 @@
         "radius" : 8,
 
         "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
-        "spread" : 0.1,
+        "spread" : 6,
 
         "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
@@ -136,7 +136,7 @@
 
     "holdMode" : "consumable",
 
-    "stats" : {"hp" : 8},
+    "stats" : {"hp" : 12},
 
     "maxStack" : 24,
 

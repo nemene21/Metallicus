@@ -501,6 +501,8 @@ function drawPlayerUI(player)
 
             end
 
+            if activeItem.chargeSpeed == -1 and activeItem.noChargeTimer < 0 then activeItem.charge = 1 end
+
             if justPressed("lshift") and activeItem.charge == 1 and activeItem.noChargeTimer < 0 then
 
                 activeItem.charge = 0
