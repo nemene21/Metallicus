@@ -421,6 +421,7 @@ function MODE_SHOOT(player,headed,item)
 
     local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM + 8); rotation = rotation:getRot() + 180
     local pos = newVec(item.holdData.distance, 0); pos:rotate(rotation)
+    pos.y = pos.y + 8
 
     local turned = boolToInt((player.collider.x - camera[1] - xM) < 0) * 2 - 1
 
@@ -472,6 +473,9 @@ function MODE_SHOOT(player,headed,item)
             table.insert(playerProjectiles,projectile)
         end
     end
+
+    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, turned, rotation / 180 * 3.14 + item.holdData.swing * math.sin(clamp(item.holdData.attackTimer / item.stats.attackTime, 0, 1) * 6.28), 1, 0, 1)
+    return item
 end
 
 function MODE_BOW(player,headed,item)

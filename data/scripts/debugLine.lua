@@ -113,6 +113,22 @@ function SET_QUAKE_COMMAND(cmd)
 
 end
 
+function CHARGE_ACTIVE_COMMAND(cmd)
+
+    local activeItemSlot = player.wearing.slots["1,2"]
+
+    if activeItemSlot ~= nil then
+        local activeItem = activeItemSlot.item
+
+        if activeItem ~= nil then
+
+            activeItem.charge = 1
+
+        end
+
+    end
+end
+
 function HELP_COMMAND(cmd)
 
     print([[
@@ -206,6 +222,16 @@ function HELP_COMMAND(cmd)
     print("\n ---------------------------------------------------- \n")
 
     print([[
+    chargeActive:
+       
+       args: _
+
+       desc: Charges your active item
+    ]])
+
+    print("\n ---------------------------------------------------- \n")
+
+    print([[
     quack:
        
        args: _
@@ -234,6 +260,8 @@ die = DIE_COMMAND,
 setQuake = SET_QUAKE_COMMAND,
 
 say = SAY_COMMAND,
+
+chargeActive = CHARGE_ACTIVE_COMMAND,
 
 quack = QUACK_COMMAND
 }

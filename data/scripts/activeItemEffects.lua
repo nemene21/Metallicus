@@ -20,11 +20,14 @@ function ACTIVE_ITEM_PROCESS_PROJECTILE_BURST(item)
 
     if item.burstTimer < 0 and item.burst ~= 0 then
 
+        local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM + 8); rotation = rotation:getRot() + 180
+        local pos = newVec(-24, 0); pos:rotate(rotation)
+
         item.burst = item.burst - 1
         item.burstTimer = item.burstSpeed
 
         -- Summon projectile
-        local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM + 8); rotation = rotation:getRot() + 180 + love.math.random(-30, 30)
+        local rotation = newVec(player.collider.x - camera[1] - xM + pos.x, player.collider.y - camera[2] - yM + 8 + pos.y); rotation = rotation:getRot() + 180 + love.math.random(-30, 30)
         local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x, player.collider.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
     
         if item.explosion ~= nil then

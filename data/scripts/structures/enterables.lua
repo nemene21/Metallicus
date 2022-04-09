@@ -92,6 +92,8 @@ end
 -- Processing
 function processEnterableRoom(room)
 
+    trackPitch = lerp(trackPitch, 0.8, dt * 3)
+
     -- Check if player entered door
     if room.entranceParticles ~= nil then
         if player.collider.x < room.entranceParticles.x - 3 then swtichRoom(0)

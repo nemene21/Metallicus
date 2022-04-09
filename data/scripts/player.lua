@@ -17,13 +17,13 @@ function newPlayer(x,y,stats)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
-    local startingWeapon = deepcopyTable(ITEMS["steelDagger"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["jelloRod"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
     local startingWeapon = deepcopyTable(ITEMS["quiver"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["goldenHelmet"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["slimyShroomSoup"]); startingWeapon.amount = 12
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
@@ -36,7 +36,7 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
 
     local player = {
-        vel=newVec(0, 0), knockback = newVec(0, 0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, resetStats = resetPlayerStats,
+        vel=newVec(0, 0), knockback = newVec(0, 0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, setStats = setPlayerStats, resetStats = resetPlayerStats,
 
         collider=newRect(x,y,30,46), justLanded = false,
 
@@ -107,19 +107,8 @@ end
 
 function processPlayer(player)
 
-    player.knockback.x = lerp(player.knockback.x, 0, dt * 3)
-    player.knockback.y = lerp(player.knockback.y, 0, dt * 3)
-
-    -- Update stats
-    for id, S in pairs(player.wearing.slots) do
-
-        if S.item ~= nil then
-            if S.item.stats ~= nil then
-                player.damageReduction = player.damageReduction + (S.item.stats.def or 0)
-                player.magicDamage = player.magicDamage + (S.item.stats.mag or 0)
-            end
-        end
-    end
+    player.knockback.x = lerp(player.knockback.x, 0, dt * 5)
+    player.knockback.y = lerp(player.knockback.y, 0, dt * 5)
 
     player.hp = clamp(player.hp, 0, player.hpMax)
 
@@ -371,11 +360,12 @@ function drawPlayer(player)
         handed = handed + boolToInt(inHandItem.armRTaken)
         handed = handed + boolToInt(inHandItem.armLTaken)
         inHandItem = holdItem(player,lookAt,inHandItem)
+        if inHandItem ~= nil then
+            if inHandItem.holdData ~= nil then if inHandItem.holdData.attackTimer ~= nil then
+                
+                attackMouseLine = inHandItem.holdData.attackTimer / inHandItem.stats.attackTime
 
-        if inHandItem.holdData ~= nil then if inHandItem.holdData.attackTimer ~= nil then
-            
-            attackMouseLine = inHandItem.holdData.attackTimer / inHandItem.stats.attackTime
-
+            end
         end end
     end
 
@@ -407,7 +397,20 @@ function resetPlayerStats(player)
 
 end
 
+function setPlayerStats(player)
 
+    -- Update stats
+    for id, S in pairs(player.wearing.slots) do
+
+        if S.item ~= nil then
+            if S.item.stats ~= nil then
+                player.damageReduction = player.damageReduction + (S.item.stats.def or 0)
+                player.magicDamage = player.magicDamage + (S.item.stats.mag or 0)
+            end
+        end
+    end
+
+end
 
 
 function sayPlayer(player, text, priority)

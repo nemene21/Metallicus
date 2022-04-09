@@ -32,6 +32,8 @@ function gameReload()
     playerDied = false; UI_ALPHA = 255
 
     mouseRot = 0; mouseScale = 1
+
+    playTrack("cave")
 end
 
 function gameDie()
@@ -46,6 +48,31 @@ function game()
 
     -- Loop
     if not paused then
+
+        -- Set mouse
+
+        if player.inventoryOpen then
+
+            if JOYSTICKS[1] ~= nil then
+                player.lastInventoryJoystickMousePos.x = lerp(player.lastInventoryJoystickMousePos.x, player.lastInventoryJoystickMousePosLerp.x, dt * 10)
+                player.lastInventoryJoystickMousePos.y = lerp(player.lastInventoryJoystickMousePos.y, player.lastInventoryJoystickMousePosLerp.y, dt * 10)
+    
+                if joystickJustPressed(1, 12) then player.lastInventoryJoystickMousePosLerp.y = player.lastInventoryJoystickMousePosLerp.y - INVENTORY_SPACING end
+                if joystickJustPressed(1, 13) then player.lastInventoryJoystickMousePosLerp.y = player.lastInventoryJoystickMousePosLerp.y + INVENTORY_SPACING end
+                if joystickJustPressed(1, 14) then player.lastInventoryJoystickMousePosLerp.x = player.lastInventoryJoystickMousePosLerp.x - INVENTORY_SPACING end
+                if joystickJustPressed(1, 15) then player.lastInventoryJoystickMousePosLerp.x = player.lastInventoryJoystickMousePosLerp.x + INVENTORY_SPACING end
+    
+                if JOYSTICKS[1] ~= nil then
+    
+                    xM = player.lastInventoryJoystickMousePos.x; yM = player.lastInventoryJoystickMousePos.y
+    
+                end
+            end
+
+        end
+
+        player:setStats()
+
         ROOM:drawBg()
 
 

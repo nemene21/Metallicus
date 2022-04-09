@@ -758,6 +758,8 @@ end
 -- Processing
 function processRoom(room)
 
+    trackPitch = lerp(trackPitch, lerp(0.8, 1.4, 1 - quakeWarnings / 3), dt * 3)
+
     -- Check if cleared
     if not room.cleared and #room.enemies == 0 then
         room.cleared = true

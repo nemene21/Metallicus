@@ -59,7 +59,7 @@
 
     "effectProcess" : "projectileBurst",
     "effect" : "projectileBurst", "burst" : 0, "burstAdding" : 10,
-    "burstSpeed" : 0.04, "burstTimer" : 0,
+    "burstSpeed" : 0.06, "burstTimer" : 0,
 
     "maxStack" : 1,
 
@@ -87,7 +87,7 @@
         "radius" : 8,
 
         "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
-        "spread" : 2,
+        "spread" : 0.1,
 
         "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
