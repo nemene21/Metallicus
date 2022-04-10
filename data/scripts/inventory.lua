@@ -196,6 +196,7 @@ function drawInventory(inventory)
         local slotX = tonumber(pos[1]); local slotY = tonumber(pos[2])
 
         -- Draw slot
+        if S.item ~= nil then if S.item.amount <= 0 then S.item = nil end end
         if S.item == nil then setColor(140,140,140) else setColor(255,255,255) end
 
         drawSprite(SLOT_IMAGES[S.image], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
@@ -346,8 +347,6 @@ function MODE_CONSUME(player,headed,item)
             player[id] = player[id] + S
 
         end
-
-        if item.amount == 0 then item = nil end
 
     end
 

@@ -32,7 +32,7 @@ end
 
 function drawSpinTrap(spinTrap)
 
-    local ballPos = newVec(spinTrap.lenght * 48, 0):rotate(spinTrap.rotation / 3.14 * 180)
+    local ballPos = newVec(spinTrap.lenght * 48 - 8, 0):rotate(spinTrap.rotation / 3.14 * 180)
     local len = ballPos:getLen() / 24
     local chainOffset = newVec(ballPos.x / len, ballPos.y / len)
 
@@ -40,7 +40,7 @@ function drawSpinTrap(spinTrap)
     ballPos.x = ballPos.x * (1 + math.sin(spinTrap.rotation) * 0.2)
     ballPos.y = ballPos.y * (1 + math.sin(spinTrap.rotation) * 0.2)
 
-    for i=0, len - 2 do
+    for i=0, len do
 
         drawSprite(SPIN_TRAP_CHAIN, spinTrap.x + chainOffset.x * i, spinTrap.y + chainOffset.y * i, 1, 1, spinTrap.rotation, 1, 0)
 

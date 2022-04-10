@@ -786,6 +786,9 @@ function processRoom(room)
 end
 
 -- Items
+
+ITEM_PICKUP_PARTICLES = loadJson("data/particles/itemPickup.json")
+
 function roomProcessItems(room)
     love.graphics.setCanvas(display)
 
@@ -804,6 +807,20 @@ function roomProcessItems(room)
 
             if I.data.amount ~= startAmount then
                 playSound("pickup", love.math.random(60,140) * 0.01, 3)
+
+                
+                local pickupParticles = newParticleSystem(I.pos.x, I.pos.y, deepcopyTable(ITEM_PICKUP_PARTICLES))
+
+                pickupParticles.particleData.color.r.a = RARITY_COLORS[I.data.rarity][1] / 255
+                pickupParticles.particleData.color.r.b = RARITY_COLORS[I.data.rarity][1] / 255
+
+                pickupParticles.particleData.color.g.a = RARITY_COLORS[I.data.rarity][2] / 255
+                pickupParticles.particleData.color.g.b = RARITY_COLORS[I.data.rarity][2] / 255
+
+                pickupParticles.particleData.color.b.a = RARITY_COLORS[I.data.rarity][3] / 255
+                pickupParticles.particleData.color.b.b = RARITY_COLORS[I.data.rarity][3] / 255
+
+                table.insert(room.particleSystems, pickupParticles)
 
                 local text = tostring(I.data.name)
                 local difference = startAmount - I.data.amount
