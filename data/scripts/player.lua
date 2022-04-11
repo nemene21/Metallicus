@@ -17,13 +17,16 @@ function newPlayer(x,y,stats)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
+    local startingWeapon = deepcopyTable(ITEMS["steelDagger"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["stoneSword"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
     local startingWeapon = deepcopyTable(ITEMS["jelloRod"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["quiver"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["slimyShroomSoup"]); startingWeapon.amount = 12
+    local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
@@ -298,8 +301,8 @@ function processPlayer(player)
     if player.downPressedTimer > 0 then player.collider = moveRect(player.collider, velocity, ROOM.tilemap.colliders)
     else player.collider = moveRect(player.collider, velocity, ROOM.tilemap.collidersWithFalltrough) end
 
-    if player.collider.touching.x ~= 0 then player.knockback.x = -0.8 * player.knockback.x end
-    if player.collider.touching.y ~= 0 then player.knockback.y = -0.8 * player.knockback.y end
+    if player.collider.touching.x ~= 0 then player.knockback.x = -0.5 * player.knockback.x end
+    if player.collider.touching.y ~= 0 then player.knockback.y = -0.5 * player.knockback.y end
 
     -- Set animation
     if player.collider.touching.y ~= 1 or flymode then

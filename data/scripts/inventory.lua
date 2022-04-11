@@ -413,6 +413,14 @@ function MODE_SLASH(player,headed,item)
 
     -- Draw
     drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, item.holdData.flip, (rotation + item.holdData.spriteRotation) / 180 * 3.14)
+    
+    local imgDiagonal = (ITEM_IMGES[item.texture]:getWidth() ^ 2 + ITEM_IMGES[item.texture]:getHeight() ^ 2) ^ 0.5
+
+    local armOffset = newVec(imgDiagonal * 1.5 - 6, 0) -- * 1.5 = / 2 * 3
+    armOffset:rotate(rotation + item.holdData.spriteRotation + 225)
+
+    drawSprite(PLAYER_ARM, player.collider.x + pos.x + armOffset.x, player.collider.y + pos.y + armOffset.y)
+    
     return item
 end
 
@@ -472,8 +480,12 @@ function MODE_SHOOT(player,headed,item)
             table.insert(playerProjectiles,projectile)
         end
     end
-
+    
     drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, turned, rotation / 180 * 3.14 + item.holdData.swing * math.sin(clamp(item.holdData.attackTimer / item.stats.attackTime, 0, 1) * 6.28), 1, 0, 1)
+    
+    local armOffset = newVec(8, 0); armOffset:rotate(rotation + (-45 * turned))
+    drawSprite(PLAYER_ARM, player.collider.x + pos.x + armOffset.x, player.collider.y + pos.y + armOffset.y)
+
     return item
 end
 
@@ -546,8 +558,14 @@ function MODE_BOW(player,headed,item)
     love.graphics.line(player.collider.x + pos.x - stringOffset.x - camera[1], player.collider.y + pos.y - stringOffset.y - camera[2], player.collider.x + pos.x * stringMiddle - camera[1], player.collider.y + pos.y * stringMiddle - camera[2], player.collider.x + pos.x + stringOffset.x - camera[1], player.collider.y + pos.y + stringOffset.y - camera[2])
 
     drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, 1, rotation / 180 * 3.14 - 0.78)
+
+    local bowArmOffset = newVec(8, 0); bowArmOffset:rotate(rotation)
+    drawSprite(PLAYER_ARM, player.collider.x + pos.x + bowArmOffset.x, player.collider.y + pos.y + bowArmOffset.y)
+
     drawFrame(PLAYER_PROJECTILE_IMAGES[item.projectile.texture], 1, 1, player.collider.x + pos.x, player.collider.y + pos.y , arrowScale, arrowScale, rotation / 180 * 3.14)
 
+    drawSprite(PLAYER_ARM, player.collider.x + pos.x * stringMiddle, player.collider.y + pos.y * stringMiddle)
+    
     return item
 end
 
