@@ -33,6 +33,8 @@ function gameReload()
 
     mouseRot = 0; mouseScale = 1
 
+    trackVolume = 0
+
     playTrack("cave")
 end
 
@@ -75,11 +77,13 @@ function game()
 
         ROOM:drawBg()
 
-
         if player.hp > 0 then
             player:process()
+            trackVolume = lerp(trackVolume, 1, dt * 5)
 
         else -- Death animation
+
+            trackVolume = lerp(trackVolume, 0, dt * 5)
 
             bindCamera(camera[1] + 400, camera[2] + 300, 3) -- Camera to the middle
             player.collider.y = player.collider.y - dt * 80
@@ -108,6 +112,11 @@ function game()
 
             if diedTimer:isDone() then -- Death animation is done
                 
+                trackVolume = 0
+                trackPitch = 0.8
+
+                SOUNDS_PLAYING = {}
+
                 timeMult = 1
                 sceneAt = "menu"
                 SHADERS.GLOW_AND_LIGHT:send("grayscale", 0)
@@ -122,8 +131,6 @@ function game()
 
         ROOM:process()
 
-        ROOM:processEnemyBodies()
-
         processPlayerProjectiles(playerProjectiles)
         processEnemyProjectiles(enemyProjectiles)
         
@@ -137,8 +144,11 @@ function game()
         end
 
         player:resetStats()
-    
+        
+        love.graphics.setCanvas(UI_LAYER)
+        processTextParticles()
         player:drawUI()
+        love.graphics.setCanvas(display)
 
         for id,P in ipairs(playerProjectiles) do P:draw() end
 
@@ -248,8 +258,6 @@ function game()
 
     end
 
-    if showStats then SHOW_STATS() end
-
     -- Mouse
     love.graphics.setCanvas(UI_LAYER)
     love.graphics.setColor(1,1,1)
@@ -280,6 +288,8 @@ function game()
 
     processInteract()
 
+    if showStats then SHOW_STATS() end
+
     -- Return scene
     return sceneAt
 end
@@ -307,5 +317,6 @@ function swtichRoom(num)
     end
 
     playerProjectiles = {}; enemyProjectiles = {}
+    ALL_TEXT_PARTICLES = {}
 
 end

@@ -30,15 +30,8 @@ function processMaterial(mat)
             if not isInHitlist then
     
                 playSound(mat.hitSound, love.math.random(80, 120) * 0.01)
-    
-                table.insert(ROOM.textPopUps.particles,{
-                    x = mat.x + love.math.random(-24, 24), y = mat.y + love.math.random(-24, 24) - 24,
-                    vel = newVec(0, -100), width = tostring(P.damage),
-                    lifetime = 1, lifetimeStart = 1,
-                    color = {r=255,g=0,b=0,a=1},
-                    rotation = 0
-                
-                })
+
+                addNewText(tostring(P.damage), mat.x + love.math.random(-24, 24), mat.y + love.math.random(-24, 24) - 24, {255, 0, 0})
     
                 mat.hp = mat.hp - P.damage
                 mat.hitTimer = 0.2

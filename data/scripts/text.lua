@@ -62,3 +62,29 @@ function waveText(x,y,w,text,color, scaleX, scaleY ,cX,cY,waveSpeed,waveWidth)
     end
 
 end
+
+ALL_TEXT_PARTICLES = {}
+
+function addNewText(text, x, y, color)
+    table.insert(ALL_TEXT_PARTICLES, {text = text, x = x, y = y, color = color, lifetime = 1.2})
+end
+
+function processTextParticles()
+
+    kill = {}
+    for id, particle in ipairs(ALL_TEXT_PARTICLES) do
+
+        particle.lifetime = particle.lifetime - dt
+
+        local progress = particle.lifetime * 0.83
+        local progressI = 1 - progress
+
+        local scaleProgress = math.min(progressI * 8, 1)
+        
+        outlinedText(particle.x - camera[1], particle.y - camera[2] - 48 * progressI, 2, particle.text, {particle.color[1], particle.color[2], particle.color[3], 255 * clamp(progress * 4, 0, 1)}, lerp(3, 1, scaleProgress), lerp(0, 1, scaleProgress), 0.5, 0.5)
+
+        if particle.lifetime < 0 then table.insert(kill, id) end
+
+    end ALL_TEXT_PARTICLES = wipeKill(kill, ALL_TEXT_PARTICLES)
+
+end

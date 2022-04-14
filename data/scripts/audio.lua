@@ -65,7 +65,7 @@ function processSound()
     end
 
     if MUSIC[TRACK_PLAYING] ~= nil then
-        MUSIC[TRACK_PLAYING]:setVolume(MUSIC_VOLUME * MASTER_VOLUME)
+        MUSIC[TRACK_PLAYING]:setVolume(MUSIC_VOLUME * MASTER_VOLUME * trackVolume)
         MUSIC[TRACK_PLAYING]:setPitch(trackPitch)
         
         if not MUSIC[TRACK_PLAYING]:isPlaying() then MUSIC[TRACK_PLAYING]:play() end

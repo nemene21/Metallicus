@@ -124,7 +124,6 @@ function love.draw()
     love.graphics.setColor(1,1,1)
     love.graphics.setCanvas(particleCanvas)
     clear(0,0,0,0)
-    love.graphics.setCanvas(display)
 
     -- Draw display
     love.graphics.setCanvas()

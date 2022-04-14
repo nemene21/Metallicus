@@ -92,14 +92,7 @@ function hitPlayer(player, damage, knockback)
 
         player.hp = player.hp - damage
 
-        table.insert(ROOM.textPopUps.particles,{
-            x = player.collider.x + love.math.random(-12, 12), y = player.collider.y + love.math.random(-12, 12),
-            vel = newVec(0, -100), width = tostring(damage),
-            lifetime = 1, lifetimeStart = 1,
-            color = {r=255,g=0,b=0,a=1},
-            rotation = 0
-
-        })
+        addNewText(tostring(damage), player.collider.x + love.math.random(-24, 24), player.collider.y + love.math.random(-24, 24), {255, 0, 0})
 
         return true
     else
@@ -432,7 +425,6 @@ end
 
 function drawPlayerUI(player)
 
-    love.graphics.setCanvas(UI_LAYER)
     -- Player talking
 
     player.speakTimer = player.speakTimer - dt
@@ -687,7 +679,6 @@ function drawPlayerUI(player)
         bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, ROOM.endUp.y + 300 - cameraWallOffset, ROOM.endDown.y - 300 + cameraWallOffset)) -- Camera to the mouse
     end
 
-    love.graphics.setCanvas(display)
 end
 
 

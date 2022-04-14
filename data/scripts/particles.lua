@@ -30,10 +30,6 @@ function drawParticleSquare(P,data)
     love.graphics.rectangle("fill",P.x - offset - camera[1],P.y - offset - camera[2], w, w)
 end
 
-function drawParticleText(P,w)
-    outlinedText(P.x - camera[1], P.y - camera[2], 2, P.width, {P.color.r, P.color.g, P.color.b, 255 * w}, 1, 1, 0.5, 0.5)
-end
-
 function drawParticleSpark(P,data)
     local point1 = newVec(P.width * P.lifetime / P.lifetimeStart, 0); local point2 = newVec(0, -P.width * 0.3 * P.lifetime / P.lifetimeStart)
     local point3 = newVec(-P.width * P.lifetime / P.lifetimeStart, 0); local point4 = newVec(0, P.width * 0.3 * P.lifetime / P.lifetimeStart)
@@ -51,7 +47,6 @@ DRAWS = {
 ["circleGlow"] = drawParticleCircleGlow,
 ["square"] = drawParticleSquare,
 ["spark"] = drawParticleSpark,
-["text"] = drawParticleText,
 ["shockwave"] = drawParticleShockwave
 }
 -- INTERPOLATE WIDTH
@@ -63,14 +58,9 @@ function interpolateParticleLinear(w,lf,lfS)
     return w * lf / lfS
 end
 
-function interpolateParticlesText(w,lf,lfS)
-    return lf / lfS
-end
-
 INTERPOLATIONS = {
 ["linear"] = interpolateParticleLinear,
-["sine"] = interpolateParticleSine,
-["text"] = interpolateParticlesText
+["sine"] = interpolateParticleSine
 }
 
 -- SPAWN PARTICLES
@@ -137,90 +127,105 @@ function newParticleSystem(x,y,data)
 end
 
 function processParticleSystem(particleSystem)
-    if particleSystem.particleData.drawMode ~= "text" then love.graphics.setCanvas(particleCanvas) end
 
-    particleSystem.timer = particleSystem.timer - dt
+    table.insert(ALL_PARTICLES, particleSystem)
 
-    if particleSystem.timer < 0 and particleSystem.ticks ~= 0 and particleSystem.spawning then
-        
-        particleSystem.ticks = particleSystem.ticks - 1
-        particleSystem.timer = love.math.random(particleSystem.tickSpeed.a*100,particleSystem.tickSpeed.b*100)*0.01
+end
 
-        particlesGoingToSpawn = love.math.random(particleSystem.amount.a,particleSystem.amount.b)
+ALL_PARTICLES = {}
 
-        for i=0,particlesGoingToSpawn do
+function processParticleSystems()
+
+    love.graphics.setCanvas(particleCanvas)
+
+    for id, particleSystem in ipairs(ALL_PARTICLES) do
+
+        particleSystem.timer = particleSystem.timer - dt
+    
+        if particleSystem.timer < 0 and particleSystem.ticks ~= 0 and particleSystem.spawning then
             
-            -- Make pos
-            local data = SPAWNS[particleSystem.spawnShape.mode](particleSystem.x,particleSystem.y,particleSystem.spawnShape.data,particleSystem,particlesGoingToSpawn,i)
-
-            local particlePos = data[1]; local newVel = data[2]
-
-            -- Make lifetime
-            newLf = love.math.random(particleSystem.particleData.lifetime.a*100,particleSystem.particleData.lifetime.b*100)/100
-            -- Rgba
-            local r=love.math.random(particleSystem.particleData.color.r.a*100,particleSystem.particleData.color.r.b*100)*0.01
-            local g=love.math.random(particleSystem.particleData.color.g.a*100,particleSystem.particleData.color.g.b*100)*0.01
-            local b=love.math.random(particleSystem.particleData.color.b.a*100,particleSystem.particleData.color.b.b*100)*0.01
-            local a=love.math.random(particleSystem.particleData.color.a.a*100,particleSystem.particleData.color.a.b*100)*0.01
-
-            -- Width
-            local width = nil
-            if type(particleSystem.particleData.width) == "table" then
-                width = love.math.random(particleSystem.particleData.width.a,particleSystem.particleData.width.b)
-            else
-                width = particleSystem.particleData.width
+            particleSystem.ticks = particleSystem.ticks - 1
+            particleSystem.timer = love.math.random(particleSystem.tickSpeed.a*100,particleSystem.tickSpeed.b*100)*0.01
+    
+            particlesGoingToSpawn = love.math.random(particleSystem.amount.a,particleSystem.amount.b)
+    
+            for i=0,particlesGoingToSpawn do
+                
+                -- Make pos
+                local data = SPAWNS[particleSystem.spawnShape.mode](particleSystem.x,particleSystem.y,particleSystem.spawnShape.data,particleSystem,particlesGoingToSpawn,i)
+    
+                local particlePos = data[1]; local newVel = data[2]
+    
+                -- Make lifetime
+                newLf = love.math.random(particleSystem.particleData.lifetime.a*100,particleSystem.particleData.lifetime.b*100)/100
+                -- Rgba
+                local r=love.math.random(particleSystem.particleData.color.r.a*100,particleSystem.particleData.color.r.b*100)*0.01
+                local g=love.math.random(particleSystem.particleData.color.g.a*100,particleSystem.particleData.color.g.b*100)*0.01
+                local b=love.math.random(particleSystem.particleData.color.b.a*100,particleSystem.particleData.color.b.b*100)*0.01
+                local a=love.math.random(particleSystem.particleData.color.a.a*100,particleSystem.particleData.color.a.b*100)*0.01
+    
+                -- Width
+                local width = nil
+                if type(particleSystem.particleData.width) == "table" then
+                    width = love.math.random(particleSystem.particleData.width.a,particleSystem.particleData.width.b)
+                else
+                    width = particleSystem.particleData.width
+                end
+    
+                -- SET ALL THE VALUES OF THE PARTICLE AND APPEND IT TO THE LIST
+                table.insert(particleSystem.particles,{
+                    x=particlePos.x, y=particlePos.y,
+                    vel=newVel,
+                    width=width, 
+                    lifetime=newLf, lifetimeStart=newLf,
+                    color={r=r,g=g,b=b,a=a},
+                    rotation=love.math.random(particleSystem.particleData.rotation.a,particleSystem.particleData.rotation.b)
+                })
             end
-
-            -- SET ALL THE VALUES OF THE PARTICLE AND APPEND IT TO THE LIST
-            table.insert(particleSystem.particles,{
-                x=particlePos.x, y=particlePos.y,
-                vel=newVel,
-                width=width, 
-                lifetime=newLf, lifetimeStart=newLf,
-                color={r=r,g=g,b=b,a=a},
-                rotation=love.math.random(particleSystem.particleData.rotation.a,particleSystem.particleData.rotation.b)
-            })
         end
-    end
-
-    local kill = {}
-
-    for id,P in ipairs(particleSystem.particles) do
-
-        -- Set color to particles color
-        love.graphics.setColor(P.color.r, P.color.g, P.color.b, P.color.a)
-
-        -- Add velocity to position
-
-        if particleSystem.lastX ~= nil and particleSystem.lastY ~= nil then
-            P.x = P.x - (particleSystem.lastX - particleSystem.x)
-            P.y = P.y - (particleSystem.lastY - particleSystem.y)
+    
+        local kill = {}
+    
+        for id,P in ipairs(particleSystem.particles) do
+    
+            -- Set color to particles color
+            love.graphics.setColor(P.color.r, P.color.g, P.color.b, P.color.a)
+    
+            -- Add velocity to position
+    
+            if particleSystem.lastX ~= nil and particleSystem.lastY ~= nil then
+                P.x = P.x - (particleSystem.lastX - particleSystem.x)
+                P.y = P.y - (particleSystem.lastY - particleSystem.y)
+            end
+    
+            P.x = P.x + P.vel.x * dt; P.y = P.y + P.vel.y * dt
+    
+            -- Rotate vector by rotation and add force
+            P.vel:rotate(P.rotation * dt)
+            P.vel.x = P.vel.x + particleSystem.force.x * dt
+            P.vel.y = P.vel.y + particleSystem.force.y * dt
+            
+            -- Decrease lifetime
+            P.lifetime = P.lifetime - dt
+    
+            -- Kill if lifetime < 0
+            if P.lifetime < 0 then table.insert(kill,id)end
+    
+            -- Get width
+            particleWidth = INTERPOLATIONS[particleSystem.interpolation](P.width, P.lifetime, P.lifetimeStart)
+    
+            -- Draw
+            DRAWS[particleSystem.particleData.drawMode](P, particleWidth)
+            
+        end particleSystem.particles = wipeKill(kill, particleSystem.particles)
+    
+        if particleSystem.following == true then
+            particleSystem.lastX = particleSystem.x; particleSystem.lastY = particleSystem.y
         end
-
-        P.x = P.x + P.vel.x * dt; P.y = P.y + P.vel.y * dt
-
-        -- Rotate vector by rotation and add force
-        P.vel:rotate(P.rotation * dt)
-        P.vel.x = P.vel.x + particleSystem.force.x * dt
-        P.vel.y = P.vel.y + particleSystem.force.y * dt
-        
-        -- Decrease lifetime
-        P.lifetime = P.lifetime - dt
-
-        -- Kill if lifetime < 0
-        if P.lifetime < 0 then table.insert(kill,id)end
-
-        -- Get width
-        particleWidth = INTERPOLATIONS[particleSystem.interpolation](P.width, P.lifetime, P.lifetimeStart)
-
-        -- Draw
-        DRAWS[particleSystem.particleData.drawMode](P, particleWidth)
-        
-    end particleSystem.particles = wipeKill(kill, particleSystem.particles)
-
-    if particleSystem.following == true then
-        particleSystem.lastX = particleSystem.x; particleSystem.lastY = particleSystem.y
+    
     end
 
     love.graphics.setCanvas(display)
+
+    ALL_PARTICLES = {}
 end

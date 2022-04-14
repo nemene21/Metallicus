@@ -151,7 +151,7 @@ function generate(amount, biome)
 
     for num=0,amount - 1 do
 
-        local room = {textPopUps = newParticleSystem(0, 0, loadJson("data/particles/textParticles.json")),processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
+        local room = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 
         -- Ambient particles
         room.ambientParticles = newParticleSystem(0, 0, loadJson(biome.ambientParticles))
@@ -582,7 +582,7 @@ function roomDrawTiles(room) setColor(255,255,255); room.tilemap:draw()
     end
 
     love.graphics.setCanvas(UI_LAYER)
-    room.textPopUps:process()
+
     love.graphics.setCanvas(display)
 end
 
@@ -602,6 +602,8 @@ function roomDrawEdge(room)
     room.ambientParticles.x = camera[1] + 400 + room.particleOffset.x; room.ambientParticles.y = camera[2] + 300 + room.particleOffset.y
 
     room.ambientParticles:process()
+
+    processParticleSystems()
 
     love.graphics.setShader(SHADERS.PIXEL_PERFECT)
     setColor(255, 255, 255)
@@ -628,6 +630,8 @@ function roomParticles(room)
         if #P.particles == 0 and P.ticks == 0 and P.timer < 0 then table.insert(kill,id) end
 
     end room.particleSystems = wipeKill(kill,room.particleSystems)
+
+    processParticleSystems()
 
     love.graphics.setShader(SHADERS.PIXEL_PERFECT)
     setColor(255, 255, 255)
@@ -826,13 +830,7 @@ function roomProcessItems(room)
                 local difference = startAmount - I.data.amount
                 if difference ~= 1 then text = text .. " x" .. tostring(difference) end
 
-                table.insert(room.textPopUps.particles,{
-                    x = I.pos.x + love.math.random(-24, 24), y = I.pos.y + love.math.random(-24, 24),
-                    vel = newVec(0, -100), width = text,
-                    lifetime = 1, lifetimeStart = 1,
-                    color = {r=RARITY_COLORS[I.data.rarity][1],g=RARITY_COLORS[I.data.rarity][2],b=RARITY_COLORS[I.data.rarity][3]},
-                    rotation = 0
-                })
+                addNewText(text, I.pos.x + love.math.random(-24, 24), I.pos.y + love.math.random(-24, 24), {RARITY_COLORS[I.data.rarity][1], RARITY_COLORS[I.data.rarity][2], RARITY_COLORS[I.data.rarity][3]})
             end
 
             if I.data.amount == 0 then table.insert(kill, id) end

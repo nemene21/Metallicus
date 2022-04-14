@@ -54,14 +54,7 @@ function hitEnemy(enemy,damage,strenght,dir)
     playSound(enemy.hitSound or "basicHit", love.math.random(80, 120) * 0.01)
     shake(3.5, 2, 0.1)
 
-    table.insert(ROOM.textPopUps.particles,{
-        x = enemy.collider.x + love.math.random(-24, 24), y = enemy.collider.y + love.math.random(-24, 24),
-        vel = newVec(0, -100), width = tostring(damage),
-        lifetime = 1, lifetimeStart = 1,
-        color = {r=255,g=0,b=0,a=1},
-        rotation = 0
-
-    })
+    addNewText(tostring(damage), enemy.collider.x + love.math.random(-24, 24), enemy.collider.y + love.math.random(-24, 24), {255, 0, 0})
 
     -- Add to active item charge
     local activeItemSlot = player.wearing.slots["1,2"]
