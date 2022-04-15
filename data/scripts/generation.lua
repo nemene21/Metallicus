@@ -26,7 +26,7 @@ end
 
 function resetBiomes()
     BIOME_ORDER = {
-        cave = 3,
+        cave = 2,
         sporeCavern = -1
     }
 
@@ -92,7 +92,7 @@ cave = {
     giantFirefly = {spawnOn = "air", frequency = 50}
     },
 
-    nEnemies = {a = 3, b = 5},
+    nEnemies = {a = 3, b = 4},
 
 },
 sporeCavern = {
@@ -489,7 +489,7 @@ function placeEnemies(biome, room, num, amount)
     if num ~= 0 and num ~= amount - 1 then
 
         -- Set the amount of enemies and the random enemy value
-        local amount = love.math.random(biome.nEnemies.a, biome.nEnemies.b)
+        local amount = love.math.random(biome.nEnemies.a, biome.nEnemies.b) - 1
 
         local maxFrequency = 0
         for id, E in pairs(biome.enemies) do maxFrequency = maxFrequency + E.frequency end

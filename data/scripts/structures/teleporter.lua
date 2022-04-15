@@ -89,7 +89,7 @@ function processTeleporter(teleporter)
 
         roomOn = 1
 
-        ROOMS = generate(8,fetchNextBiome())
+        ROOMS = generate(5,fetchNextBiome())
         ROOM = ROOMS[roomOn]
     
         playerProjectiles = {}; enemyProjectiles = {}

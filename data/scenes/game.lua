@@ -13,7 +13,7 @@ function gameReload()
     quakeWarnings = 3
     quakeProjectileTimer = 0
 
-    ROOMS = generate(6,fetchNextBiome())
+    ROOMS = generate(5,fetchNextBiome())
     ROOM = ROOMS[roomOn]
 
     playerProjectiles = {}; enemyProjectiles = {}

@@ -1,7 +1,7 @@
 uniform float xRatio = 0;
 int size = 8;
 float multiplier = 0.001;
-float intensity = 0.5;
+float intensity = 0.25;
 int iterations = size * size;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
