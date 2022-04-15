@@ -147,14 +147,7 @@ function processPlayerProjectiles(playerProjectiles)
                             S.hp = S.hp - P.explosion.dmg
                             S.hitTimer = 0.2
 
-                            table.insert(ROOM.textPopUps.particles,{
-                                x = S.x + love.math.random(-24, 24), y = S.y + love.math.random(-24, 24) - 24,
-                                vel = newVec(0, -100), width = tostring(P.explosion.dmg),
-                                lifetime = 1, lifetimeStart = 1,
-                                color = {r=255,g=0,b=0,a=1},
-                                rotation = 0
-                            
-                            })
+                            addNewText(tostring(P.explosion.dmg), S.x + love.math.random(-24, 24), S.y + love.math.random(-24, 24) - 24, {255, 0, 0})
                             
                             playSound(S.hitSound, love.math.random(80, 120) * 0.01)
 
@@ -214,14 +207,7 @@ function processPlayerProjectiles(playerProjectiles)
                             S.hp = S.hp - P.explosion.dmg
                             S.hitTimer = 0.2
 
-                            table.insert(ROOM.textPopUps.particles,{
-                                x = S.x + love.math.random(-24, 24), y = S.y + love.math.random(-24, 24) - 24,
-                                vel = newVec(0, -100), width = tostring(P.explosion.dmg),
-                                lifetime = 1, lifetimeStart = 1,
-                                color = {r=255,g=0,b=0,a=1},
-                                rotation = 0
-                            
-                            })
+                            addNewText(tostring(P.explosion.dmg), S.x + love.math.random(-24, 24), S.y + love.math.random(-24, 24) - 24, {255, 0, 0})
                             
                             playSound(S.hitSound, love.math.random(80, 120) * 0.01)
 

@@ -201,7 +201,7 @@ function processParticleSystems()
             P.x = P.x + P.vel.x * dt; P.y = P.y + P.vel.y * dt
     
             -- Rotate vector by rotation and add force
-            P.vel:rotate(P.rotation * dt)
+            P.vel:rotate(P.rotation * dt) 
             P.vel.x = P.vel.x + particleSystem.force.x * dt
             P.vel.y = P.vel.y + particleSystem.force.y * dt
             
@@ -212,10 +212,14 @@ function processParticleSystems()
             if P.lifetime < 0 then table.insert(kill,id)end
     
             -- Get width
-            particleWidth = INTERPOLATIONS[particleSystem.interpolation](P.width, P.lifetime, P.lifetimeStart)
-    
-            -- Draw
-            DRAWS[particleSystem.particleData.drawMode](P, particleWidth)
+            local particleWidth = INTERPOLATIONS[particleSystem.interpolation](P.width, P.lifetime, P.lifetimeStart)
+            
+            local width = particleWidth * P.width
+            if P.x > camera[1] - width and P.x < camera[2] + width + 800 and P.y > camera[2] - width and P.y < camera[2] + width + 600 then
+                -- Draw
+                DRAWS[particleSystem.particleData.drawMode](P, particleWidth)
+            end
+
             
         end particleSystem.particles = wipeKill(kill, particleSystem.particles)
     

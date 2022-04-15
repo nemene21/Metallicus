@@ -4,6 +4,7 @@ walk = love.audio.newSource("data/sounds/SFX/player/walk.wav", "stream"), -- Pla
 enter = love.audio.newSource("data/sounds/SFX/player/enter.wav", "stream"),
 fall = love.audio.newSource("data/sounds/SFX/player/fall.wav", "stream"),
 jump = love.audio.newSource("data/sounds/SFX/player/jump.wav", "stream"),
+talk = love.audio.newSource("data/sounds/SFX/player/talk.wav", "stream"),
 
 hitOre = love.audio.newSource("data/sounds/SFX/structures/hitOre.wav", "stream"), -- Structure sounds
 teleport = love.audio.newSource("data/sounds/SFX/structures/teleport.wav", "stream"),

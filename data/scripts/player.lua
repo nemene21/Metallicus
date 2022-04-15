@@ -17,16 +17,7 @@ function newPlayer(x,y,stats)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
-    local startingWeapon = deepcopyTable(ITEMS["steelDagger"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["stoneSword"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["jelloRod"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
@@ -448,6 +439,8 @@ function drawPlayerUI(player)
         if #player.lettersLoaded < player.letterTimer and #player.text ~= #player.lettersLoaded then
 
             player.lettersLoaded = player.text:sub(1, round(player.letterTimer))
+
+            playSound("talk", love.math.random(80, 140) * 0.01, love.math.random(1, 3))
 
         end
 
