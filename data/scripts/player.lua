@@ -430,7 +430,6 @@ function drawPlayerUI(player)
 
     end
 
-    -- KAWBFJHAWFJNAWNF ahwfhaowfhoAWHF
 
     player.textPos.x = lerp(player.textPos.x, player.collider.x - camera[1], dt * 6)
     player.textPos.y = lerp(player.textPos.y, player.collider.y - 80 - camera[2], dt * 6)
