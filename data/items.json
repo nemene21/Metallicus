@@ -472,6 +472,32 @@
     "types" : ["item","bodyArmor"]
 },
 
+"shroomHelmet" : {
+    "texture" : "shroomHelmet",
+    "name" : "Shroom Helmet", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"shroomArmor" : {
+    "texture" : "shroomArmor",
+    "name" : "Shroom Armor", "rarity" : "rare",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 20},
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
 "stoneHelmet" : {
     "texture" : "stoneHelmet",
     "name" : "Stone Helmet", "rarity" : "epic",

@@ -3,7 +3,9 @@
 
 function drawParticleShockwave(P,w)
 
-    love.graphics.setLineWidth(w * 0.2)
+    love.graphics.setLineStyle("rough")
+
+    love.graphics.setLineWidth(w)
 
     w = P.width - w
 
@@ -214,12 +216,8 @@ function processParticleSystems()
             -- Get width
             local particleWidth = INTERPOLATIONS[particleSystem.interpolation](P.width, P.lifetime, P.lifetimeStart)
             
-            local width = particleWidth * P.width
-            if P.x > camera[1] - width and P.x < camera[2] + width + 800 and P.y > camera[2] - width and P.y < camera[2] + width + 600 then
-                -- Draw
-                DRAWS[particleSystem.particleData.drawMode](P, particleWidth)
-            end
-
+            -- Draw
+            DRAWS[particleSystem.particleData.drawMode](P, particleWidth)
             
         end particleSystem.particles = wipeKill(kill, particleSystem.particles)
     

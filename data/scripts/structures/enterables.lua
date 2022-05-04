@@ -129,6 +129,8 @@ function drawEnterable(enterable)
             player.walkParticles.particles = {}
             playerProjectiles = {}
             enemyProjectiles = {}
+
+            player.inventory.justUpdated = true
             
         end
 

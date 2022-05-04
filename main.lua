@@ -94,6 +94,10 @@ function love.draw()
     love.graphics.setColor(1,1,1,1); love.graphics.setCanvas(display)
     love.graphics.clear (0,0,0,1)
 
+    SHADERS.WAVE:send("timePassed", globalTimer)
+    SHADERS.WAVE:send("cameraX", round(camera[1]))
+    SHADERS.WAVE:send("cameraY", round(camera[2]))
+
     --------------------------------------------------------------------------SCENE CALLED
     sceneNew = scenes[scene][1]()
 
@@ -130,7 +134,7 @@ function love.draw()
 
     local displayScaleNow = displayScale * zoomInEffect
 
-    love.graphics.draw(postProCanvas, w * 0.5 - dw * 0.5 * displayScaleNow - screenshake[1] * displayScaleNow, h * 0.5 - dh * 0.5 * displayScaleNow - screenshake[2] * displayScaleNow, 0, displayScaleNow, displayScaleNow)
+    love.graphics.draw(postProCanvas, w * 0.5 + screenshake[1] * displayScaleNow, h * 0.5 + screenshake[2] * displayScaleNow, math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008, displayScaleNow, displayScaleNow, postProCanvas:getWidth() * 0.5, postProCanvas:getHeight() * 0.5)
 
     love.graphics.setColor(1,1,1)
 

@@ -33,7 +33,7 @@ function resetBiomes()
     firstRoomEver = true
 end
 
-function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light)
+function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light, shader)
 
     -- LIGHT:
     --    1 = x offset
@@ -53,7 +53,7 @@ function newDecoration(name, images, offset, spawnCondition, distance, frequency
     if particles ~= nil then particles = {xO = particles[1], yO = particles[2], data = loadJson(particles[3])} end
 
     return {
-        particles = particles, offset = offset, name = name, distance = distance, frequency = frequency, spawnCondition = spawnCondition, centering = centering, wind = wind, windSpeed = windSpeed, light = light
+        shader = shader, particles = particles, offset = offset, name = name, distance = distance, frequency = frequency, spawnCondition = spawnCondition, centering = centering, wind = wind, windSpeed = windSpeed, light = light
     }
 end
 
@@ -69,14 +69,14 @@ cave = {
     background = {
 
         newDecoration("torch", {"cave/torch.png"}, {0,0}, {{0, 0, false}, {0, 1, false}, {0, 2, true}}, 6, 20, {0.5, 0.5}, 0, 0, {0, -10, "data/particles/decorations/torch.json"}, {0, -24, 180, 0.12, 2.4, {230,180,80,40}}),
-        newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 4, 33, {0.5, 0}, 0, 0),
+        newDecoration("stalagmite", {"cave/stalagmite1.png", "cave/stalagmite2.png"}, {0,-24}, {{0,0,false}, {0,-1,false},{0,1,true}}, 0, 40, {0.5, 0}, 0, 0),
         newDecoration("fireflies", {}, {0, 0}, {{0,0,false}, {0,1,false}, {1,0,false}, {0,-1,false}, {-1,0,false}}, 5, 12, {0, 0}, 0, 0, {0, 0, "data/particles/decorations/fireflies.json"}, {0, -24, 230, 0.12, 2.4, {255,170,50,30}})
 
     },
 
     foreground = {
 
-        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5)
+        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5, nil, nil, "WAVE")
 
     }
     },
@@ -418,7 +418,7 @@ function decorateRoom(room, biome)
                     if B.particles ~= nil then particles = newParticleSystem(B.particles.xO + posX * 48 + 24 + B.offset[1], B.particles.yO + posY * 48 + 24 + B.offset[2], deepcopyTable(B.particles.data)) end
 
                     table.insert(room.decorations.background, {
-                        particles = particles, light = B.light, x = posX * 48 + 24 + B.offset[1], y = posY * 48 + 24 + B.offset[2], name = B.name, textureId = love.math.random(1, #DECORATION_IMAGES[B.name]), centering = B.centering, windSpeed = B.windSpeed, wind = B.wind
+                        shader = B.shader, particles = particles, light = B.light, x = posX * 48 + 24 + B.offset[1], y = posY * 48 + 24 + B.offset[2], name = B.name, textureId = love.math.random(1, #DECORATION_IMAGES[B.name]), centering = B.centering, windSpeed = B.windSpeed, wind = B.wind
                     })
 
                     table.insert(tilesTaken, {posX, posY})
@@ -467,7 +467,7 @@ function decorateRoom(room, biome)
                     if F.particles ~= nil then particles = newParticleSystem(F.particles.xO + posX * 48 + 24 + F.offset[1], F.particles.yO + posY * 48 + 24 + F.offset[2], deepcopyTable(F.particles.data)) end
                     
                     table.insert(room.decorations.foreground, {
-                        particles = particles, light = F.light, x = posX * 48 + 24 + F.offset[1], y = posY * 48 + 24 + F.offset[2], name = F.name, textureId = love.math.random(1, #DECORATION_IMAGES[F.name]), centering = F.centering, windSpeed = F.windSpeed, wind = F.wind
+                        shader = F.shader, particles = particles, light = F.light, x = posX * 48 + 24 + F.offset[1], y = posY * 48 + 24 + F.offset[2], name = F.name, textureId = love.math.random(1, #DECORATION_IMAGES[F.name]), centering = F.centering, windSpeed = F.windSpeed, wind = F.wind
                     })
 
                     table.insert(tilesTaken, {posX, posY})
@@ -556,7 +556,9 @@ function roomDrawBg(room)
     for id, B in ipairs(room.decorations.background) do
         setColor(255,255,255)
 
+        love.graphics.setShader(SHADERS[B.shader])
         if #DECORATION_IMAGES[B.name] ~= 0 then drawSprite(DECORATION_IMAGES[B.name][B.textureId], B.x, B.y, 1, 1, math.sin(B.x + B.y + globalTimer * B.windSpeed) * B.wind, 1, B.centering[1], B.centering[2]) end
+        love.graphics.setShader()
 
         if B.light ~= nil then shine(B.x + B.light[1], B.y + B.light[2], B.light[3] * math.sin(globalTimer * B.light[5]) * B.light[4] + B.light[3], B.light[6]); love.graphics.setCanvas(display) end
         if B.particles ~= nil then B.particles:process(); setColor(255, 255, 255) end
@@ -575,7 +577,9 @@ function roomDrawTiles(room) setColor(255,255,255); room.tilemap:draw()
     for id, F in ipairs(room.decorations.foreground) do
         
         setColor(255,255,255)
+        love.graphics.setShader(SHADERS[F.shader])
         if #DECORATION_IMAGES[F.name] ~= 0 then drawSprite(DECORATION_IMAGES[F.name][F.textureId], F.x, F.y, 1, 1, math.sin(F.x + F.y + globalTimer * F.windSpeed) * F.wind, 1, F.centering[1], F.centering[2]) end
+        love.graphics.setShader()
 
         if F.light ~= nil then shine(F.x + F.light.x, F.y + F.light.y, F.light[3] * math.sin(globalTimer * F.light[5]) * F.light[4] + F.light[3], F.light[6]) end
 

@@ -36,6 +36,7 @@ function gameReload()
     trackVolume = 0
 
     playTrack("cave")
+    shake(6, 5, 0.15)
 end
 
 function gameDie()
@@ -167,7 +168,7 @@ function game()
                 local say = {"The ground is shaking D:", "Shiver me timbers!", "Oww thats a big shake :/"}
                 player:say(say[love.math.random(1, #say)], 4)
 
-                shake(14, 12, 0.15, 4)
+                shake(10, 12, 0.15, 4)
             else
 
                 local say = {"This time it is for real!", "The cave is going to collapse :(", "AAAAaaaaAAAAaaaa!!!"}
@@ -178,7 +179,7 @@ function game()
 
         if quakeWarnings == 0 then
 
-            shake(4 - 3 * boolToInt(ROOM.stopQuake), 2, 0.5, 4)
+            shake(3 - 2 * boolToInt(ROOM.stopQuake), 2, 0.02, 4)
 
             quakeProjectileTimer = quakeProjectileTimer - dt
 

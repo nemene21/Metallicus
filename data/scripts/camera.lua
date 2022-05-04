@@ -56,11 +56,11 @@ end
 function shake(shakeStrNew,shakesNew,time,dir)
     dir = dir or nil
 
-    if shakeStr <= shakeStrNew then
+    if shakeStr < shakeStrNew then
         shakeStr = shakeStrNew; shakes = shakesNew; shakeTimer.timeMax = time; shakeTimer.time = 0; dir = dir
     end
 end
 
 function lockScreenshake(bool) shakeTimer.playing = bool end
 
-shake(1, 1, 0.01)
+shake(16, 1, 0.01)

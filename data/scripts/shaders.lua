@@ -20,13 +20,22 @@ SHADERS = {
     BLUR = love.graphics.newShader((love.filesystem.read("data/shaders/BLUR.fs")))
     ,
     ACTIVE_ITEM = love.graphics.newShader((love.filesystem.read("data/shaders/ACTIVE_ITEM.fs")))
+    ,
+    WAVE = love.graphics.newShader(nil, love.filesystem.read("data/shaders/WAVE.vs"))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
 SHADERS.BLUR:send("xRatio",aspectRatio[2])
 SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitch.png"))
+
 SHADERS.GLOW_AND_LIGHT:send("vignetteMask",love.graphics.newImage("data/images/shaderMasks/vignette.png"))
 SHADERS.GLOW_AND_LIGHT:send("hitVignetteMask",love.graphics.newImage("data/images/shaderMasks/hitVignette.png"))
+
+bloomCycles = 24
+
+SHADERS.GLOW_AND_LIGHT:send("bloomCycles", bloomCycles)
+SHADERS.GLOW_AND_LIGHT:send("bloomCyclesHalf", math.floor(bloomCycles / 2) * -1)
+SHADERS.GLOW_AND_LIGHT:send("bloomIntensity", (1 / (bloomCycles * 2)) * 0.3)
 
 SHADERS.GLOW_AND_LIGHT:send("hurtVignetteIntensity", 0)
 

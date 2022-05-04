@@ -119,7 +119,7 @@ function slimeStateJump(slime, player)
         slime.vel.y = 0
 
         slime.state = "idle"; slime.nextStateTimer = love.math.random(3,5)
-        shake(12, 2, 0.12); playSound("slimeHitGround", love.math.random(80, 120) * 0.01)
+        shake(8, 2, 0.12); playSound("slimeHitGround", love.math.random(80, 120) * 0.01)
 
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(slime.collider.x, slime.collider.y), 200, 0, 24, 10, {255,200,200}))
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(slime.collider.x, slime.collider.y), 200, 90, 24, 10, {255,200,200}))

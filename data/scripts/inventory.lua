@@ -399,7 +399,7 @@ function MODE_SLASH(player,headed,item)
             local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), item.stats.dmg, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
-            shake(2, 1, 0.15, rotation)
+            shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
 
             table.insert(playerProjectiles,projectile)
@@ -474,7 +474,7 @@ function MODE_SHOOT(player,headed,item)
 
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
-            shake(2, 1, 0.15, rotation)
+            shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
 
             table.insert(playerProjectiles,projectile)
@@ -490,6 +490,8 @@ function MODE_SHOOT(player,headed,item)
 end
 
 function MODE_BOW(player,headed,item)
+
+    love.graphics.setLineStyle("smooth")
 
     local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM + 8); rotation = rotation:getRot() + 180
     local pos = newVec(item.holdData.distance, 0); pos:rotate(rotation)
@@ -538,7 +540,7 @@ function MODE_BOW(player,headed,item)
     
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
     
-            shake(2, 1, 0.15, rotation)
+            shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
     
             table.insert(playerProjectiles,projectile)
@@ -615,10 +617,16 @@ blunderbuss = love.graphics.newImage("data/images/items/blunderbuss.png"), -- Mi
 crystalRod = love.graphics.newImage("data/images/items/crystalRod.png"),
 
 shroomOre = love.graphics.newImage("data/images/items/shroomOre.png"), -- Shroom
+
 shroomHat = love.graphics.newImage("data/images/items/shroomHat.png"),
 shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png"),
+
 slimyShroomSoup = love.graphics.newImage("data/images/items/slimyShroomSoup.png"),
+
 mushboomRod = love.graphics.newImage("data/images/items/mushboomRod.png"),
+
+shroomArmor = love.graphics.newImage("data/images/items/shroomArmor.png"),
+shroomHelmet = love.graphics.newImage("data/images/items/shroomHelmet.png"),
 
 flyDust = love.graphics.newImage("data/images/items/flyDust.png"), -- Flydust
 totemOfFloat = love.graphics.newImage("data/images/items/totemOfFloat.png"),
