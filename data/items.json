@@ -32,6 +32,17 @@
     "types" : ["item"]
 },
 
+"bone" : {
+    "texture" : "bone",
+    "name" : "Bone", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
 "totemOfFloat" : {
     "texture" : "totemOfFloat",
     "name" : "Totem of Float", "rarity" : "uncommon",

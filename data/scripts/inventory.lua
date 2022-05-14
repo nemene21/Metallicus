@@ -265,7 +265,7 @@ attackTime = "s", def = "%", mag = "%"
 }
 
 TOOLTIP_OFFSET = 80
-RARITY_COLORS = {common={255,255,255},uncommon={0,255,0},rare={44,255,255},epic={128,0,255},mythic={255,0,100}}
+RARITY_COLORS = {common={200,200,200},uncommon={0,255,0},rare={44,255,255},epic={128,0,255},mythic={255,0,100}}
 
 function drawTooltip(item)
     
@@ -631,7 +631,9 @@ shroomHelmet = love.graphics.newImage("data/images/items/shroomHelmet.png"),
 flyDust = love.graphics.newImage("data/images/items/flyDust.png"), -- Flydust
 totemOfFloat = love.graphics.newImage("data/images/items/totemOfFloat.png"),
 
-archerHat = love.graphics.newImage("data/images/items/archerHat.png")
+archerHat = love.graphics.newImage("data/images/items/archerHat.png"),
+
+bone = love.graphics.newImage("data/images/items/bone.png") -- Bone
 }
 
 -- Add slot function

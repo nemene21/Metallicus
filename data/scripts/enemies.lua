@@ -8,7 +8,8 @@ ENEMY_ID = 0
 ENEMY_NAMES = {
 slime="slime",
 giantFirefly="giant firefly",
-battlefly="battlefly"
+battlefly="battlefly",
+skeletonMiner="skeleton miner"
 }
 
 function buildEnemy(name, x, y)
@@ -82,6 +83,12 @@ GIANT_FIREFLY = {
 BATTLEFLY = {
     body = love.graphics.newImage("data/images/enemies/battlefly/body.png"),
     wing = love.graphics.newImage("data/images/enemies/battlefly/wing.png")
+},
+SKELETON_MINER = {
+    body = love.graphics.newImage("data/images/enemies/skeletonMiner/body.png"),
+    arm = love.graphics.newImage("data/images/enemies/skeletonMiner/arm.png"),
+    head = love.graphics.newImage("data/images/enemies/skeletonMiner/head.png"),
+    pickaxe = love.graphics.newImage("data/images/enemies/skeletonMiner/pickaxe.png"),
 }
 }
 
@@ -91,11 +98,12 @@ PARTICLES_FIREFLY = loadJson("data/particles/decorations/fireflies.json")
 --                                                           BUILDS AND STATES FOR EVERY ENEMY
 
 -- Cave
-require "data.scripts.enemies.slime"; require "data.scripts.enemies.giantFirefly"; require "data.scripts.enemies.battlefly"
+require "data.scripts.enemies.slime"; require "data.scripts.enemies.giantFirefly"; require "data.scripts.enemies.battlefly"; require "data.scripts.enemies.skeletonMiner"
 
 enemies = {
 slime = buildSlime,
 giantFirefly = buildGiantFirefly,
-battlefly = buildBattlefly
+battlefly = buildBattlefly,
+skeletonMiner = buildSkeletonMiner
 }
 

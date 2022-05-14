@@ -22,7 +22,7 @@ function gameReload()
 
     PAUSED_SCREEN_BG = love.graphics.newCanvas(WS[1], WS[2])
 
-    debugLine = ""
+    debugLine = "spawnEnemy skeletonMiner"
     debugLineOpen = false
 
     debugDeleteTimer = newTimer(0.1)
