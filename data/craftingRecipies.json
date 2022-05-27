@@ -15,18 +15,23 @@
     "amount" : 1
 },
 {
+    "name" : "slimyShroomSoup",
+    "materials" : [["stone", 8], ["stick", 8], ["wood", 4]],
+    "amount" : 1
+},
+{
     "name" : "stoneSword",
     "materials" : [["stone", 6], ["stick", 4]],
     "amount" : 1
 },
 {
-    "name" : "stoneArmor",
-    "materials" : [["stone", 12]],
+    "name" : "stoneHelmet",
+    "materials" : [["stone", 8]],
     "amount" : 1
 },
 {
-    "name" : "stoneHelmet",
-    "materials" : [["stone", 8]],
+    "name" : "stoneArmor",
+    "materials" : [["stone", 12]],
     "amount" : 1
 },
 {
@@ -65,7 +70,12 @@
     "amount" : 1
 },
 {
-    "name" : "mushboomRod",
+    "name" : "boneRobe",
+    "materials" : [["bone", 16]],
+    "amount" : 1
+},
+{
+    "name" : "shroomBat",
     "materials" : [["shroomOre", 12], ["stick", 4]],
     "amount" : 1
 },
@@ -75,13 +85,18 @@
     "amount" : 1
 },
 {
-    "name" : "shroomBat",
+    "name" : "mushboomRod",
     "materials" : [["shroomOre", 12], ["stick", 4]],
     "amount" : 1
 },
 {
-    "name" : "rodOfChase",
-    "materials" : [["flyDust", 12], ["stick", 4]],
+    "name" : "shroomHelmet",
+    "materials" : [["shroomOre", 8]],
+    "amount" : 1
+},
+{
+    "name" : "shroomArmor",
+    "materials" : [["shroomOre", 12]],
     "amount" : 1
 },
 {
@@ -95,13 +110,8 @@
     "amount" : 1
 },
 {
-    "name" : "shroomHelmet",
-    "materials" : [["shroomOre", 8]],
-    "amount" : 1
-},
-{
-    "name" : "shroomArmor",
-    "materials" : [["shroomOre", 12]],
+    "name" : "rodOfChase",
+    "materials" : [["flyDust", 12], ["stick", 4]],
     "amount" : 1
 },
 {

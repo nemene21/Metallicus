@@ -494,7 +494,7 @@
         "sound" : "slash", "texture" : "boneArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
 
-    "stats" : {"dmg" : 15, "attackTime" : 0.5, "amount" : 1},
+    "stats" : {"dmg" : 20, "attackTime" : 0.5, "amount" : 1},
 
     "types" : ["item"]
 },
