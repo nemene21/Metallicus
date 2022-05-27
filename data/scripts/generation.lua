@@ -12,13 +12,13 @@ occlusion = 1
 function fetchNextBiome(degrade)
     local degrade = degrade or true
 
-    for id, B in pairs(BIOME_ORDER) do
+    for id, B in ipairs(BIOME_ORDER) do
 
         if B ~= 0 then
 
-            if degrade then BIOME_ORDER[id] = BIOME_ORDER[id] - 1 end
-            biomeOn = id
-            return id
+            if degrade then BIOME_ORDER[id][2] = BIOME_ORDER[id][2] - 1 end
+            biomeOn = BIOME_ORDER[id][1]
+            return BIOME_ORDER[id][1]
 
         end
 
@@ -28,12 +28,14 @@ end
 
 function resetBiomes()
     BIOME_ORDER = {
-        cave = 2,
-        sporeCavern = -1
+        {"cave", 2},
+        {"sporeCavern", -1}
     }
 
     firstRoomEver = true
 end
+
+resetBiomes()
 
 function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light, shader)
 
@@ -91,7 +93,7 @@ cave = {
 
     enemies = {
     slime = {spawnOn = "ground", frequency = 100},
-    skeletonMiner = {spawnOn = "ground", frequency = 50},
+    skeletonMiner = {spawnOn = "ground", frequency = 75},
     giantFirefly = {spawnOn = "air", frequency = 75}
     },
 
