@@ -17,13 +17,13 @@ function newPlayer(x,y,stats)
     local hotbar = newInventory(42,600 - 42,5,1,"hotbarSlot")
     local wearing = newInventory(42 + INVENTORY_SPACING * 4 + 2,600 - INVENTORY_SPACING - 154,0,0)
     
-    local startingWeapon = deepcopyTable(ITEMS["steelDagger"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["boneRod"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["shroomHelmet"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["boneCrown"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["shroomArmor"]); startingWeapon.amount = 1
+    local startingWeapon = deepcopyTable(ITEMS["boneRobe"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
@@ -44,7 +44,7 @@ function newPlayer(x,y,stats)
 
         hasActiveItem=false, activeItemOffset=0, activeItemAppear=0,
         
-        text = "", lettersLoaded = "", letterTimer = 0, speakTimer = 0, textFadeTimer = 0, textPriority = 0, textPos = newVec(0, 0),
+        text = "", lettersLoaded = "", letterTimer = 0, speakTimer = 0, textFadeTimer = 0, textPriority = 0, textPos = newVec(0, 0), lightScale = 100,
 
         walkSoundTimer = newTimer(0.2), speed = 300, float = 0, floatParticles = newParticleSystem(x, y, loadJson("data/particles/player/playerFly.json")),
  
@@ -231,7 +231,7 @@ function processPlayer(player)
 
     player.vel.y = math.min(player.vel.y + 1200 * dt * boolToInt(not flying),600) -- Gravity
     
-    if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(flying); player.canCutJump = false end -- Grounded
+    if player.collider.touching.y == -1 then player.vel.y = player.vel.y * boolToInt(flying) + 100; player.canCutJump = false end -- Grounded
 
     player.jumpPressedTimer = player.jumpPressedTimer - dt             -- Jump time
 
@@ -309,7 +309,10 @@ end
 
 
 function drawPlayer(player)
-    shine(player.collider.x,player.collider.y,300 + math.sin(globalTimer * 3) * 30,{255,200,100,90}) -- Light
+
+    player.lightScaleLerped = lerp(player.lightScaleLerped or 100, player.lightScale, dt * 3)
+
+    shine(player.collider.x,player.collider.y,300 * player.lightScaleLerped * 0.01 + math.sin(globalTimer * 3) * 30,{255,200,100,60}) -- Light
 
     love.graphics.setCanvas(display)
 
@@ -338,10 +341,10 @@ function drawPlayer(player)
 
     -- HEAD AND BODY
     drawSprite(PLAYER_BODY, player.collider.x + player.body.x * lookAt, player.collider.y + player.body.y, lookAt, 1, player.bodyR)
-    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt + (player.wearing.slots["1,1"].item.xOffset or 0) * lookAt, player.collider.y + player.body.y + (player.wearing.slots["1,1"].item.yOffset or 0), lookAt, 1, player.bodyR) end
+    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMAGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt + (player.wearing.slots["1,1"].item.xOffset or 0) * lookAt, player.collider.y + player.body.y + (player.wearing.slots["1,1"].item.yOffset or 0), lookAt, 1, player.bodyR) end
 
     drawSprite(PLAYER_HEAD, player.collider.x + player.head.x * lookAt, player.collider.y + player.head.y, lookAt, 1, player.headR)
-    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt + (player.wearing.slots["1,0"].item.xOffset or 0) * lookAt, player.collider.y + player.head.y + (player.wearing.slots["1,0"].item.yOffset or 0), lookAt, 1, player.headR) end
+    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMAGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt + (player.wearing.slots["1,0"].item.xOffset or 0) * lookAt, player.collider.y + player.head.y + (player.wearing.slots["1,0"].item.yOffset or 0), lookAt, 1, player.headR) end
 
     -- ITEM IN HAND
     local holding = tostring(player.slotOn)..",0"
@@ -383,6 +386,9 @@ function resetPlayerStats(player)
         if S.item ~= nil then
             if S.item.stats ~= nil then
                 player.damageReduction = player.damageReduction - (S.item.stats.def or 0)
+
+                player.lightScale = player.lightScale - (S.item.stats.light or 0)
+
                 player.magicDamage = player.magicDamage - (S.item.stats.mag or 0)
             end
         end
@@ -398,6 +404,9 @@ function setPlayerStats(player)
         if S.item ~= nil then
             if S.item.stats ~= nil then
                 player.damageReduction = player.damageReduction + (S.item.stats.def or 0)
+
+                player.lightScale = player.lightScale + (S.item.stats.light or 0)
+
                 player.magicDamage = player.magicDamage + (S.item.stats.mag or 0)
             end
         end
@@ -516,13 +525,13 @@ function drawPlayerUI(player)
 
             if activeItem.charge < 1 then activeItem.alreadyActivated = false end
 
-            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             
             love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
-            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
-            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
-            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
-            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             
             if activeItem.flashTimer > 0.2 then
 
@@ -543,7 +552,7 @@ function drawPlayerUI(player)
                 end
             
             end
-            drawSprite(ITEM_IMGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
+            drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             love.graphics.setShader()
 
         else

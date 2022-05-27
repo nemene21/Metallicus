@@ -7,6 +7,8 @@ BIOME_ORDER = {}
 
 biomeOn = ""
 
+occlusion = 1
+
 function fetchNextBiome(degrade)
     local degrade = degrade or true
 
@@ -89,7 +91,8 @@ cave = {
 
     enemies = {
     slime = {spawnOn = "ground", frequency = 100},
-    giantFirefly = {spawnOn = "air", frequency = 50}
+    skeletonMiner = {spawnOn = "ground", frequency = 50},
+    giantFirefly = {spawnOn = "air", frequency = 75}
     },
 
     nEnemies = {a = 3, b = 4},
@@ -682,7 +685,7 @@ function roomProcessEnemies(room)
 
                 local item = ITEMS[id]; item.amount = amount
 
-                table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, item))
+                if item.amount ~= 0 then table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, item)) end
 
             end
 

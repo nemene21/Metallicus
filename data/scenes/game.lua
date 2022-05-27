@@ -22,7 +22,7 @@ function gameReload()
 
     PAUSED_SCREEN_BG = love.graphics.newCanvas(WS[1], WS[2])
 
-    debugLine = "spawnEnemy skeletonMiner"
+    debugLine = ""
     debugLineOpen = false
 
     debugDeleteTimer = newTimer(0.1)
@@ -34,6 +34,8 @@ function gameReload()
     mouseRot = 0; mouseScale = 1
 
     trackVolume = 0
+    
+    occlusion = boolToInt(not challanges.lightsOff.active)
 
     playTrack("cave")
     shake(6, 5, 0.15)

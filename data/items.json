@@ -156,7 +156,7 @@
 
 "jelloRod" : {
     "texture" : "jelloRod",
-    "name" : "Jello rod", "rarity" : "uncommon",
+    "name" : "Jello Rod", "rarity" : "uncommon",
 
     "holdMode" : "shoot",
 
@@ -193,6 +193,51 @@
     },
 
     "stats" : {"dmg" : 15, "attackTime" : 0.3},
+
+    "types" : ["item"]
+},
+
+"boneRod" : {
+    "texture" : "boneRod",
+    "name" : "Bone Rod", "rarity" : "uncommon",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 16, "swing" : 0.25
+    },
+
+    "damageType" : "magicDamage",
+
+    "projectile" : {
+        "speed" : 400,
+        "range" : 99999,
+        "gravity" : 1000,
+
+        "offsetRotation" : 40,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "homingRange" : 64,
+
+        "radius" : 8,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 45,
+
+        "sound" : "slash", "texture" : "boneShot", "particles" : "boneShot", "particlesDie" : "boneShot", "particlesSpawn" : "boneShot"
+    },
+
+    "stats" : {"dmg" : 7, "attackTime" : 0.1},
 
     "types" : ["item"]
 },
@@ -239,6 +284,51 @@
     },
 
     "stats" : {"dmg" : 15, "attackTime" : 1.2},
+
+    "types" : ["item"]
+},
+
+"rodOfChase" : {
+    "texture" : "rodOfChase",
+    "name" : "Rod of Chase", "rarity" : "uncommon",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 16, "swing" : 0.25
+    },
+
+    "damageType" : "magicDamage",
+
+    "projectile" : {
+        "speed" : 480,
+        "range" : 99999,
+        "gravity" : 200,
+
+        "offsetRotation" : 40,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 14,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 0,
+
+        "homingRange" : 164,
+
+        "sound" : "slash", "texture" : "starShot", "particles" : "starShot", "particlesDie" : "starShot", "particlesSpawn" : "starShot"
+    },
+
+    "stats" : {"dmg" : 15, "attackTime" : 0.3},
 
     "types" : ["item"]
 },
@@ -363,7 +453,94 @@
         "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
 
-    "stats" : {"dmg" : 25, "attackTime" : 0.5, "amount" : 1},
+    "stats" : {"dmg" : 20, "attackTime" : 0.5, "amount" : 1},
+
+    "types" : ["item"]
+},
+
+"boneBow" : {
+    "texture" : "boneBow",
+    "name" : "Bone Bow", "rarity" : "common",
+
+    "holdMode" : "bow",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : true,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 24, "swing" : 0
+    },
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 9999,
+        "gravity" : 200,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 3,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 8,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 2,
+
+        "sound" : "slash", "texture" : "boneArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
+    },
+
+    "stats" : {"dmg" : 15, "attackTime" : 0.5, "amount" : 1},
+
+    "types" : ["item"]
+},
+
+"mushboomBow" : {
+    "texture" : "mushboomBow",
+    "name" : "Mushboom Bow", "rarity" : "uncommon",
+
+    "holdMode" : "bow",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : true,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 24, "swing" : 0
+    },
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 9999,
+        "gravity" : 200,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 8,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 2,
+
+        "sound" : "slash", "texture" : "shroomArrow", "particlesDie" : "mushboom", "particles" : "mushboomShot"
+
+    },
+
+    "explosion" : {
+        "dmg" : 10, "radius" : 96, "particles" : "mushboomExplosion"
+    },
+
+    "stats" : {"dmg" : 15, "attackTime" : 0.5, "amount" : 1},
 
     "types" : ["item"]
 },
@@ -421,10 +598,44 @@
 
         "radius" : 18,
         "pirice" : 999,
-        "knockback" : 300,
+        "knockback" : 100,
 
         "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
         "spread" : 4,
+
+        "sound" : "slash", "texture" : "daggerSlash"
+    },
+
+    "stats" : {"dmg" : 15, "attackTime" : 0.4},
+
+    "maxStack" : 1, 
+
+    "types" : ["item"]
+},
+
+"boneDagger" : {
+    "texture" : "boneDagger",
+    "name" : "Bone Dagger", "rarity" : "uncommon",
+
+    "holdMode" : "slash",
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "rotation" : 60, "rotateTo" : 60,"roatationDefault" : 60, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+    },
+
+    "projectile" : {
+        "speed" : 400,
+        "range" : 60,
+        "followPlayer" : 1,
+        "collides" : false, "bounces" : 1,
+
+        "radius" : 18,
+        "pirice" : 999,
+        "knockback" : 100,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 30,
 
         "sound" : "slash", "texture" : "daggerSlash"
     },
@@ -452,7 +663,6 @@
         "range" : 100,
         "followPlayer" : 1,
         "collides" : false, "bounces" : 1,
-        "damage" : 20,
         "radius" : 30,
         "pirice" : 999,
         "knockback" : 300,
@@ -464,6 +674,40 @@
     },
 
     "stats" : {"dmg" : 20, "attackTime" : 0.8},
+
+    "maxStack" : 1, 
+
+    "types" : ["item"]
+},
+
+"shroomBat" : {
+    "texture" : "shroomBat",
+    "name" : "Shroom Bat", "rarity" : "uncommon",
+
+    "holdMode" : "slash",
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
+    },
+
+    "projectile" : {
+        "speed" : 500,
+        "range" : 100,
+        "followPlayer" : 1,
+        "collides" : false, "bounces" : 1,
+
+        "radius" : 30,
+        "pirice" : 999,
+        "knockback" : 900,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 4,
+
+        "sound" : "slash", "texture" : "basicSlash"
+    },
+
+    "stats" : {"dmg" : 25, "attackTime" : 0.8},
 
     "maxStack" : 1, 
 
@@ -494,6 +738,36 @@
     "maxStack" : 1,
 
     "types" : ["item","headArmor"]
+},
+
+"boneCrown" : {
+    "texture" : "boneCrown",
+    "name" : "Bone Crown", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10, "mag" : 20},
+
+    "yOffset" : -20,
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"minerHelmet" : {
+    "texture" : "minerHat",
+    "name" : "Miner's Helmet", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10, "light" : 100},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"],
+
+    "yOffset" : -9
 },
 
 "shroomArmor" : {
@@ -552,6 +826,34 @@
     "types" : ["item","bodyArmor"]
 },
 
+"boneRobe" : {
+    "texture" : "boneRobe",
+    "name" : "Bone Robe", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 20, "mag" : 15},
+    "yOffset" : 7,
+    "xOffset" : 1,
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
+"boneArmor" : {
+    "texture" : "boneArmor",
+    "name" : "Bone Armor", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 20},
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
 "shroomHat" : {
     "texture" : "shroomHat",
     "name" : "Shroom Hat", "rarity" : "uncommon",
@@ -563,6 +865,22 @@
     "yOffset" : -12,
 
     "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"boneHelmet" : {
+    "texture" : "boneHelmet",
+    "name" : "Bone Helmet", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10},
+
+    "maxStack" : 1,
+
+    "yOffset" : -3,
+    "xOffset" : -3,
 
     "types" : ["item","headArmor"]
 },

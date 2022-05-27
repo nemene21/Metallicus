@@ -15,8 +15,8 @@ function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, proces
     
     enterableRoom.structures = structures or {} -- Structures and tilemaps
 
-    enterableRoom.tilemap = newTilemap(loadSpritesheet(tileTexture, 16, 16), 48, roomData)
-    enterableRoom.bgTilemap = newTilemap(loadSpritesheet(tileTexture, 16, 16), 48)
+    enterableRoom.tilemap = newTilemap(loadSpritesheet(tileTexture[1], 16, 16), 48, roomData)
+    enterableRoom.bgTilemap = newTilemap(loadSpritesheet(tileTexture[2], 16, 16), 48)
 
     local firstCheck = true 
     for id,T in pairs(enterableRoom.tilemap.tiles) do
@@ -42,6 +42,21 @@ function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, proces
         end
 
     end
+
+    for x=enterableRoom.endLeft,enterableRoom.endRight do for y=enterableRoom.endUp,enterableRoom.endDown do
+
+        if
+            enterableRoom.tilemap:getTile(x + 1, y) == nil or
+            enterableRoom.tilemap:getTile(x - 1, y) == nil or
+            enterableRoom.tilemap:getTile(x, y + 1) == nil or
+            enterableRoom.tilemap:getTile(x, y - 1) == nil
+        then
+
+            enterableRoom.bgTilemap:setTile(x,y,{1,love.math.random(1,3)})
+
+        end
+
+    end end -- Place tiles
 
     -- Get the edges actual position and width
 
@@ -147,7 +162,7 @@ end
 
 function newHouse(x, y)
 
-    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), "data/images/tilesets/houseTileset.png", newRect(-39, -33, 24, 60), drawEnterable, processEnterable, "data/particles/blankParticles.json",nil, true, {newTeleporter(560, 580), newAnvil(350, 580)})
+    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, "data/particles/blankParticles.json",nil, true, {newTeleporter(560, 580), newAnvil(350, 580)})
 
 end
 

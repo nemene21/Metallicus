@@ -11,18 +11,28 @@ mushboomShot = loadSpritesheet("data/images/projectiles/player/mushboomShot.png"
 bullet = loadSpritesheet("data/images/projectiles/player/bullet.png",13,8),
 
 woodenArrow = loadSpritesheet("data/images/projectiles/player/woodenArrow.png",14,5),
+shroomArrow = loadSpritesheet("data/images/projectiles/player/shroomArrow.png",15,7),
+boneArrow = loadSpritesheet("data/images/projectiles/player/boneArrow.png",15,5),
+
+starShot = loadSpritesheet("data/images/projectiles/player/starShot.png",6,6),
+
+boneShot = loadSpritesheet("data/images/projectiles/player/boneShot.png",8,8)
 }
 
 PLAYER_PROJECTILE_PARTICLES = {
 slimeShot = loadJson("data/particles/playerProjectiles/slimeShot.json"),
+starShot = loadJson("data/particles/playerProjectiles/starShot.json"),
 mushboomShot = loadJson("data/particles/playerProjectiles/mushboomShot.json"),
 crystalShot = loadJson("data/particles/playerProjectiles/crystalShot.json"),
-arrowTrail = loadJson("data/particles/playerProjectiles/arrowTrail.json")
+arrowTrail = loadJson("data/particles/playerProjectiles/arrowTrail.json"),
+boneShot = loadJson("data/particles/playerProjectiles/boneShot.json")
 }
 
 PLAYER_PROJECTILE_PARTICLES_DIE = {
 slimeShot = loadJson("data/particles/playerProjectiles/slimeShotDie.json"),
 bullet = loadJson("data/particles/playerProjectiles/bulletDie.json"),
+
+starShot = loadJson("data/particles/playerProjectiles/starShotDie.json"),
 
 mushboom = loadJson("data/particles/playerProjectiles/mushboomSpawn.json"),
 mushboomDie = loadJson("data/particles/playerProjectiles/mushboomDie.json"),
@@ -30,13 +40,15 @@ mushboomExplosion = loadJson("data/particles/playerProjectiles/mushboomExplosion
 
 arrow = loadJson("data/particles/playerProjectiles/arrow.json"),
 
-crystalShot = loadJson("data/particles/playerProjectiles/crystalShotDie.json")
+crystalShot = loadJson("data/particles/playerProjectiles/crystalShotDie.json"),
+
+boneShot = loadJson("data/particles/playerProjectiles/boneShotDie.json")
 }
 
 -- Init
 function newPlayerProjectile(img, frames, interpolate, pos, gravity, speed, dir, damage, range, follow, radius, pirice, knockback, collides, bounces)
     local projectile = {
-        draw = drawPlayerProjectile, bounces = bounces, collides = collides, gravity = gravity or 0, knockback = knockback, pirice = pirice, follow = follow,radius = radius, vel = newVec(speed,0), sheet = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, lifetimeStart = range / speed, lifetime = range / speed, damage = damage, hitlist = {}, process = processPlayerProjectile
+        speed = speed, draw = drawPlayerProjectile, bounces = bounces, collides = collides, gravity = gravity or 0, knockback = knockback, pirice = pirice, follow = follow,radius = radius, vel = newVec(speed,0), sheet = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, lifetimeStart = range / speed, lifetime = range / speed, damage = damage, hitlist = {}, process = processPlayerProjectile
     }
 
     projectile.vel:rotate(dir + 180)
@@ -66,6 +78,31 @@ function processPlayerProjectile(projectile)
     projectile.vel.y = projectile.vel.y + projectile.gravity * dt
 
     projectile.pos.x = projectile.pos.x + projectile.vel.x * dt + player.vel.x * dt * projectile.follow
+
+    if projectile.homingRange ~= nil then
+
+        local bestPos = newVec(-999999, -999999)
+
+        for id, E in ipairs(ROOM.enemies) do
+
+            local newPos = newVec(E.collider.x - projectile.pos.x, E.collider.y - projectile.pos.y)
+
+            if newPos:getLen() < bestPos:getLen() then bestPos = newPos end
+
+        end
+
+        if bestPos:getLen() < projectile.homingRange then
+
+            bestPos:normalize()
+            bestPos.x = bestPos.x * projectile.speed
+            bestPos.y = bestPos.y * projectile.speed
+
+            projectile.vel.x = lerp(projectile.vel.x, bestPos.x, dt * 6)
+            projectile.vel.y = lerp(projectile.vel.y, bestPos.y, dt * 6)
+
+        end
+
+    end
 
     if projectile.collides then -- Bounce
         tile = ROOM.tilemap:getTile(math.floor(projectile.pos.x / 48), math.floor(projectile.pos.y / 48))
@@ -105,7 +142,7 @@ end
 function drawPlayerProjectile(projectile)
 
     setColor(255, 255, 255)
-    drawFrame(PLAYER_PROJECTILE_IMAGES[projectile.sheet], interpolatePlayerProjectile(projectile.interpolation, projectile.frames, projectile.lifetime, projectile.lifetimeStart), 1, projectile.pos.x, projectile.pos.y, 1, 1, projectile.vel:getRot() / 180 * 3.14)
+    drawFrame(PLAYER_PROJECTILE_IMAGES[projectile.sheet], interpolatePlayerProjectile(projectile.interpolation, projectile.frames, projectile.lifetime, projectile.lifetimeStart), 1, projectile.pos.x, projectile.pos.y, 1, boolToInt(projectile.vel.x > 0) * 2 - 1, projectile.vel:getRot() / 180 * 3.14)
 end
 
 -- Process player projectiles

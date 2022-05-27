@@ -35,7 +35,7 @@ bloomCycles = 24
 
 SHADERS.GLOW_AND_LIGHT:send("bloomCycles", bloomCycles)
 SHADERS.GLOW_AND_LIGHT:send("bloomCyclesHalf", math.floor(bloomCycles / 2) * -1)
-SHADERS.GLOW_AND_LIGHT:send("bloomIntensity", (1 / (bloomCycles * 2)) * 0.3)
+SHADERS.GLOW_AND_LIGHT:send("bloomIntensity", (1 / (bloomCycles * 2)) * 0.25)
 
 SHADERS.GLOW_AND_LIGHT:send("hurtVignetteIntensity", 0)
 
@@ -55,7 +55,7 @@ function processLight() SHADERS.GLOW_AND_LIGHT:send("lightImage",lightImage); li
 function resetLight()
 
     love.graphics.setCanvas(lightImage)
-    clear(ambientLight[1] * 0.5, ambientLight[2] * 0.5,ambientLight[3] * 0.5)
+    clear(ambientLight[1] * 0.5 * occlusion, ambientLight[2] * 0.5 * occlusion, ambientLight[3] * 0.5 * occlusion)
     love.graphics.setCanvas()
 
 end

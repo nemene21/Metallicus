@@ -7,8 +7,6 @@ function drawParticleShockwave(P,w)
 
     love.graphics.setLineWidth(w)
 
-    w = P.width - w
-
     love.graphics.circle("line",P.x - camera[1],P.y - camera[2], w)
 end
 

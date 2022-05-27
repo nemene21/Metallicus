@@ -156,7 +156,7 @@ function processAnvil(anvil)
 
                 setColor(255, 255 * boolToInt(S.craftable), 255 * boolToInt(S.craftable))
                 drawSprite(SLOT_IMAGES["equipmentSlot"], 744, posY, S.scale, S.scale, 0, 0) -- Draw slot
-                drawSprite(ITEM_IMGES[S.name], 744, posY, S.scale, S.scale, 0, 0)
+                drawSprite(ITEM_IMAGES[S.name], 744, posY, S.scale, S.scale, 0, 0)
 
                 if S.amount ~= 1 then
 
@@ -167,7 +167,7 @@ function processAnvil(anvil)
                 for idMat, M in ipairs(S.materials) do -- Draw materials
 
                     setColor(255, 255, 255)
-                    drawSprite(ITEM_IMGES[M[1]], 744 - 21 - 56 * idMat, posY, 1, 1, 0, 0)
+                    drawSprite(ITEM_IMAGES[M[1]], 744 - 21 - 56 * idMat, posY, 1, 1, 0, 0)
 
                     outlinedText(768 - 21 - 56 * idMat, posY + 5, 2, M[2], {255, 255 * boolToInt(M[3]), 255 * boolToInt(M[3])}, 1, 1, 1)
 

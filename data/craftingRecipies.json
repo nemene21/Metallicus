@@ -10,6 +10,11 @@
     "amount" : 1
 },
 {
+    "name" : "woodenBow",
+    "materials" : [["stick", 8], ["wood", 2]],
+    "amount" : 1
+},
+{
     "name" : "stoneSword",
     "materials" : [["stone", 6], ["stick", 4]],
     "amount" : 1
@@ -30,8 +35,53 @@
     "amount" : 1
 },
 {
+    "name" : "boneDagger",
+    "materials" : [["stick", 4], ["bone", 12]],
+    "amount" : 1
+},
+{
+    "name" : "boneBow",
+    "materials" : [["stick", 4], ["bone", 12]],
+    "amount" : 1
+},
+{
+    "name" : "boneRod",
+    "materials" : [["stick", 4], ["bone", 12]],
+    "amount" : 1
+},
+{
+    "name" : "boneHelmet",
+    "materials" : [["bone", 12]],
+    "amount" : 1
+},
+{
+    "name" : "boneArmor",
+    "materials" : [["bone", 16]],
+    "amount" : 1
+},
+{
+    "name" : "boneCrown",
+    "materials" : [["bone", 12]],
+    "amount" : 1
+},
+{
     "name" : "mushboomRod",
     "materials" : [["shroomOre", 12], ["stick", 4]],
+    "amount" : 1
+},
+{
+    "name" : "mushboomBow",
+    "materials" : [["shroomOre", 12], ["stick", 4]],
+    "amount" : 1
+},
+{
+    "name" : "shroomBat",
+    "materials" : [["shroomOre", 12], ["stick", 4]],
+    "amount" : 1
+},
+{
+    "name" : "rodOfChase",
+    "materials" : [["flyDust", 12], ["stick", 4]],
     "amount" : 1
 },
 {
@@ -41,6 +91,16 @@
 },
 {
     "name" : "shroomRobe",
+    "materials" : [["shroomOre", 12]],
+    "amount" : 1
+},
+{
+    "name" : "shroomHelmet",
+    "materials" : [["shroomOre", 8]],
+    "amount" : 1
+},
+{
+    "name" : "shroomArmor",
     "materials" : [["shroomOre", 12]],
     "amount" : 1
 },

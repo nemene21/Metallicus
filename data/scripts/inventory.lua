@@ -206,7 +206,7 @@ function drawInventory(inventory)
         -- Draw item and item count, if there is one
         if S.item ~= nil then
             setColor(255,255,255)
-            drawSprite(ITEM_IMGES[S.item.texture], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
+            drawSprite(ITEM_IMAGES[S.item.texture], slotX * INVENTORY_SPACING + inventory.x, slotY * INVENTORY_SPACING + inventory.y, snap(S.scale,0.02), snap(S.scale,0.02), 0, 0)
 
             if S.item.amount ~= 1 then
                 local count = tostring(S.item.amount)
@@ -240,7 +240,7 @@ function processMouseSlot()
         setColor(255,255,255)
 
         -- Draw
-        drawSprite(ITEM_IMGES[IN_HAND.texture],xM + 48,yM + 48, 1, 1, 0, 0)
+        drawSprite(ITEM_IMAGES[IN_HAND.texture],xM + 48,yM + 48, 1, 1, 0, 0)
 
         if IN_HAND.amount ~= 1 and IN_HAND.amount ~= 0 then
 
@@ -257,11 +257,11 @@ end
 
 -- TOOLTIP
 STAT_NAMES = {
-dmg = "damage", def = "defense", attackTime = "attack speed", mag = "magic damage"
+dmg = "Damage", def = "Defense", attackTime = "Attack Speed", mag = "Magic Damage", light = "Light"
 }
 
 STAT_MEASURES = {
-attackTime = "s", def = "%", mag = "%"
+attackTime = "s", def = "%", mag = "%", light = "%"
 }
 
 TOOLTIP_OFFSET = 80
@@ -301,14 +301,18 @@ function drawTooltip(item)
 
         local fontHeight = FONT:getHeight("text lol") + 4
 
+        local yOffset = 0
+
+        if yM + 38 + 24 + #item.stats * fontHeight > 600 then yOffset = 600 - 24 + #item.stats * fontHeight end
+
         -- Draw rect
         setColor(0,0,0,150)
-        love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM + 38, width + 12, fontHeight * (#textDraws + 1),8, 8)
+        love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM + 38 + yOffset, width + 12, fontHeight * (#textDraws + 1),8, 8)
 
         -- Draw stats
 
         for id,T in ipairs(textDraws) do
-            outlinedText(xM + TOOLTIP_OFFSET + STAT_OFFSET,yM + 24 + id * fontHeight,2,T,colors[id])
+            outlinedText(xM + TOOLTIP_OFFSET + STAT_OFFSET, yM + 24 + id * fontHeight + yOffset,2,T,colors[id])
         end
     end
     -- Draw rect
@@ -329,14 +333,14 @@ function holdItem(player,headed,item) return HOLD_MODES[item.holdMode](player,he
 function MODE_HOLD(player,headed,item)
 
     -- Draw
-    drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
+    drawSprite(ITEM_IMAGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
 
     return item
 end
 
 function MODE_CONSUME(player,headed,item)
     -- Draw
-    drawSprite(ITEM_IMGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
+    drawSprite(ITEM_IMAGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
 
     if mouseJustPressed(1) or justPressedTrigger[2] then
 
@@ -392,6 +396,7 @@ function MODE_SLASH(player,headed,item)
 
                 projectile.explosion = deepcopyTable(item.explosion)
 
+
             end
 
             local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
@@ -401,6 +406,8 @@ function MODE_SLASH(player,headed,item)
 
             shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+
+            projectile.homingRange = item.projectile.homingRange
 
             table.insert(playerProjectiles,projectile)
         end
@@ -412,9 +419,9 @@ function MODE_SLASH(player,headed,item)
     local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + item.holdData.rotation)
 
     -- Draw
-    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, item.holdData.flip, (rotation + item.holdData.spriteRotation) / 180 * 3.14)
+    drawSprite(ITEM_IMAGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, item.holdData.flip, (rotation + item.holdData.spriteRotation) / 180 * 3.14)
     
-    local imgDiagonal = (ITEM_IMGES[item.texture]:getWidth() ^ 2 + ITEM_IMGES[item.texture]:getHeight() ^ 2) ^ 0.5
+    local imgDiagonal = (ITEM_IMAGES[item.texture]:getWidth() ^ 2 + ITEM_IMAGES[item.texture]:getHeight() ^ 2) ^ 0.5
 
     local armOffset = newVec(imgDiagonal * 1.5 - 6, 0) -- * 1.5 = / 2 * 3
     armOffset:rotate(rotation + item.holdData.spriteRotation + 225)
@@ -467,6 +474,7 @@ function MODE_SHOOT(player,headed,item)
             if item.explosion ~= nil then
 
                 projectile.explosion = deepcopyTable(item.explosion)
+                projectile.explosion.dmg = round(projectile.explosion.dmg * multiplier)
 
             end
 
@@ -477,11 +485,13 @@ function MODE_SHOOT(player,headed,item)
             shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
 
+            projectile.homingRange = item.projectile.homingRange
+
             table.insert(playerProjectiles,projectile)
         end
     end
     
-    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, turned, rotation / 180 * 3.14 + item.holdData.swing * math.sin(clamp(item.holdData.attackTimer / item.stats.attackTime, 0, 1) * 6.28), 1, 0, 1)
+    drawSprite(ITEM_IMAGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, turned, rotation / 180 * 3.14 + item.holdData.swing * math.sin(clamp(item.holdData.attackTimer / item.stats.attackTime, 0, 1) * 6.28), 1, 0, 1)
     
     local armOffset = newVec(8, 0); armOffset:rotate(rotation + (-45 * turned))
     drawSprite(PLAYER_ARM, player.collider.x + pos.x + armOffset.x, player.collider.y + pos.y + armOffset.y)
@@ -533,6 +543,7 @@ function MODE_BOW(player,headed,item)
             if item.explosion ~= nil then
     
                 projectile.explosion = deepcopyTable(item.explosion)
+                projectile.explosion.dmg = round(projectile.explosion.dmg * multiplier)
     
             end
     
@@ -542,6 +553,8 @@ function MODE_BOW(player,headed,item)
     
             shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+
+            projectile.homingRange = item.projectile.homingRange
     
             table.insert(playerProjectiles,projectile)
         end
@@ -559,12 +572,12 @@ function MODE_BOW(player,headed,item)
     love.graphics.setLineWidth(2); setColor(255, 255, 255)
     love.graphics.line(player.collider.x + pos.x - stringOffset.x - camera[1], player.collider.y + pos.y - stringOffset.y - camera[2], player.collider.x + pos.x * stringMiddle - camera[1], player.collider.y + pos.y * stringMiddle - camera[2], player.collider.x + pos.x + stringOffset.x - camera[1], player.collider.y + pos.y + stringOffset.y - camera[2])
 
-    drawSprite(ITEM_IMGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, 1, rotation / 180 * 3.14 - 0.78)
+    drawSprite(ITEM_IMAGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y, 1, 1, rotation / 180 * 3.14 - 0.78)
 
     local bowArmOffset = newVec(8, 0); bowArmOffset:rotate(rotation)
     drawSprite(PLAYER_ARM, player.collider.x + pos.x + bowArmOffset.x, player.collider.y + pos.y + bowArmOffset.y)
 
-    drawFrame(PLAYER_PROJECTILE_IMAGES[item.projectile.texture], 1, 1, player.collider.x + pos.x, player.collider.y + pos.y , arrowScale, arrowScale, rotation / 180 * 3.14)
+    drawFrame(PLAYER_PROJECTILE_IMAGES[item.projectile.texture], 1, 1, player.collider.x + pos.x, player.collider.y + pos.y , arrowScale, arrowScale * turned, rotation / 180 * 3.14)
 
     drawSprite(PLAYER_ARM, player.collider.x + pos.x * stringMiddle, player.collider.y + pos.y * stringMiddle)
     
@@ -593,7 +606,7 @@ hotbarSlot=love.graphics.newImage("data/images/UI/inventory/hotbarSlot.png"),
 equipmentSlot=love.graphics.newImage("data/images/UI/inventory/equipmentSlot.png")
 }
 
-ITEM_IMGES = {
+ITEM_IMAGES = {
 
 wood = love.graphics.newImage("data/images/items/wood.png"), -- Wood
 stick = love.graphics.newImage("data/images/items/stick.png"),
@@ -623,6 +636,9 @@ shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png"),
 
 slimyShroomSoup = love.graphics.newImage("data/images/items/slimyShroomSoup.png"),
 
+shroomBat = love.graphics.newImage("data/images/items/shroomBat.png"),
+mushboomBow = love.graphics.newImage("data/images/items/mushboomBow.png"),
+
 mushboomRod = love.graphics.newImage("data/images/items/mushboomRod.png"),
 
 shroomArmor = love.graphics.newImage("data/images/items/shroomArmor.png"),
@@ -631,9 +647,25 @@ shroomHelmet = love.graphics.newImage("data/images/items/shroomHelmet.png"),
 flyDust = love.graphics.newImage("data/images/items/flyDust.png"), -- Flydust
 totemOfFloat = love.graphics.newImage("data/images/items/totemOfFloat.png"),
 
+rodOfChase = love.graphics.newImage("data/images/items/staffOfChase.png"),
+
 archerHat = love.graphics.newImage("data/images/items/archerHat.png"),
 
-bone = love.graphics.newImage("data/images/items/bone.png") -- Bone
+bone = love.graphics.newImage("data/images/items/bone.png"), -- Bone
+
+boneHelmet = love.graphics.newImage("data/images/items/boneHelmet.png"),
+boneArmor = love.graphics.newImage("data/images/items/boneArmor.png"),
+
+boneCrown = love.graphics.newImage("data/images/items/boneCrown.png"),
+boneRobe = love.graphics.newImage("data/images/items/boneRobe.png"),
+
+boneRod = love.graphics.newImage("data/images/items/boneRod.png"),
+
+boneBow = love.graphics.newImage("data/images/items/boneBow.png"),
+
+boneDagger = love.graphics.newImage("data/images/items/boneDagger.png"),
+
+minerHat = love.graphics.newImage("data/images/items/minerHat.png")
 }
 
 -- Add slot function
@@ -707,13 +739,13 @@ function drawDroppedItem(item)
     love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
     setColor(RARITY_COLORS[item.data.rarity][1], RARITY_COLORS[item.data.rarity][2], RARITY_COLORS[item.data.rarity][3])
 
-    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x - 1, item.pos.y + sine)
-    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x + 1, item.pos.y + sine)
-    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine - 1)
-    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine + 1)
+    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x - 1, item.pos.y + sine)
+    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x + 1, item.pos.y + sine)
+    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x, item.pos.y + sine - 1)
+    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x, item.pos.y + sine + 1)
 
     love.graphics.setShader(); setColor(255, 255, 255)
 
-    drawSprite(ITEM_IMGES[item.data.texture], item.pos.x, item.pos.y + sine)
+    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x, item.pos.y + sine)
 
 end
