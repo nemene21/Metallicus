@@ -14,7 +14,7 @@ function fetchNextBiome(degrade)
 
     for id, B in ipairs(BIOME_ORDER) do
 
-        if B ~= 0 then
+        if BIOME_ORDER[id][2] ~= 0 then
 
             if degrade then BIOME_ORDER[id][2] = BIOME_ORDER[id][2] - 1 end
             biomeOn = BIOME_ORDER[id][1]
