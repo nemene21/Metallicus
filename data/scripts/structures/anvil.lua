@@ -156,7 +156,7 @@ function processAnvil(anvil)
 
             if posY < 624 and posY > -24 then
 
-                setColor(255, 255 * boolToInt(S.craftable), 255 * boolToInt(S.craftable))
+                setColor(255, 255 * boolToInt(S.craftable or infiniteMaterials), 255 * boolToInt(S.craftable or infiniteMaterials))
                 drawSprite(SLOT_IMAGES["equipmentSlot"], 744, posY, S.scale, S.scale, 0, 0) -- Draw slot
                 drawSprite(ITEM_IMAGES[S.name], 744, posY, S.scale, S.scale, 0, 0)
 

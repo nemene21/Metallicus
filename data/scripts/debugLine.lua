@@ -129,6 +129,12 @@ function CHARGE_ACTIVE_COMMAND(cmd)
     end
 end
 
+function INF_CRAFTING_COMMAND(cmd)
+
+    infiniteMaterials = not infiniteMaterials
+
+end
+
 function HELP_COMMAND(cmd)
 
     print([[
@@ -260,6 +266,8 @@ die = DIE_COMMAND,
 setQuake = SET_QUAKE_COMMAND,
 
 say = SAY_COMMAND,
+
+infCrafting = INF_CRAFTING_COMMAND,
 
 chargeActive = CHARGE_ACTIVE_COMMAND,
 
