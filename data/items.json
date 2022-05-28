@@ -453,7 +453,48 @@
         "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
 
-    "stats" : {"dmg" : 20, "attackTime" : 0.5, "amount" : 1},
+    "stats" : {"dmg" : 22, "attackTime" : 0.5},
+
+    "types" : ["item"]
+},
+
+"stoneTribow" : {
+    "texture" : "stoneTribow",
+    "name" : "Stone Tribow", "rarity" : "common",
+
+    "holdMode" : "bow",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : true,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 24, "swing" : 0
+    },
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 9999,
+        "gravity" : 200,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 75,
+
+        "followPlayer" : 0,
+
+        "radius" : 8,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 25,
+
+        "sound" : "slash", "texture" : "woodenArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
+    },
+
+    "stats" : {"dmg" : 12, "attackTime" : 0.5, "amount" : 3},
 
     "types" : ["item"]
 },
@@ -494,7 +535,7 @@
         "sound" : "slash", "texture" : "boneArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
 
-    "stats" : {"dmg" : 20, "attackTime" : 0.5, "amount" : 1},
+    "stats" : {"dmg" : 25, "attackTime" : 0.5},
 
     "types" : ["item"]
 },
@@ -537,10 +578,10 @@
     },
 
     "explosion" : {
-        "dmg" : 10, "radius" : 96, "particles" : "mushboomExplosion"
+        "dmg" : 15, "radius" : 96, "particles" : "mushboomExplosion"
     },
 
-    "stats" : {"dmg" : 15, "attackTime" : 0.5, "amount" : 1},
+    "stats" : {"dmg" : 15, "attackTime" : 0.5},
 
     "types" : ["item"]
 },

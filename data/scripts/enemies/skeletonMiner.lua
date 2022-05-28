@@ -6,7 +6,7 @@ function buildSkeletonMiner(x, y)
     dashParticles.particleData.lifetime = {a=0.2, b=0.4}
 
     return {
-        hp = 200,
+        hp = 150,
 
         knockback = newVec(0,0), knockBackResistance = 1,
 

@@ -22,6 +22,8 @@ function newAnvil(x, y)
 
 end
 
+infiniteMaterials = true
+
 function checkAnvilCrafts(anvil)
 
     for idC, C in ipairs(anvil.slots) do -- For crafts
@@ -145,7 +147,7 @@ function processAnvil(anvil)
         anvil.scrollVel = anvil.scrollVel + getScroll() * 12
 
         anvil.scroll = anvil.scroll + anvil.scrollVel
-        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, clamp(- 21 - 56 * (#anvil.slots), -800, 0), 0), dt * 30)
+        anvil.scroll = lerp(anvil.scroll, clamp(anvil.scroll, - 42 - 56 * (#anvil.slots) + 600, 0), dt * 30)
 
         -- Draw crafting slots
         for id, S in ipairs(anvil.slots) do
@@ -177,7 +179,7 @@ function processAnvil(anvil)
 
                     S.scale = lerp(S.scale, 1.2, dt * 20)
 
-                    if mouseJustPressed(1) and S.craftable then -- I pressed
+                    if mouseJustPressed(1) and (S.craftable or infiniteMaterials) then -- I pressed
                         
                         S.scale = 1.4
 
@@ -227,6 +229,6 @@ function drawAnvil(anvil)
     drawSprite(IMAGE_ANVIL, anvil.x, anvil.y, 1, 1, 0, 1, 0.5, 1)
     drawSprite(IMAGE_ANVIL_LANTERN, anvil.x + 64, anvil.y, 1, 1, 0, 1, 0.5, 1)
 
-    shine(anvil.x + 52, anvil.y - 96, 400 + math.sin(globalTimer) * 12, {230,180,80,160})
+    shine(anvil.x + 52, anvil.y - 96, 400 + math.sin(globalTimer) * 12, {230,180,80,120})
 
 end

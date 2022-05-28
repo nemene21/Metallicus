@@ -528,7 +528,7 @@ function MODE_BOW(player,headed,item)
         -- Get multiplier
         local multiplier = (100 + (player[item.damageType] or 0)) * 0.01
     
-        local projectileOffset = newVec(36, 0); projectileOffset:rotate(rotation + item.projectile.offsetRotation * -turned)
+        local projectileOffset = newVec(item.holdData.distance, 0); projectileOffset:rotate(rotation + item.projectile.offsetRotation * -turned)
     
         if item.projectile.particlesSpawn ~= nil then
                 
@@ -538,7 +538,8 @@ function MODE_BOW(player,headed,item)
     
         for x=1, item.stats.amount or 1 do
             -- Summon projectile
-            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+
+            local projectile = newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "lerp", newVec(player.collider.x + pos.x + projectileOffset.x, player.collider.y + pos.y + projectileOffset.y), item.projectile.gravity, item.projectile.speed, rotation + 180 + lerp(-item.projectile.spread, item.projectile.spread, (x - 0.5) / (item.stats.amount or 1)), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
     
             if item.explosion ~= nil then
     
@@ -618,9 +619,13 @@ jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
 jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
 
 stone = love.graphics.newImage("data/images/items/stone.png"),            -- Stone
+
 stoneArmor = love.graphics.newImage("data/images/items/stoneArmor.png"),
 stoneHelmet = love.graphics.newImage("data/images/items/stoneHelmet.png"),
+
 stoneSword = love.graphics.newImage("data/images/items/stoneSword.png"),
+
+stoneTribow = love.graphics.newImage("data/images/items/tribow.png"),
 
 steelDagger = love.graphics.newImage("data/images/items/steelDagger.png"), -- Steel
 

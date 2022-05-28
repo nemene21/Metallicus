@@ -11,17 +11,22 @@
 },
 {
     "name" : "woodenBow",
-    "materials" : [["stick", 8], ["wood", 2]],
+    "materials" : [["stick", 4], ["wood", 12]],
     "amount" : 1
 },
 {
-    "name" : "slimyShroomSoup",
+    "name" : "quiver",
     "materials" : [["stone", 8], ["stick", 8], ["wood", 4]],
     "amount" : 1
 },
 {
     "name" : "stoneSword",
     "materials" : [["stone", 6], ["stick", 4]],
+    "amount" : 1
+},
+{
+    "name" : "stoneTribow",
+    "materials" : [["stick", 4], ["stone", 12]],
     "amount" : 1
 },
 {
