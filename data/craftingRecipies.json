@@ -11,7 +11,7 @@
 },
 {
     "name" : "woodenBow",
-    "materials" : [["stick", 4], ["wood", 12]],
+    "materials" : [["stick", 4], ["wood", 6]],
     "amount" : 1
 },
 {
@@ -61,22 +61,22 @@
 },
 {
     "name" : "boneHelmet",
-    "materials" : [["bone", 12]],
+    "materials" : [["bone", 8]],
     "amount" : 1
 },
 {
     "name" : "boneArmor",
-    "materials" : [["bone", 16]],
-    "amount" : 1
-},
-{
-    "name" : "boneCrown",
     "materials" : [["bone", 12]],
     "amount" : 1
 },
 {
+    "name" : "boneCrown",
+    "materials" : [["bone", 8]],
+    "amount" : 1
+},
+{
     "name" : "boneRobe",
-    "materials" : [["bone", 16]],
+    "materials" : [["bone", 12]],
     "amount" : 1
 },
 {
@@ -112,6 +112,11 @@
 {
     "name" : "shroomRobe",
     "materials" : [["shroomOre", 12]],
+    "amount" : 1
+},
+{
+    "name" : "flydustBow",
+    "materials" : [["stick", 4], ["flydust", 12]],
     "amount" : 1
 },
 {
