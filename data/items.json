@@ -540,6 +540,47 @@
     "types" : ["item"]
 },
 
+"flydustBow" : {
+    "texture" : "flydustBow",
+    "name" : "Bone Bow", "rarity" : "common",
+
+    "holdMode" : "bow",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : true,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 24, "swing" : 0
+    },
+
+    "projectile" : {
+        "speed" : 880,
+        "range" : 9999,
+        "gravity" : -1000,
+
+        "offsetRotation" : 0,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 1,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 8,
+
+        "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "spread" : 2,
+
+        "sound" : "slash", "texture" : "flydustArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
+    },
+
+    "stats" : {"dmg" : 33, "attackTime" : 0.5},
+
+    "types" : ["item"]
+},
+
 "mushboomBow" : {
     "texture" : "mushboomBow",
     "name" : "Mushboom Bow", "rarity" : "uncommon",

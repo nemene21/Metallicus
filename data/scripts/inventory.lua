@@ -656,6 +656,8 @@ rodOfChase = love.graphics.newImage("data/images/items/staffOfChase.png"),
 
 archerHat = love.graphics.newImage("data/images/items/archerHat.png"),
 
+flydustBow = love.graphics.newImage("data/images/items/flydustBow.png"),
+
 bone = love.graphics.newImage("data/images/items/bone.png"), -- Bone
 
 boneHelmet = love.graphics.newImage("data/images/items/boneHelmet.png"),

@@ -22,7 +22,7 @@ function newAnvil(x, y)
 
 end
 
-infiniteMaterials = true
+infiniteMaterials = false
 
 function checkAnvilCrafts(anvil)
 

@@ -16,7 +16,9 @@ boneArrow = loadSpritesheet("data/images/projectiles/player/boneArrow.png",15,5)
 
 starShot = loadSpritesheet("data/images/projectiles/player/starShot.png",6,6),
 
-boneShot = loadSpritesheet("data/images/projectiles/player/boneShot.png",8,8)
+boneShot = loadSpritesheet("data/images/projectiles/player/boneShot.png",8,8),
+
+flydustArrow = loadSpritesheet("data/images/projectiles/player/flydustArrow.png",15,7)
 }
 
 PLAYER_PROJECTILE_PARTICLES = {
