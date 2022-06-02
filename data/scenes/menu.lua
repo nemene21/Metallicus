@@ -55,7 +55,7 @@ function menu()
     drawSprite(CHALLANGES_IMAGE, 0, challangesYOffset - 6, 1, 1, 0, 1, 0, 0)
     drawSprite(CHALLANGES_ARROW, 52, challangesYOffset + challangesArrowAnim + 21 - 21 * challangesOffset * challangesOffset, 1, challangesOffset * challangesOffset * 2 - 1, 0, 1, 0, 0)
 
-    if challangesOpen then
+    if challangesOffset < 0.98 then
         id = 0
         for stringId, C in pairs(challanges) do
 

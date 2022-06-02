@@ -12,6 +12,8 @@ battlefly="battlefly",
 skeletonMiner="skeleton miner"
 }
 
+ENEMY_HP_SCALE = 1
+
 function buildEnemy(name, x, y)
 
     local enemy = enemies[name](x, y)
@@ -22,6 +24,8 @@ function buildEnemy(name, x, y)
 
     enemy.ID = ENEMY_ID
     ENEMY_ID = ENEMY_ID + 1
+
+    enemy.hp = math.floor(enemy.hp * ENEMY_HP_SCALE)
 
     return enemy
 end

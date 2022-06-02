@@ -14,9 +14,11 @@
     "texture" : "shroomOre",
     "name" : "Shroom Ore", "rarity" : "uncommon",
 
-    "holdMode" : "hold",
+    "holdMode" : "consumable",
 
     "maxStack" : 24,
+
+    "stats" : {"hp" : 4},
 
     "types" : ["item"]
 },
@@ -390,6 +392,8 @@
         "attackTimer" : 0, "distance" : 8, "swing" : 0
     },
 
+    "damageType" : "rangedDamage",
+
     "projectile" : {
         "speed" : 880,
         "range" : 350,
@@ -430,6 +434,8 @@
     "holdData" : {
         "attackTimer" : 0, "distance" : 24, "swing" : 0
     },
+
+    "damageType" : "rangedDamage",
 
     "projectile" : {
         "speed" : 880,
@@ -472,6 +478,8 @@
         "attackTimer" : 0, "distance" : 24, "swing" : 0
     },
 
+    "damageType" : "rangedDamage",
+
     "projectile" : {
         "speed" : 880,
         "range" : 9999,
@@ -513,6 +521,8 @@
         "attackTimer" : 0, "distance" : 24, "swing" : 0
     },
 
+    "damageType" : "rangedDamage",
+
     "projectile" : {
         "speed" : 880,
         "range" : 9999,
@@ -540,7 +550,7 @@
     "types" : ["item"]
 },
 
-"flydustBow" : {
+"flyDustBow" : {
     "texture" : "flydustBow",
     "name" : "Bone Bow", "rarity" : "common",
 
@@ -553,6 +563,8 @@
     "holdData" : {
         "attackTimer" : 0, "distance" : 24, "swing" : 0
     },
+
+    "damageType" : "rangedDamage",
 
     "projectile" : {
         "speed" : 880,
@@ -594,6 +606,8 @@
     "holdData" : {
         "attackTimer" : 0, "distance" : 24, "swing" : 0
     },
+
+    "damageType" : "rangedDamage",
 
     "projectile" : {
         "speed" : 880,
@@ -638,6 +652,8 @@
         "attackTimer" : 0, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
+    "damageType" : "meleeDamage",
+
     "projectile" : {
         "speed" : 500,
         "range" : 100,
@@ -671,6 +687,8 @@
     "holdData" : {
         "attackTimer" : 0, "rotation" : 60, "rotateTo" : 60,"roatationDefault" : 60, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
+
+    "damageType" : "meleeDamage",
 
     "projectile" : {
         "speed" : 400,
@@ -706,6 +724,8 @@
         "attackTimer" : 0, "rotation" : 60, "rotateTo" : 60,"roatationDefault" : 60, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
+    "damageType" : "meleeDamage",
+
     "projectile" : {
         "speed" : 400,
         "range" : 60,
@@ -740,6 +760,8 @@
         "attackTimer" : 0, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
+    "damageType" : "meleeDamage",
+
     "projectile" : {
         "speed" : 500,
         "range" : 100,
@@ -773,6 +795,8 @@
         "attackTimer" : 0, "rotation" : 90, "rotateTo" : 90,"roatationDefault" : 90, "turnTo" : -1, "distance" : 28, "flip" : -1, "spriteRotateTo" : 0, "spriteRotation" : 0
     },
 
+    "damageType" : "meleeDamage",
+
     "projectile" : {
         "speed" : 500,
         "range" : 100,
@@ -796,13 +820,55 @@
     "types" : ["item"]
 },
 
+"stoneHelmet" : {
+    "texture" : "stoneHelmet",
+    "name" : "Stone Helmet", "rarity" : "epic",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10, "meleeDamage" : 5},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
 "stoneArmor" : {
     "texture" : "stoneArmor",
     "name" : "Stone Armor", "rarity" : "rare",
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 20},
+    "stats" : {"def" : 15, "meleeDamage" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
+"boneHelmet" : {
+    "texture" : "boneHelmet",
+    "name" : "Bone Helmet", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 15, "meleeDamage" : 10},
+
+    "maxStack" : 1,
+
+    "yOffset" : -3,
+    "xOffset" : -3,
+
+    "types" : ["item","headArmor"]
+},
+
+"boneArmor" : {
+    "texture" : "boneArmor",
+    "name" : "Bone Armor", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 20, "meleeDamage" : 15},
 
     "maxStack" : 1,
 
@@ -815,41 +881,11 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 10},
+    "stats" : {"def" : 20, "meleeDamage" : 15},
 
     "maxStack" : 1,
 
     "types" : ["item","headArmor"]
-},
-
-"boneCrown" : {
-    "texture" : "boneCrown",
-    "name" : "Bone Crown", "rarity" : "uncommon",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 10, "mag" : 20},
-
-    "yOffset" : -20,
-
-    "maxStack" : 1,
-
-    "types" : ["item","headArmor"]
-},
-
-"minerHelmet" : {
-    "texture" : "minerHat",
-    "name" : "Miner's Helmet", "rarity" : "uncommon",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 10, "light" : 100},
-
-    "maxStack" : 1,
-
-    "types" : ["item","headArmor"],
-
-    "yOffset" : -9
 },
 
 "shroomArmor" : {
@@ -858,24 +894,56 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 20},
+    "stats" : {"def" : 30, "meleeDamage" : 20},
 
     "maxStack" : 1,
 
     "types" : ["item","bodyArmor"]
 },
 
-"stoneHelmet" : {
-    "texture" : "stoneHelmet",
-    "name" : "Stone Helmet", "rarity" : "epic",
+"boneCrown" : {
+    "texture" : "boneCrown",
+    "name" : "Bone Crown", "rarity" : "uncommon",
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 10},
+    "stats" : {"def" : 5, "magicDamage" : 10},
+
+    "yOffset" : -20,
 
     "maxStack" : 1,
 
     "types" : ["item","headArmor"]
+},
+
+"boneRobe" : {
+    "texture" : "boneRobe",
+    "name" : "Bone Robe", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 15, "magicDamage" : 15},
+    "yOffset" : 7,
+    "xOffset" : 1,
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
+},
+
+"minerHelmet" : {
+    "texture" : "minerHat",
+    "name" : "Miner's Helmet", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 15, "light" : 100},
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"],
+
+    "yOffset" : -9
 },
 
 "goldenHelmet" : {
@@ -884,9 +952,24 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 10},
+    "stats" : {"def" : 10, "meleeDamage" : 30},
 
     "yOffset" : -9,
+
+    "maxStack" : 1,
+
+    "types" : ["item","headArmor"]
+},
+
+"shroomHat" : {
+    "texture" : "shroomHat",
+    "name" : "Shroom Hat", "rarity" : "uncommon",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 10, "magicDamage" : 15},
+
+    "yOffset" : -12,
 
     "maxStack" : 1,
 
@@ -899,72 +982,13 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 20, "mag" : 15},
+    "stats" : {"def" : 20, "magicDamage" : 20},
     "yOffset" : 7,
     "xOffset" : 1,
 
     "maxStack" : 1,
 
     "types" : ["item","bodyArmor"]
-},
-
-"boneRobe" : {
-    "texture" : "boneRobe",
-    "name" : "Bone Robe", "rarity" : "uncommon",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 20, "mag" : 15},
-    "yOffset" : 7,
-    "xOffset" : 1,
-
-    "maxStack" : 1,
-
-    "types" : ["item","bodyArmor"]
-},
-
-"boneArmor" : {
-    "texture" : "boneArmor",
-    "name" : "Bone Armor", "rarity" : "uncommon",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 20},
-
-    "maxStack" : 1,
-
-    "types" : ["item","bodyArmor"]
-},
-
-"shroomHat" : {
-    "texture" : "shroomHat",
-    "name" : "Shroom Hat", "rarity" : "uncommon",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 10, "mag" : 20},
-
-    "yOffset" : -12,
-
-    "maxStack" : 1,
-
-    "types" : ["item","headArmor"]
-},
-
-"boneHelmet" : {
-    "texture" : "boneHelmet",
-    "name" : "Bone Helmet", "rarity" : "uncommon",
-
-    "holdMode" : "hold",
-
-    "stats" : {"def" : 10},
-
-    "maxStack" : 1,
-
-    "yOffset" : -3,
-    "xOffset" : -3,
-
-    "types" : ["item","headArmor"]
 },
 
 "archerHat" : {
@@ -973,7 +997,7 @@
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 10, "mag" : 20},
+    "stats" : {"def" : 10, "rangedDamage" : 20},
 
     "yOffset" : -12,
 

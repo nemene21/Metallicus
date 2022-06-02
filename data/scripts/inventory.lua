@@ -257,11 +257,11 @@ end
 
 -- TOOLTIP
 STAT_NAMES = {
-dmg = "Damage", def = "Defense", attackTime = "Attack Speed", mag = "Magic Damage", light = "Light"
+dmg = "Damage", def = "Defense", attackTime = "Attack Speed", magicDamage = "Magic Damage", rangedDamage = "Ranged Damage", meleeDamage = "Melee Damage", light = "Light"
 }
 
 STAT_MEASURES = {
-attackTime = "s", def = "%", mag = "%", light = "%"
+attackTime = "s", def = "%", magicDamage = "%", rangedDamage = "%", meleeDamage = "%", light = "%"
 }
 
 TOOLTIP_OFFSET = 80
@@ -388,6 +388,8 @@ function MODE_SLASH(player,headed,item)
         item.projectile.burstTimer = item.projectile.burstWait
         item.projectile.burstsLeft = item.projectile.burstsLeft - 1
 
+        local multiplier = (100 + (player[item.damageType] or 0)) * 0.01
+
         for x=1, item.stats.amount or 1 do
             -- Summon projectile
             local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y - camera[2] - yM); rotation = rotation:getRot()
@@ -401,7 +403,7 @@ function MODE_SLASH(player,headed,item)
 
             local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
 
-            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), item.stats.dmg, item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
             shake(3, 1, 0.15, rotation)

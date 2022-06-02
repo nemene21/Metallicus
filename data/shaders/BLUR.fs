@@ -1,8 +1,8 @@
 uniform float xRatio = 0;
-int size = 8;
-float multiplier = 0.001;
-float intensity = 0.25;
-int iterations = size * size;
+int size = 10;
+float multiplier = 0.00001;
+
+int iterations = size * size * 4;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
@@ -16,5 +16,5 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
     }
     }
 
-    return blur / iterations * intensity;
+    return blur / iterations;
 }

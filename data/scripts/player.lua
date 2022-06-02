@@ -19,6 +19,18 @@ function newPlayer(x,y,stats)
     
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["jelloRod"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["stoneHelmet"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
+
+    local startingWeapon = deepcopyTable(ITEMS["boneCrown"]); startingWeapon.amount = 1
+    hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")
@@ -48,7 +60,9 @@ function newPlayer(x,y,stats)
 
         iFrames = 0,
         
-        damageReduction = 0, magicDamage = 0,
+        damageReduction = 0,
+
+        magicDamage = 0, meleeDamage = 0, rangedDamage = 0,
 
         hp = 100, hpMax = 100, hpBarDelayed = 0,
 
@@ -369,9 +383,6 @@ function drawPlayer(player)
 end
 
 
-
-
-
 function resetPlayerStats(player)
 
     -- Update stats
@@ -383,7 +394,9 @@ function resetPlayerStats(player)
 
                 player.lightScale = player.lightScale - (S.item.stats.light or 0)
 
-                player.magicDamage = player.magicDamage - (S.item.stats.mag or 0)
+                player.meleeDamage = player.meleeDamage - (S.item.stats.meleeDamage or 0)
+                player.rangedDamage = player.rangedDamage - (S.item.stats.rangedDamage or 0)
+                player.magicDamage = player.magicDamage - (S.item.stats.magicDamage or 0)
             end
         end
     end
@@ -401,7 +414,9 @@ function setPlayerStats(player)
 
                 player.lightScale = player.lightScale + (S.item.stats.light or 0)
 
-                player.magicDamage = player.magicDamage + (S.item.stats.mag or 0)
+                player.meleeDamage = player.meleeDamage + (S.item.stats.meleeDamage or 0)
+                player.rangedDamage = player.rangedDamage + (S.item.stats.rangedDamage or 0)
+                player.magicDamage = player.magicDamage + (S.item.stats.magicDamage or 0)
             end
         end
     end

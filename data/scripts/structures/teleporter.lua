@@ -45,6 +45,8 @@ function processTeleporter(teleporter)
 
             teleporter.pressed = true
 
+            ENEMY_HP_SCALE = ENEMY_HP_SCALE + 0.1
+
             shake(8, 55, 0.1)
 
             playSound("teleport")
