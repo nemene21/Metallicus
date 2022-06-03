@@ -552,7 +552,7 @@
 
 "flyDustBow" : {
     "texture" : "flydustBow",
-    "name" : "Bone Bow", "rarity" : "common",
+    "name" : "Flydust Bow", "rarity" : "common",
 
     "holdMode" : "bow",
 
