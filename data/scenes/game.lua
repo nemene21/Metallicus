@@ -40,6 +40,8 @@ function gameReload()
     playTrack("cave")
     shake(6, 5, 0.15)
 
+    floorOn = 1
+
     ENEMY_HP_SCALE = 1
 end
 

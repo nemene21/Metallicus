@@ -81,8 +81,8 @@ function love.load()
     discordRPC.initialize(appId, true)
     local now = os.time(os.date("*t"))
     presence = {
-        state = "Action rougelike!",
-        details = "",
+        state = "",
+        details = "Bullet-Hell Action Rougelike!",
         startTimestamp = nil,
         endTimestamp = nil,
         partyId = "",
@@ -117,6 +117,13 @@ end
 function love.update()
 
     if nextPresenceUpdate < love.timer.getTime() then
+
+        if sceneAt == "game" then
+            presence.state = BIOMES[biomeOn].name .. " - Floor " .. tostring(floorOn)
+        else
+            presence.state = ""
+        end
+
         discordRPC.updatePresence(presence)
         nextPresenceUpdate = love.timer.getTime() + 2.0
     end

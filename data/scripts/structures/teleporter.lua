@@ -95,6 +95,8 @@ function processTeleporter(teleporter)
         ROOM = ROOMS[roomOn]
     
         playerProjectiles = {}; enemyProjectiles = {}
+        
+        floorOn = floorOn + 1
 
     end
 end

@@ -67,6 +67,8 @@ cave = {
     tilesetPath = "data/images/tilesets/cave/tileset.png",
     bgTilesetPath = "data/images/tilesets/cave/bg.png",
 
+    name = "Shallow Caves",
+
     materials = {rock = 100, wood = 100},
 
     decorations = {
@@ -105,6 +107,8 @@ sporeCavern = {
     bgTilesetPath = "data/images/tilesets/cave/bg.png",
     
     materials = {shroomOre = 150, wood = 100},
+
+    name = "Spore Caverns",
 
     ambientLight = {15, 35, 80},
     
