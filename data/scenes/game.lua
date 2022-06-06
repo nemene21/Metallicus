@@ -27,6 +27,8 @@ function gameReload()
 
     debugDeleteTimer = newTimer(0.1)
 
+    drawUi = true
+
     diedTimer = newTimer(4)
     
     playerDied = false; UI_ALPHA = 255

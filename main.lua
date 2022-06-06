@@ -105,12 +105,17 @@ function love.load()
 
     MIN_DELTA = 1 / 30
 
+    drawUi = true
+
     textInputed = ""
 
     timeMult = 1
     showStats = false
 
     zoomInEffect = 1
+
+    screenshotAnim = 0
+    SS_FOLDER = love.filesystem.getSaveDirectory() .. "/screenshots"
 end
 
 -- Play scenes
@@ -181,8 +186,10 @@ function love.draw()
 
     love.graphics.setShader()
     
-    love.graphics.setColor(1,1,1, UI_ALPHA / 255)
-    love.graphics.draw(UI_LAYER)
+    if (drawUi or sceneAt ~= "game") and UI_ALPHA > 0.01 then
+        love.graphics.setColor(1,1,1, UI_ALPHA / 255)
+        love.graphics.draw(UI_LAYER)
+    end
 
     setColor(0,0,0,255 * transition)
     love.graphics.rectangle("fill",0,0,800,600)
@@ -202,8 +209,19 @@ function love.draw()
 
     love.graphics.setColor(1,1,1)
 
+    screenshotAnim = screenshotAnim - dt
+    if screenshotAnim > 0 then
+
+        normalText(16, 16, 'Screenshot saved at "' .. SS_FOLDER .. '" (copied)', {255, 255, 255, (screenshotAnim * 0.2) ^ 2 * 255}, 0.8, 0.8)
+        
+    end
+
     -- Check for fullscreen 
     if justPressed("f1") then changeFullscreen() end
+
+    if justPressed("f2") then drawUi = not drawUi end
+
+    if justPressed("f3") then love.graphics.captureScreenshot("screenshots/screenshot.png"); screenshotAnim = 5; love.system.setClipboardText(SS_FOLDER) end
 
     -- Reset stuff
     lastKeyPressed = "none"; lastMouseButtonPressed = -1
