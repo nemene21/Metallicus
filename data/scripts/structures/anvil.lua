@@ -231,6 +231,6 @@ function drawAnvil(anvil)
     drawSprite(IMAGE_ANVIL, anvil.x, anvil.y, 1, 1, 0, 1, 0.5, 1)
     drawSprite(IMAGE_ANVIL_LANTERN, anvil.x + 64, anvil.y, 1, 1, 0, 1, 0.5, 1)
 
-    shine(anvil.x + 52, anvil.y - 96, 400 + math.sin(globalTimer) * 12, {230,180,80,120})
+    shine(anvil.x + 52, anvil.y - 96, 400 + math.sin(globalTimer) * 12, {230,180,80,60})
 
 end

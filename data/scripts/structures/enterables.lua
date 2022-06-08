@@ -142,7 +142,7 @@ function drawEnterable(enterable)
         if justPressed("f") then
 
             ROOM = enterable.room
-            ambientLight = enterable.ambientLight or {200, 200, 200}
+            ambientLight = enterable.ambientLight or BIOMES[biomeOn].ambientLight
             transition = 1
             player.collider.x = ROOM.entranceParticles.x + 12; player.collider.y = ROOM.entranceParticles.y + 48
             player.walkParticles.particles = {}

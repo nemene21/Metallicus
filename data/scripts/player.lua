@@ -308,7 +308,7 @@ function drawPlayer(player)
 
     player.lightScaleLerped = lerp(player.lightScaleLerped or 100, player.lightScale, dt * 3)
 
-    shine(player.collider.x,player.collider.y,300 * player.lightScaleLerped * 0.01 + math.sin(globalTimer * 3) * 30,{255,200,100,60}) -- Light
+    shine(player.collider.x,player.collider.y,300 * player.lightScaleLerped * 0.01 + math.sin(globalTimer * 3) * 30,{255,200,100,50}) -- Light
 
     love.graphics.setCanvas(display)
 
