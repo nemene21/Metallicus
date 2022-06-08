@@ -32,6 +32,8 @@ function menuReload()
         lightsOff = newChallange(love.graphics.newImage("data/images/UI/challanges/lightsOff.png"))
 
     }
+
+    mouseMode = "pointer"
 end
 
 function menuDie()

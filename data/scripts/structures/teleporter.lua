@@ -98,6 +98,8 @@ function processTeleporter(teleporter)
         
         floorOn = floorOn + 1
 
+        playTrack("cave", 0.5)
+
     end
 end
 

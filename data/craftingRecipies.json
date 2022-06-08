@@ -115,7 +115,7 @@
     "amount" : 1
 },
 {
-    "name" : "flydustBow",
+    "name" : "flyDustBow",
     "materials" : [["stick", 4], ["flyDust", 12]],
     "amount" : 1
 },

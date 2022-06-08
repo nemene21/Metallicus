@@ -19,18 +19,6 @@ function newPlayer(x,y,stats)
     
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["woodenBow"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["jelloRod"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["stoneHelmet"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-
-    local startingWeapon = deepcopyTable(ITEMS["boneCrown"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
     
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")

@@ -39,18 +39,20 @@ function gameReload()
     
     occlusion = boolToInt(not challanges.lightsOff.active)
 
-    playTrack("cave")
     shake(6, 5, 0.15)
 
     floorOn = 1
 
     ENEMY_HP_SCALE = 1
+
+    playTrack("cave", 0.5)
 end
 
 function gameDie()
 end
 
 function game()
+
     -- Reset
     sceneAt = "game"
     

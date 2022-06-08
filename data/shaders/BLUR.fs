@@ -1,19 +1,27 @@
-uniform float xRatio = 0;
-int size = 10;
-float multiplier = 0.00001;
 
-int iterations = size * size * 4;
+float directions = 16.0;
+float quality = 3.0;
+float radius = 0.002;
+
+float PI2 = 6.2831;
+
+float iterations = directions * quality + 1;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
     vec4 blur = Texel(image, uvs);
 
-    for (int x = -size; x < size; x++) {
-    for (int y = -size; y < size; y++) {
+    float angle = PI2 / directions;
+    float qualityDiv = 1.0 / quality;
 
-        blur += Texel(image,uvs + vec2(x * multiplier * xRatio, y * multiplier));
+    for (float directionOn = 0.0; directionOn < PI2; directionOn += angle) {
 
-    }
+        for (float i = qualityDiv; i < quality; i += qualityDiv) {
+
+            blur += Texel(image, uvs + vec2(cos(directionOn), sin(directionOn)) * radius * i);
+
+        }
+
     }
 
     return blur / iterations;

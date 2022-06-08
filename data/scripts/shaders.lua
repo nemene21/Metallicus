@@ -25,7 +25,7 @@ SHADERS = {
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
-SHADERS.BLUR:send("xRatio",aspectRatio[2])
+--SHADERS.BLUR:send("xRatio",aspectRatio[2])
 SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitch.png"))
 
 SHADERS.GLOW_AND_LIGHT:send("vignetteMask",love.graphics.newImage("data/images/shaderMasks/vignette.png"))

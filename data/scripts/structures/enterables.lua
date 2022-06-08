@@ -1,9 +1,9 @@
 
 
 
-function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, particles, particleOffset, stopQuake, structures)
+function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, additionalProcess, particles, particleOffset, stopQuake, structures)
     -- GENERATE THE ROOM
-    local enterableRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processEnterableRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
+    local enterableRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processEnterableRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, additionalProcess = additionalProcess, processParticles=roomParticles, particleSystems={}}
 
     -- Ambient particles
     enterableRoom.ambientParticles = newParticleSystem(0, 0, loadJson(particles))
@@ -115,6 +115,8 @@ function processEnterableRoom(room)
         
             player.collider.x = room.outsideExit.x; player.collider.y = room.outsideExit.y
 
+            playTrack("cave", 0.5)
+
         end
     end
 
@@ -125,6 +127,8 @@ function processEnterableRoom(room)
         if S.dead then table.insert(kill, id) end
 
     end room.structures = wipeKill(kill, room.structures)
+
+    room:additionalProcess()
 
 end
 
@@ -157,12 +161,14 @@ function processEnterable(enterable)
     
 end
 
-
-
+function processCraftingArea(house)
+    trackPitch = lerp(trackPitch, 1, dt * 6)
+    playTrack("crafting", 0.5)
+end
 
 function newHouse(x, y)
 
-    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, "data/particles/blankParticles.json",nil, true, {newTeleporter(560, 580), newAnvil(350, 580)})
+    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, processCraftingArea, "data/particles/blankParticles.json", nil, true, {newTeleporter(560, 580), newAnvil(350, 580)})
 
 end
 
