@@ -8,39 +8,41 @@ extern Image vignetteMask;
 
 extern Image lightImage;
 
-uniform int bloomCycles = 0;
-uniform int bloomCyclesHalf = 0;
+float directions = 8.0;
+float quality = 3.0;
+float radius = 0.0018;
 
-uniform float bloomSize = 0.0002;
+float PI2 = 6.2831;
 
-uniform float bloomIntensity = 0.0;
+float iterations = directions * quality - 15;
+
+float intensityBloom = 0.55;
+
+extern float xRatio;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
     vec4 px = Texel(image,uvs);
 
-    vec4 bloomV = vec4(0.0, 0.0, 0.0, 1.0);
-    vec4 bloomH = vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 glow = px;
 
-    float bloomCyclesHalfAbs = bloomCycles * 0.5;
+    float angle = PI2 / directions;
+    float qualityDiv = 1.0 / quality;
 
-    for (int x = bloomCyclesHalf; x < bloomCycles; x++) {
+    for (float directionOn = 0.0; directionOn < PI2; directionOn += angle) {
 
-        vec4 pxGotten = Texel(image, vec2(uvs.x + bloomSize * x, uvs.y)) * (1.0 - abs(x) / bloomCycles);
-        bloomH += pxGotten;
+        for (float i = qualityDiv; i < quality; i += qualityDiv) {
 
-    }
+            vec4 lookup = Texel(image, uvs + vec2(cos(directionOn) * xRatio, sin(directionOn)) * radius * i);
+            glow += lookup * lookup;
 
-    for (int y = bloomCyclesHalf; y < bloomCycles; y++) {
-        
-        vec4 pxGotten = Texel(image, vec2(uvs.x, uvs.y + bloomSize * y)) * (1.0 - abs(y) / bloomCycles);
-        bloomV += pxGotten;
+        }
 
     }
 
-    vec4 glow = bloomV * bloomH * bloomIntensity;
+    glow /= iterations;
 
-    px += glow;
+    px += glow * intensityBloom;
 
     vec4 lightedImage = px * Texel(lightImage,uvs) * 2;
 

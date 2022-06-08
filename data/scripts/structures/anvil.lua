@@ -179,6 +179,8 @@ function processAnvil(anvil)
 
                     S.scale = lerp(S.scale, 1.2, dt * 20)
 
+                    drawTooltip(ITEMS[S.name])
+
                     if mouseJustPressed(1) and (S.craftable or infiniteMaterials) then -- I pressed
                         
                         S.scale = 1.4

@@ -31,11 +31,7 @@ SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitc
 SHADERS.GLOW_AND_LIGHT:send("vignetteMask",love.graphics.newImage("data/images/shaderMasks/vignette.png"))
 SHADERS.GLOW_AND_LIGHT:send("hitVignetteMask",love.graphics.newImage("data/images/shaderMasks/hitVignette.png"))
 
-bloomCycles = 24
-
-SHADERS.GLOW_AND_LIGHT:send("bloomCycles", bloomCycles)
-SHADERS.GLOW_AND_LIGHT:send("bloomCyclesHalf", math.floor(bloomCycles / 2) * -1)
-SHADERS.GLOW_AND_LIGHT:send("bloomIntensity", (1 / (bloomCycles * 2)) * 0.25)
+SHADERS.GLOW_AND_LIGHT:send("xRatio", aspectRatio[2])
 
 SHADERS.GLOW_AND_LIGHT:send("hurtVignetteIntensity", 0)
 

@@ -5,7 +5,7 @@ float radius = 0.002;
 
 float PI2 = 6.2831;
 
-float iterations = directions * quality + 1;
+float iterations = directions * quality * 2;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
