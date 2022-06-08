@@ -69,6 +69,8 @@ cave = {
 
     name = "Shallow Caves",
 
+    track = "cave",
+
     materials = {rock = 100, wood = 100},
 
     decorations = {
@@ -109,6 +111,8 @@ sporeCavern = {
     materials = {shroomOre = 150, wood = 100},
 
     name = "Spore Caverns",
+
+    track = "cave",
 
     ambientLight = {15, 35, 80},
     

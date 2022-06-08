@@ -1,10 +1,11 @@
 
 
 
-function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, additionalProcess, particles, particleOffset, stopQuake, structures)
+function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, additionalProcess, particles, particleOffset, stopQuake, structures, track)
     -- GENERATE THE ROOM
     local enterableRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processEnterableRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, additionalProcess = additionalProcess, processParticles=roomParticles, particleSystems={}}
 
+    
     -- Ambient particles
     enterableRoom.ambientParticles = newParticleSystem(0, 0, loadJson(particles))
 
@@ -98,7 +99,9 @@ function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, proces
 
     return { -- RETURN THE TABLE
 
-        x = x, y = y, room = enterableRoom, sprite = texture, tiles = tiles, doorCollider = newRect(doorCollider.x + x, doorCollider.y + y, doorCollider.w, doorCollider.h), process = process or processEnterable, draw = draw or drawEnterable
+        x = x, y = y, room = enterableRoom, sprite = texture, tiles = tiles, doorCollider = newRect(doorCollider.x + x, doorCollider.y + y, doorCollider.w, doorCollider.h), process = process or processEnterable, draw = draw or drawEnterable,
+
+        track = track
 
     }
 
@@ -106,6 +109,8 @@ end
 
 -- Processing
 function processEnterableRoom(room)
+
+    room:additionalProcess()
 
     trackPitch = lerp(trackPitch, 0.8, dt * 3)
 
@@ -115,7 +120,15 @@ function processEnterableRoom(room)
         
             player.collider.x = room.outsideExit.x; player.collider.y = room.outsideExit.y
 
-            playTrack("cave", 0.5)
+            if trackTransition > 0 then
+
+                switchTracks()
+
+            else
+                
+                playTrack("cave", 0.5)
+
+            end
 
         end
     end
@@ -128,8 +141,6 @@ function processEnterableRoom(room)
 
     end room.structures = wipeKill(kill, room.structures)
 
-    room:additionalProcess()
-
 end
 
 function drawEnterable(enterable)
@@ -140,6 +151,8 @@ function drawEnterable(enterable)
         drawInteract(enterable.doorCollider.x + 2, enterable.doorCollider.y - enterable.doorCollider.h * 0.5 - 24)
 
         if justPressed("f") then
+            
+            playTrack(enterable.track or BIOMES[biomeOn].track, 0.5)
 
             ROOM = enterable.room
             ambientLight = enterable.ambientLight or BIOMES[biomeOn].ambientLight
@@ -163,12 +176,11 @@ end
 
 function processCraftingArea(house)
     trackPitch = lerp(trackPitch, 1, dt * 6)
-    playTrack("crafting", 0.5)
 end
 
 function newHouse(x, y)
 
-    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, processCraftingArea, "data/particles/blankParticles.json", nil, true, {newTeleporter(560, 580), newAnvil(350, 580)})
+    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, processCraftingArea, "data/particles/blankParticles.json", nil, true, {newTeleporter(560, 580), newAnvil(350, 580)}, "crafting")
 
 end
 

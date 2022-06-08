@@ -57,7 +57,14 @@ function playTrack(track, transition)
 
 end
 
+function switchTracks()
 
+    local hold = TRACK_PLAYING
+
+    TRACK_PLAYING = NEW_TRACK
+    NEW_TRACK = hold
+    
+end
     
 function playSound(string, pitch, maxPlays, vol)
     if (maxPlays or 99) > SOUNDS_NUM_PLAYING[string]  then

@@ -10,13 +10,13 @@ extern Image lightImage;
 
 float directions = 8.0;
 float quality = 3.0;
-float radius = 0.00125;
+float radius = 0.001;
 
 float PI2 = 6.2831;
 
 float iterations = directions * quality - 15;
 
-float intensityBloom = 0.6;
+float intensityBloom = 0.75;
 
 extern float xRatio;
 
