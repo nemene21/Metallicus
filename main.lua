@@ -137,6 +137,8 @@ function love.update()
 end
 
 function love.draw()
+    
+    events = {}
 
     joystickJustPressedTriggerProcess(1)
 
