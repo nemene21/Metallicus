@@ -90,10 +90,13 @@ function giantFireflyStateCircle(giantFirefly)
     drawSprite(ENEMY_IMAGES[giantFirefly.image].wing, giantFirefly.collider.x + (- 6 + flap) * turned, giantFirefly.collider.y - 4, flap * turned, 1, -1 - flap, 1, 0)
 
     drawSprite(ENEMY_IMAGES[giantFirefly.image].body, giantFirefly.collider.x - 9 * turned, giantFirefly.collider.y, turned)
+    
+    drawSprite(ENEMY_IMAGES[giantFirefly.image].wing, giantFirefly.collider.x + (- 6 + flap) * turned, giantFirefly.collider.y - 4, flap * turned, 1, -2 - flap, 1, 0)
+
+    setColor(255, 255 * (1 - headScalePlus * 2), 255 * (1 - headScalePlus * 2))
     drawSprite(ENEMY_IMAGES[giantFirefly.image].head, giantFirefly.collider.x + 10 * turned, giantFirefly.collider.y + 6, turned + headScalePlus * turned, 1 + headScalePlus, headTurn + math.sin(globalTimer * 3) * 0.2)
 
-    drawSprite(ENEMY_IMAGES[giantFirefly.image].wing, giantFirefly.collider.x + (- 6 + flap) * turned, giantFirefly.collider.y - 4, flap * turned, 1, -2 - flap, 1, 0)
-    love.graphics.setShader()
+    love.graphics.setShader(); setColor(255, 255, 255)
 
     shine(giantFirefly.collider.x - 9 * turned, giantFirefly.collider.y, 100, {255, 170, 50, 40})
     love.graphics.setCanvas(display)
