@@ -25,23 +25,32 @@ function processCamera()
     shakeTimer:process()
 
     if shakeTimer:isDone() then
-    if shakes > 0 then
 
-        lastScreenshake = deepcopyTable(boundScreenshake)
+        if shakes > 0 then
 
-        shakes = shakes - 1
+            lastScreenshake = deepcopyTable(boundScreenshake)
 
-        shakeTimer:reset()
+            shakes = shakes - 1
 
-        if dir == nil then
-            boundScreenshake = {love.math.random(-shakeStr,shakeStr),love.math.random(-shakeStr,shakeStr)}
+            shakeTimer:reset()
+
+            if dir == nil then
+
+                boundScreenshake = {love.math.random(-shakeStr,shakeStr),love.math.random(-shakeStr,shakeStr)}
+
+            else
+
+                local screenshakeTemp = newVec(love.math.random(shakeStr * 0.5,shakeStr), 0); screenshakeTemp:rotate(dir)
+                boundScreenshake = {screenshakeTemp.x, screenshakeTemp.y}
+
+            end
+
         else
-            local screenshakeTemp = newVec(love.math.random(shakeStr * 0.5,shakeStr), 0); screenshakeTemp:rotate(dir)
-            boundScreenshake = {screenshakeTemp.x, screenshakeTemp.y}
+
+            shakeStr = 0; boundScreenshake = {0,0}; dir = nil; lastScreenshake = {0,0}
+
         end
-    else
-        shakeStr = 0; boundScreenshake = {0,0}; dir = nil; lastScreenshake = {0,0}
-    end end
+    end
 
     camera[1] = lerp(camera[1],boundCamPos[1], dt*lerpSpeed)
     camera[2] = lerp(camera[2],boundCamPos[2], dt*lerpSpeed)
@@ -54,9 +63,11 @@ end
 -- Screenshake
 
 function shake(shakeStrNew,shakesNew,time,dir)
+
     dir = dir or nil
 
     if shakeStr < shakeStrNew then
+
         shakeStr = shakeStrNew; shakes = shakesNew; shakeTimer.timeMax = time; shakeTimer.time = 0; dir = dir
     end
 end

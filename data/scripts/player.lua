@@ -250,7 +250,6 @@ function processPlayer(player)
             if impulse > 0.1 then table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) end -- Fall particles
 
             -- Move body parts due to force
-            shake(4 * impulse, 1, 90)
 
             player.armL.y = player.armL.y + impulse * 13
             player.armR.y = player.armL.y + impulse * 13

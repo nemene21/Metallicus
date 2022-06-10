@@ -196,7 +196,7 @@ function processAnvil(anvil)
                         
                         -- Remove the requrements
 
-                        anvil:take(id)
+                        if not infiniteMaterials then anvil:take(id) end
 
                         -- Cheeck crafts again
                         anvil:checkCrafts()

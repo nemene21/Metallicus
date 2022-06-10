@@ -222,7 +222,7 @@ function love.draw()
     if justPressed("f1") then changeFullscreen() end
 
     if justPressed("f2") then drawUi = not drawUi end
-
+ 
     if justPressed("f3") then love.graphics.captureScreenshot("screenshots/screenshot.png"); screenshotAnim = 5; love.system.setClipboardText(SS_FOLDER) end
 
     -- Reset stuff
