@@ -297,7 +297,7 @@ ENEMY_PROJECTILE_PARTICLES["mediumOrb"].particleData.width.b = 20
 -- Init
 function newEnemyProjectile(img, pos, speed, dir, radius, damage, glowColor)
     local projectile = {
-        draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
+        animation = 0, draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
     }
 
     if ENEMY_PROJECTILE_PARTICLES[img] ~= nil then projectile.spawnParticles = newParticleSystem(pos.x, pos.y, deepcopyTable(ENEMY_PROJECTILE_PARTICLES[img])); projectile.spawnParticles.following = true end
@@ -309,6 +309,8 @@ end
 
     -- Processing
 function processEnemyProjectile(projectile)
+
+    projectile.animation = lerp(projectile.animation, 1, dt * 8)
 
     projectile.pos.x = projectile.pos.x + projectile.vel.x * dt
     projectile.pos.y = projectile.pos.y + projectile.vel.y * dt
@@ -322,9 +324,9 @@ end
 
 function drawEnemyProjectile(projectile)
     setColor(255, 255, 255)
-    drawSprite(ENEMY_PROJECTILE_IMAGES[projectile.image], projectile.pos.x, projectile.pos.y, 1, 1, projectile.vel:getRot() / 180 * 3.14)
+    drawSprite(ENEMY_PROJECTILE_IMAGES[projectile.image], projectile.pos.x, projectile.pos.y, projectile.animation, projectile.animation, projectile.vel:getRot() / 180 * 3.14)
 
-    shine(projectile.pos.x, projectile.pos.y, projectile.radius * 5 + math.sin(globalTimer * 3) * 24, projectile.glowColor)
+    shine(projectile.pos.x, projectile.pos.y, (projectile.radius * 5 + math.sin(globalTimer * 3) * 24) * projectile.animation, projectile.glowColor)
     love.graphics.setCanvas(display)
 end
 
