@@ -35,7 +35,7 @@ function gameReload()
 
     mouseRot = 0; mouseScale = 1
 
-    trackVolume = 0
+    trackVolume = 1
     
     occlusion = boolToInt(not challanges.lightsOff.active)
 
@@ -90,7 +90,6 @@ function game()
 
         if player.hp > 0 then
             player:process()
-            trackVolume = lerp(trackVolume, 1, dt * 5)
 
         else -- Death animation
 

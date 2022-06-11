@@ -99,7 +99,7 @@ function newRock(x, y)
 end
     
 function newWood(x, y)
-    return newMaterial(x, y, "wood", {wood = 250}, "hitOre")
+    return newMaterial(x, y, "wood", {wood = 350}, "hitOre")
 end
     
 function newShroomOre(x, y)
