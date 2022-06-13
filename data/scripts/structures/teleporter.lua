@@ -77,7 +77,9 @@ function processTeleporter(teleporter)
         teleporter.teleportParticles:process()
         teleporter.teleportParticlesBurst:process()
 
-        trackVolume = lerp(trackVolume, 0, dt)
+        trackPitch = lerp(1, 4, 1 - teleporter.animTimer.time / teleporter.animTimer.timeMax)
+
+        trackVolume = (teleporter.animTimer.time / teleporter.animTimer.timeMax) ^ 2
 
         shine(teleporter.x, teleporter.y - 50, 400 * ((clamp((1 - teleporter.animTimer.time / teleporter.animTimer.timeMax) * 3, 0, 1)) + math.sin(globalTimer) * 0.1), {0, 149, 233})
     end
@@ -103,6 +105,7 @@ function processTeleporter(teleporter)
         playTrack("cave", -1)
 
         trackVolume = 1
+        trackPitch = 0.8
 
     end
 end

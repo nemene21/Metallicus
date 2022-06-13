@@ -47,12 +47,12 @@ end
 
 function waveText(x,y,w,text,color, scaleX, scaleY ,cX,cY,waveSpeed,waveWidth)
 
-    local width = FONT:getWidth(text) * cX or 1 * scaleX or 1 + #text * w
-    local height = FONT:getHeight(text) * cY or 1 * scaleY or 1
+    local width = FONT:getWidth(text) * (cX or 1) * (scaleX or 1) + #text * w
+    local height = FONT:getHeight(text) * (cY or 1) * (scaleY or 1)
 
     text = tablifyString(text)
 
-    local xOffset = -width 
+    local xOffset = -width
 
     for id, L in ipairs(text) do
 

@@ -588,7 +588,7 @@
         "sound" : "slash", "texture" : "flydustArrow", "particlesDie" : "arrow", "particles" : "arrowTrail"
     },
 
-    "stats" : {"dmg" : 28, "attackTime" : 0.5},
+    "stats" : {"dmg" : 35, "attackTime" : 0.5},
 
     "types" : ["item"]
 },
