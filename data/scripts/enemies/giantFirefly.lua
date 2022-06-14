@@ -13,7 +13,7 @@ function buildGiantFirefly(x, y)
 
         scaleX = 1, scaleY = 1,
 
-        drops = {jello = 250},
+        drops = {glowDrop = 250},
 
         rotation = 1, shootDir = 0, flash = 0,
 

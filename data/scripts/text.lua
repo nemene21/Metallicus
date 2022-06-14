@@ -52,7 +52,7 @@ function waveText(x,y,w,text,color, scaleX, scaleY ,cX,cY,waveSpeed,waveWidth)
 
     text = tablifyString(text)
 
-    local xOffset = -width
+    local xOffset = -width * 0.5
 
     for id, L in ipairs(text) do
 

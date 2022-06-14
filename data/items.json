@@ -10,6 +10,17 @@
     "types" : ["item"]
 },
 
+"glowDrop" : {
+    "texture" : "glowDrop",
+    "name" : "Glow Drop", "rarity" : "common",
+
+    "holdMode" : "hold",
+
+    "maxStack" : 24,
+
+    "types" : ["item"]
+},
+
 "shroomOre" : {
     "texture" : "shroomOre",
     "name" : "Shroom Ore", "rarity" : "uncommon",

@@ -620,6 +620,8 @@ quiver = love.graphics.newImage("data/images/items/quiver.png"),
 jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
 jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
 
+glowDrop = love.graphics.newImage("data/images/items/glowDrop.png"), -- Glow drop
+
 stone = love.graphics.newImage("data/images/items/stone.png"),            -- Stone
 
 stoneArmor = love.graphics.newImage("data/images/items/stoneArmor.png"),
