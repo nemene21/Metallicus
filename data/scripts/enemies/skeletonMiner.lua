@@ -22,7 +22,7 @@ function buildSkeletonMiner(x, y)
 
         vel = newVec(0, 0),
 
-        drops = {bone = 350, minerHelmet = 5},
+        drops = {bone = 250, minerHelmet = 5},
 
         dashParticles = dashParticles,
 

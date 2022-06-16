@@ -620,7 +620,11 @@ quiver = love.graphics.newImage("data/images/items/quiver.png"),
 jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
 jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
 
+jelloBycocket = love.graphics.newImage("data/images/items/jelloBycocket.png"),
+jelloLightArmor = love.graphics.newImage("data/images/items/jelloLightArmor.png"),
+
 glowDrop = love.graphics.newImage("data/images/items/glowDrop.png"), -- Glow drop
+rodOfLight = love.graphics.newImage("data/images/items/rodOfLight.png"),
 
 stone = love.graphics.newImage("data/images/items/stone.png"),            -- Stone
 
@@ -657,8 +661,6 @@ flyDust = love.graphics.newImage("data/images/items/flyDust.png"), -- Flydust
 totemOfFloat = love.graphics.newImage("data/images/items/totemOfFloat.png"),
 
 rodOfChase = love.graphics.newImage("data/images/items/staffOfChase.png"),
-
-archerHat = love.graphics.newImage("data/images/items/archerHat.png"),
 
 flydustBow = love.graphics.newImage("data/images/items/flydustBow.png"),
 

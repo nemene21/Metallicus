@@ -369,21 +369,42 @@ function drawPlayer(player)
     -- drawCollider(player.collider)
 end
 
+function changeStat(player, S, way)
+
+    if S.item.stats ~= nil then
+
+        way = way or 1
+
+        player.damageReduction = player.damageReduction - (S.item.stats.def or 0) * way
+
+        player.lightScale = player.lightScale + (S.item.stats.light or 0) * way
+
+        player.meleeDamage = player.meleeDamage + (S.item.stats.meleeDamage or 0) * way
+        player.rangedDamage = player.rangedDamage + (S.item.stats.rangedDamage or 0) * way
+        player.magicDamage = player.magicDamage + (S.item.stats.magicDamage or 0) * way
+
+    end
+
+end
 
 function resetPlayerStats(player)
+
+    local holding = tostring(player.slotOn)..",0"
+
+    if player.hotbar.slots[holding].item ~= nil then
+
+        changeStat(player, player.hotbar.slots[holding], -1)
+
+    end
 
     -- Update stats
     for id, S in pairs(player.wearing.slots) do
 
         if S.item ~= nil then
             if S.item.stats ~= nil then
-                player.damageReduction = player.damageReduction - (S.item.stats.def or 0)
+                
+                changeStat(player, S, -1)
 
-                player.lightScale = player.lightScale - (S.item.stats.light or 0)
-
-                player.meleeDamage = player.meleeDamage - (S.item.stats.meleeDamage or 0)
-                player.rangedDamage = player.rangedDamage - (S.item.stats.rangedDamage or 0)
-                player.magicDamage = player.magicDamage - (S.item.stats.magicDamage or 0)
             end
         end
     end
@@ -392,18 +413,22 @@ end
 
 function setPlayerStats(player)
 
+    local holding = tostring(player.slotOn)..",0"
+
+    if player.hotbar.slots[holding].item ~= nil then
+
+        changeStat(player, player.hotbar.slots[holding])
+
+    end
+
     -- Update stats
     for id, S in pairs(player.wearing.slots) do
 
         if S.item ~= nil then
             if S.item.stats ~= nil then
-                player.damageReduction = player.damageReduction + (S.item.stats.def or 0)
 
-                player.lightScale = player.lightScale + (S.item.stats.light or 0)
+                changeStat(player, S)
 
-                player.meleeDamage = player.meleeDamage + (S.item.stats.meleeDamage or 0)
-                player.rangedDamage = player.rangedDamage + (S.item.stats.rangedDamage or 0)
-                player.magicDamage = player.magicDamage + (S.item.stats.magicDamage or 0)
             end
         end
     end

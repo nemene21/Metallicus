@@ -18,16 +18,25 @@ starShot = loadSpritesheet("data/images/projectiles/player/starShot.png",6,6),
 
 boneShot = loadSpritesheet("data/images/projectiles/player/boneShot.png",8,8),
 
-flydustArrow = loadSpritesheet("data/images/projectiles/player/flydustArrow.png",15,7)
+flydustArrow = loadSpritesheet("data/images/projectiles/player/flydustArrow.png",15,7),
+
+lightShot = loadSpritesheet("data/images/projectiles/player/lightShot.png",6,6)
 }
 
 PLAYER_PROJECTILE_PARTICLES = {
 slimeShot = loadJson("data/particles/playerProjectiles/slimeShot.json"),
+
 starShot = loadJson("data/particles/playerProjectiles/starShot.json"),
+
 mushboomShot = loadJson("data/particles/playerProjectiles/mushboomShot.json"),
+
 crystalShot = loadJson("data/particles/playerProjectiles/crystalShot.json"),
+
 arrowTrail = loadJson("data/particles/playerProjectiles/arrowTrail.json"),
-boneShot = loadJson("data/particles/playerProjectiles/boneShot.json")
+
+boneShot = loadJson("data/particles/playerProjectiles/boneShot.json"),
+
+lightShot = loadJson("data/particles/playerProjectiles/lightShot.json")
 }
 
 PLAYER_PROJECTILE_PARTICLES_DIE = {
@@ -44,7 +53,9 @@ arrow = loadJson("data/particles/playerProjectiles/arrow.json"),
 
 crystalShot = loadJson("data/particles/playerProjectiles/crystalShotDie.json"),
 
-boneShot = loadJson("data/particles/playerProjectiles/boneShotDie.json")
+boneShot = loadJson("data/particles/playerProjectiles/boneShotDie.json"),
+
+lightShot = loadJson("data/particles/playerProjectiles/lightShotDie.json")
 }
 
 -- Init

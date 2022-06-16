@@ -210,6 +210,49 @@
     "types" : ["item"]
 },
 
+"rodOfLight" : {
+    "texture" : "rodOfLight",
+    "name" : "Rod of Light", "rarity" : "uncommon",
+
+    "holdMode" : "shoot",
+
+    "maxStack" : 1,
+
+    "armRTaken" : true, "armLTaken" : false,
+
+    "holdData" : {
+        "attackTimer" : 0, "distance" : 16, "swing" : 0.25
+    },
+
+    "damageType" : "magicDamage",
+
+    "projectile" : {
+        "speed" : 1000,
+        "range" : 99999,
+        "gravity" : 200,
+
+        "offsetRotation" : 40,
+
+        "collides" : true, "bounces" : 0,
+        "pirice" : 3,
+
+        "knockback" : 150,
+
+        "followPlayer" : 0,
+
+        "radius" : 14,
+
+        "burst" : 1, "burstTimer" : 0, "burstWait" : 0, "burstsLeft" : 0,
+        "amount" : 1, "spread" : 4,
+
+        "sound" : "slash", "texture" : "lightShot", "particles" : "lightShot", "particlesDie" : "lightShot", "particlesSpawn" : "lightShot"
+    },
+
+    "stats" : {"dmg" : 9, "attackTime" : 0.3, "light" : 50},
+
+    "types" : ["item"]
+},
+
 "boneRod" : {
     "texture" : "boneRod",
     "name" : "Bone Rod", "rarity" : "uncommon",
@@ -250,7 +293,7 @@
         "sound" : "slash", "texture" : "boneShot", "particles" : "boneShot", "particlesDie" : "boneShot", "particlesSpawn" : "boneShot"
     },
 
-    "stats" : {"dmg" : 7, "attackTime" : 0.1},
+    "stats" : {"dmg" : 8, "attackTime" : 0.1},
 
     "types" : ["item"]
 },
@@ -1002,18 +1045,31 @@
     "types" : ["item","bodyArmor"]
 },
 
-"archerHat" : {
-    "texture" : "archerHat",
-    "name" : "Archer Hat", "rarity" : "uncommon",
+"jelloBycocket" : {
+    "texture" : "jelloBycocket",
+    "name" : "Jello Bycocket", "rarity" : "uncommon",
 
     "holdMode" : "hold",
 
-    "stats" : {"def" : 10, "rangedDamage" : 20},
+    "stats" : {"def" : 10, "rangedDamage" : 5},
 
-    "yOffset" : -12,
+    "yOffset" : -9,
 
     "maxStack" : 1,
 
     "types" : ["item","headArmor"]
+},
+
+"jelloLightArmor" : {
+    "texture" : "jelloLightArmor",
+    "name" : "Jelllo Light Armor", "rarity" : "rare",
+
+    "holdMode" : "hold",
+
+    "stats" : {"def" : 15, "rangedDamage" : 10},
+
+    "maxStack" : 1,
+
+    "types" : ["item","bodyArmor"]
 }
 }
