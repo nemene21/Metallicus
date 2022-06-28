@@ -609,77 +609,13 @@ hotbarSlot=love.graphics.newImage("data/images/UI/inventory/hotbarSlot.png"),
 equipmentSlot=love.graphics.newImage("data/images/UI/inventory/equipmentSlot.png")
 }
 
-ITEM_IMAGES = {
+ITEM_IMAGES = {}
 
-wood = love.graphics.newImage("data/images/items/wood.png"), -- Wood
-stick = love.graphics.newImage("data/images/items/stick.png"),
-bat = love.graphics.newImage("data/images/items/bat.png"),
-woodenBow = love.graphics.newImage("data/images/items/woodenBow.png"),
-quiver = love.graphics.newImage("data/images/items/quiver.png"),
+for id, item in pairs(ITEMS) do
 
-jello = love.graphics.newImage("data/images/items/jello.png"),        -- Jello
-jelloRod = love.graphics.newImage("data/images/items/jelloRod.png"),
+    ITEM_IMAGES[item.texture] = love.graphics.newImage("data/images/items/" .. item.texture .. ".png")
 
-jelloBycocket = love.graphics.newImage("data/images/items/jelloBycocket.png"),
-jelloLightArmor = love.graphics.newImage("data/images/items/jelloLightArmor.png"),
-
-glowDrop = love.graphics.newImage("data/images/items/glowDrop.png"), -- Glow drop
-rodOfLight = love.graphics.newImage("data/images/items/rodOfLight.png"),
-
-stone = love.graphics.newImage("data/images/items/stone.png"),            -- Stone
-
-stoneArmor = love.graphics.newImage("data/images/items/stoneArmor.png"),
-stoneHelmet = love.graphics.newImage("data/images/items/stoneHelmet.png"),
-
-stoneSword = love.graphics.newImage("data/images/items/stoneSword.png"),
-
-stoneTribow = love.graphics.newImage("data/images/items/tribow.png"),
-
-steelDagger = love.graphics.newImage("data/images/items/steelDagger.png"), -- Steel
-
-goldenHelmet = love.graphics.newImage("data/images/items/goldenHelmet.png"), -- Gold
-
-blunderbuss = love.graphics.newImage("data/images/items/blunderbuss.png"), -- Misc
-crystalRod = love.graphics.newImage("data/images/items/crystalRod.png"),
-
-shroomOre = love.graphics.newImage("data/images/items/shroomOre.png"), -- Shroom
-
-shroomHat = love.graphics.newImage("data/images/items/shroomHat.png"),
-shroomRobe = love.graphics.newImage("data/images/items/shroomRobe.png"),
-
-slimyShroomSoup = love.graphics.newImage("data/images/items/slimyShroomSoup.png"),
-
-shroomBat = love.graphics.newImage("data/images/items/shroomBat.png"),
-mushboomBow = love.graphics.newImage("data/images/items/mushboomBow.png"),
-
-mushboomRod = love.graphics.newImage("data/images/items/mushboomRod.png"),
-
-shroomArmor = love.graphics.newImage("data/images/items/shroomArmor.png"),
-shroomHelmet = love.graphics.newImage("data/images/items/shroomHelmet.png"),
-
-flyDust = love.graphics.newImage("data/images/items/flyDust.png"), -- Flydust
-totemOfFloat = love.graphics.newImage("data/images/items/totemOfFloat.png"),
-
-rodOfChase = love.graphics.newImage("data/images/items/staffOfChase.png"),
-
-flydustBow = love.graphics.newImage("data/images/items/flydustBow.png"),
-
-bone = love.graphics.newImage("data/images/items/bone.png"), -- Bone
-
-boneHelmet = love.graphics.newImage("data/images/items/boneHelmet.png"),
-boneArmor = love.graphics.newImage("data/images/items/boneArmor.png"),
-
-boneCrown = love.graphics.newImage("data/images/items/boneCrown.png"),
-boneRobe = love.graphics.newImage("data/images/items/boneRobe.png"),
-
-boneRod = love.graphics.newImage("data/images/items/boneRod.png"),
-
-boneBow = love.graphics.newImage("data/images/items/boneBow.png"),
-
-boneDagger = love.graphics.newImage("data/images/items/boneDagger.png"),
-
-minerHat = love.graphics.newImage("data/images/items/minerHat.png")
-}
+end
 
 -- Add slot function
 

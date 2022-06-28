@@ -40,7 +40,7 @@ body {
 
     background-color: rgb(40, 40, 80);
 
-    box-shadow: 0 0 12px;
+    box-shadow: 0 0 16px;
 
     border-radius: 8px;
 
@@ -56,10 +56,11 @@ body {
     color: white;
 
     text-shadow: 0 0 2px rgba(255, 255, 255 , 128);
-    font-size: 24px;
+    font-size: 40px;
     font-weight: bolder;
 
     margin-top: 0;
+    margin-bottom: 12px;
 
 }
 
@@ -69,15 +70,50 @@ body {
     font-size: 24px;
     font-weight: bolder;
 
-    background-color: rgb(80, 80, 120);
-
     border: 0;
     border-radius: 6px;
 
-    box-shadow: 0 0 8px;
+    box-shadow: 0 0 12px;
 
     padding: 8px;
 
     margin-bottom: 48px;
+
+
+    transition: all 0.4s;
+
+    background-color: rgb(80, 80, 120);
+
+}
+
+.Item .Edit:focus {
+
+    background-color: rgb(120, 120, 180);
+
+}
+
+.Item .ItemTexture {
+
+    width: 100%;
+    height: auto;
+
+    margin-top: 12px;
+    margin-bottom: 24px;
+
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+
+    transition: all 0.3s;
+
+    transform: translateY(0);
+    filter: drop-shadow(0 12px 8px);
+
+}
+
+.Item .ItemTexture:hover {
+
+    transform: translateY(-16px);
+    filter: drop-shadow(0 28px 8px);
 
 }
