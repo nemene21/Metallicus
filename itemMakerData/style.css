@@ -34,6 +34,48 @@ body {
 
 }
 
+.fixed {
+
+    position: fixed;
+
+}
+
+#FileDrop {
+
+    border-radius: 14px;
+
+    background-color: rgb(40, 40, 80);
+    box-shadow: 0 0 16px black;
+
+    width: 128px; height: 128px;
+
+    right: 0;
+    top: 0;
+
+    margin: 48px;
+
+    transition: all 0.2s;
+
+    color: rgb(60, 60, 100);
+    font-weight: 999;
+    font-size: 32px;
+    
+    padding: 12px;
+
+    display: flex;
+
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#FileDrop:hover {
+
+    background-color: rgb(120, 120, 180);
+
+}
+
 .Item {
 
     margin: 48px;
@@ -51,7 +93,7 @@ body {
 
 }
 
-.Item .PropertyName {
+.PropertyName {
 
     color: white;
 
@@ -64,7 +106,16 @@ body {
 
 }
 
-.Item .Edit {
+.PropertyList {
+
+    padding-left: 64px;
+
+    width: fit-content;
+    height: fit-content;
+
+}
+
+.Edit {
 
     text-shadow: 0 0 2px rgba(0, 0, 0 , 128);
     font-size: 24px;
@@ -80,19 +131,21 @@ body {
     margin-bottom: 48px;
 
 
-    transition: all 0.4s;
+    transition: all 0.2s;
 
     background-color: rgb(80, 80, 120);
 
 }
 
-.Item .Edit:focus {
+.Edit:focus {
 
     background-color: rgb(120, 120, 180);
 
+    outline: none;
+
 }
 
-.Item .ItemTexture {
+.ItemTexture {
 
     width: 100%;
     height: auto;
@@ -111,7 +164,7 @@ body {
 
 }
 
-.Item .ItemTexture:hover {
+.ItemTexture:hover {
 
     transform: translateY(-16px);
     filter: drop-shadow(0 28px 8px);

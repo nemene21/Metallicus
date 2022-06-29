@@ -1,14 +1,10 @@
 
-let items = JSON.parse(prompt("items.json"));
-
-let body = document.getElementsByTagName("body")[0];
-
 function basicUISet(item, itemElement, propertyKey) {
 
     let propertyNameElement = document.createElement("p");
     propertyNameElement.classList.add("PropertyName");
 
-    propertyNameElement.textContent = propertyKey;
+    propertyNameElement.textContent = propertyKey + ":";
 
 
     let editElement = document.createElement("input");
@@ -20,6 +16,46 @@ function basicUISet(item, itemElement, propertyKey) {
     itemElement.appendChild(propertyNameElement);
 
     itemElement.appendChild(editElement);
+
+}
+
+function listUISet(item, itemElement, propertyKey) {
+
+    let propertyNameElement = document.createElement("p");
+    propertyNameElement.classList.add("PropertyName");
+
+    propertyNameElement.textContent = propertyKey + ":";
+
+
+    let propertyList = item[propertyKey];
+
+    let propertyListElement = document.createElement("div");
+
+    propertyListElement.classList.add("PropertyList");
+
+    for (let propertyInKey in propertyList) {
+
+        let propertyInNameElement = document.createElement("p");
+        propertyInNameElement.classList.add("PropertyName");
+    
+        propertyInNameElement.textContent = propertyInKey + ":";
+
+
+        let editInElement = document.createElement("input");
+        editInElement.classList.add("Edit");
+    
+        editInElement.value = item[propertyKey][propertyInKey];
+
+
+        propertyListElement.appendChild(propertyInNameElement);
+
+        propertyListElement.appendChild(editInElement);
+
+    }
+
+    itemElement.appendChild(propertyNameElement);
+
+    itemElement.appendChild(propertyListElement);
 
 }
 
@@ -41,31 +77,71 @@ functionsUI = {
 
         itemElement.appendChild(imageElement);
 
-    }
+    },
+
+    "stats" : listUISet,
+    "explosion" : listUISet,
+    "projectile" : listUISet,
+    "holdData" : listUISet
 
 }
 
-for (let itemKey in items) {
+function resetItemUI(data) {
+    
+    let items = JSON.parse(data);
 
-    let item = items[itemKey];
+    let itemsElement = document.getElementById("Items");
 
-    let itemElement = document.createElement("div");
-    itemElement.classList.add("Item");
+    itemsElement.innerHTML = "";
 
-    for (let propertyKey in item) {
+    for (let itemKey in items) {
 
-        if (propertyKey in functionsUI) {
-            
-            functionsUI[propertyKey](item, itemElement, propertyKey)
+        let item = items[itemKey];
 
-        } else {
+        let itemElement = document.createElement("div");
+        itemElement.classList.add("Item");
 
-            functionsUI["basic"](item, itemElement, propertyKey)
+        for (let propertyKey in item) {
+
+            if (propertyKey in functionsUI) {
+                
+                functionsUI[propertyKey](item, itemElement, propertyKey);
+
+            } else {
+
+                functionsUI["basic"](item, itemElement, propertyKey);
+
+            }
 
         }
 
+        itemsElement.appendChild(itemElement);
+
     }
 
-    body.appendChild(itemElement);
+}
+
+function setItems(event) {
+
+    event.preventDefault();
+
+    const file = event.dataTransfer.items[0].getAsFile();
+
+    read = new FileReader();
+
+    read.readAsBinaryString(file);
+
+    read.onloadend = function() {
+
+        resetItemUI(read.result);
+
+    }
 
 }
+
+function dragOverHandler(event) {
+
+    event.preventDefault();
+
+}
+
