@@ -183,6 +183,8 @@ function processPlayer(player)
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
+        shock(player.collider.x, player.collider.y, 0.00005, 0.2)
+
         player.dashingFrames = 0.2
 
         player.dashTimer = 1
@@ -705,7 +707,7 @@ function drawPlayerUI(player)
     else
         mouseMode = "aimer"; mCentered = 0.5
 
-        local zoom = 0.35
+        local zoom = 0.2
         bindCamera(clamp(player.collider.x + (xM - WS[1] * 0.5) * zoom, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(player.collider.y + (yM - WS[2] * 0.5) * zoom, ROOM.endUp.y + 300 - cameraWallOffset, ROOM.endDown.y - 300 + cameraWallOffset)) -- Camera to the mouse
     end
 

@@ -25,7 +25,7 @@ SHADERS = {
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
---SHADERS.BLUR:send("xRatio",aspectRatio[2])
+-- SHADERS.BLUR:send("xRatio",aspectRatio[2])
 SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitch.png"))
 
 SHADERS.GLOW_AND_LIGHT:send("vignetteMask",love.graphics.newImage("data/images/shaderMasks/vignette.png"))
@@ -34,6 +34,9 @@ SHADERS.GLOW_AND_LIGHT:send("hitVignetteMask",love.graphics.newImage("data/image
 SHADERS.GLOW_AND_LIGHT:send("xRatio", aspectRatio[2])
 
 SHADERS.GLOW_AND_LIGHT:send("hurtVignetteIntensity", 0)
+
+-- SHADERS.GLOW_AND_LIGHT:send("screenDimensions", WS)
+SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", 1)
 
 SHADERS.PIXEL_PERFECT:send("snapX", 1 / 800 * 3)
 SHADERS.PIXEL_PERFECT:send("snapY", 1 / 600 * 3)
@@ -78,6 +81,45 @@ function drawLight(x,y,r,color)
     love.graphics.draw(LIGHT_ROUND,x - camera[1],y - camera[2],0,r/300,r/300,LIGHT_ROUND:getWidth() * 0.5,LIGHT_ROUND:getHeight() * 0.5)
 
 end
+
+SHOCKWAVES = {}
+
+function processShockwaves()
+
+    local kill = {}
+
+    for id, shockwave in ipairs(SHOCKWAVES) do
+
+        shockwave.lifetime = shockwave.lifetime - dt
+
+        local idC = id - 1
+
+        SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].lifetime", shockwave.lifetime)
+        SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].lifetimeMax", shockwave.lifetimeMax)
+        SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].position", {shockwave.position[1] - camera[1], shockwave.position[2] - camera[2]})
+        SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].size", shockwave.size)
+
+        if shockwave.lifetime < 0 then
+
+            table.insert(kill, id)
+
+            SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", #SHOCKWAVES - 1)
+
+        end
+
+    end SHOCKWAVES = wipeKill(kill, SHOCKWAVES)
+
+end
+
+function shock(x, y, size, lifetime)
+
+    table.insert(SHOCKWAVES, {position = {x, y}, size = size, lifetime = lifetime, lifetimeMax = lifetime})
+
+    SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", #SHOCKWAVES)
+
+end
+
+shock(400, 300, 10, 1)
 
 -- Table of all post process effects you want, example: postPro = {"PIXEL_PERFECT","GLOW"}
 postPro = {}

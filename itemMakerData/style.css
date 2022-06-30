@@ -34,9 +34,21 @@ body {
 
 }
 
-.fixed {
+#ActionBar {
 
     position: fixed;
+
+    z-index: 10;
+
+    width: fit-content;
+    top: 0; left: 0;
+
+    padding: 32px;
+
+    margin-right: 32px;
+
+    display: flex;
+    justify-content: right;
 
 }
 
@@ -51,8 +63,6 @@ body {
 
     right: 0;
     top: 0;
-
-    margin: 48px;
 
     transition: all 0.2s;
 
@@ -70,9 +80,39 @@ body {
 
 }
 
-#FileDrop:hover {
+#DownloadFileButton {
+
+    margin-right: 32px;
+
+    box-shadow: 0 0 16px black;
+
+    background-color: rgb(40, 40, 80);
+
+    border-radius: 12px;
+
+    border: 0;
+
+    width: 64px; height: 64px;
+
+    transition: all 0.2s;
+
+    transform: translateY(0);
+
+}
+
+#DownloadFileButton:hover {
 
     background-color: rgb(120, 120, 180);
+
+    transform: translateY(-12px);
+
+    box-shadow: 0 12px 16px black;
+
+}
+
+#DownloadFileButton img {
+
+    width: 50%; height: 50%;
 
 }
 

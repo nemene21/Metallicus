@@ -11,7 +11,17 @@
 
         <div id="vignette"></div>
 
-        <div class="fixed" id="FileDrop" ondrop="setItems(event)" ondragover="dragOverHandler(event);"> Drop files here </div>
+        <div id="ActionBar">
+
+            <button id="DownloadFileButton" onclick="downloadItemsFile()">
+
+                <img src="itemMakerData/downloadIcon.png">
+
+            </button>
+
+            <div id="FileDrop" ondrop="setItems(event)" ondragover="dragOverHandler(event);"> Drop files here </div>
+
+        </div>
 
         <div id="Items"></div>
 

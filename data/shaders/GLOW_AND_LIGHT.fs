@@ -20,8 +20,51 @@ float intensityBloom = 0.75;
 
 extern float xRatio;
 
+struct Shockwave {
+
+    vec2 position;
+
+    float size;
+    
+    float lifetime;
+    float lifetimeMax;
+
+};
+
+extern int ACTIVE_SHOCKWAVES;
+
+extern Shockwave shockwaves[16];
+
+vec2 screenDimensions = vec2(800, 600);
+
+extern float motionBlur = 0.0;
+
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
+
+    color.a = 1 - motionBlur;
+
+    for (int i = 0; i < ACTIVE_SHOCKWAVES; i++) {
+
+        Shockwave shockwaveOn = shockwaves[i];
+
+        vec2 normalisedPos = shockwaveOn.position / screenDimensions;
+
+        float multiplier = sin(shockwaveOn.lifetime / shockwaveOn.lifetimeMax * 3.14);
+
+        vec2 diff = uvs - normalisedPos;
+
+        float dist = length(diff);
+
+        diff.x /= dist;
+        diff.y /= dist;
+
+        vec2 disp = diff * (step(shockwaveOn.size, length(diff)) * step(shockwaveOn.size * 0.75, length(diff))) * 0.02;
+
+        uvs -= disp * multiplier;
+
+    }
+
     vec4 px = Texel(image,uvs);
 
     vec4 glow = px;
@@ -49,5 +92,5 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
     vec4 pxf = (lightedImage + vec4(1, 0, 0, 1) * hurtVignetteIntensity * Texel(hitVignetteMask, uvs).r) * Texel(vignetteMask, uvs);
     float gsc = (pxf.r + pxf.g + pxf.b) * 0.33;
 
-    return vec4(pxf.r + (gsc - pxf.r) * grayscale, pxf.g + (gsc - pxf.g) * grayscale, pxf.b + (gsc - pxf.b) * grayscale, 1);
+    return vec4(pxf.r + (gsc - pxf.r) * grayscale, pxf.g + (gsc - pxf.g) * grayscale, pxf.b + (gsc - pxf.b) * grayscale, 1) * color;
 }

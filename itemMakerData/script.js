@@ -1,5 +1,11 @@
 
-function basicUISet(item, itemElement, propertyKey) {
+let boolConvert = {
+
+    "true" : true, "false" : false
+
+}
+
+function basicUISet(itemKey, item, itemElement, propertyKey) {
 
     let propertyNameElement = document.createElement("p");
     propertyNameElement.classList.add("PropertyName");
@@ -12,6 +18,8 @@ function basicUISet(item, itemElement, propertyKey) {
 
     editElement.value = item[propertyKey];
 
+    editElement.index = propertyKey
+
     
     itemElement.appendChild(propertyNameElement);
 
@@ -19,7 +27,7 @@ function basicUISet(item, itemElement, propertyKey) {
 
 }
 
-function listUISet(item, itemElement, propertyKey) {
+function listUISet(itemKey, item, itemElement, propertyKey) {
 
     let propertyNameElement = document.createElement("p");
     propertyNameElement.classList.add("PropertyName");
@@ -46,6 +54,8 @@ function listUISet(item, itemElement, propertyKey) {
     
         editInElement.value = item[propertyKey][propertyInKey];
 
+        editInElement.index = propertyKey + "," + propertyInKey
+
 
         propertyListElement.appendChild(propertyInNameElement);
 
@@ -63,9 +73,9 @@ functionsUI = {
 
     "basic" : basicUISet,
 
-    "texture" : function (item, itemElement, propertyKey) {
+    "texture" : function (itemKey, item, itemElement, propertyKey) {
 
-        basicUISet(item, itemElement, propertyKey);
+        basicUISet(itemKey, item, itemElement, propertyKey);
 
         itemElement.appendChild(document.createElement("br"));
 
@@ -101,15 +111,17 @@ function resetItemUI(data) {
         let itemElement = document.createElement("div");
         itemElement.classList.add("Item");
 
+        itemElement.name = itemKey;
+
         for (let propertyKey in item) {
 
             if (propertyKey in functionsUI) {
                 
-                functionsUI[propertyKey](item, itemElement, propertyKey);
+                functionsUI[propertyKey](itemKey, item, itemElement, propertyKey);
 
             } else {
 
-                functionsUI["basic"](item, itemElement, propertyKey);
+                functionsUI["basic"](itemKey, item, itemElement, propertyKey);
 
             }
 
@@ -144,4 +156,115 @@ function dragOverHandler(event) {
     event.preventDefault();
 
 }
+
+function download(filename, text) {
+
+    var element = document.createElement('a');
+
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+}
+
+listProperties = {
+
+    "types" : true
+
+}
+
+function downloadItemsFile() {
+
+    let items = {};
+
+    let itemElements = document.getElementsByClassName("Item");
+
+    for (let elementId = 0; elementId < itemElements.length; elementId++) {
+
+        let itemElement = itemElements[elementId];
+
+        let itemKey = itemElement.name;
+
+        items[itemKey] = {};
+
+        let properties = itemElement.getElementsByClassName("Edit");
+
+        for (let propertyId = 0; propertyId < properties.length; propertyId++) {
+
+            let property = properties[propertyId];
+
+            let location = property.index.split(",");
+
+            let value = property.value;
+
+            if (location[0] in listProperties) {
+
+                value = value.split(",");
+
+            }
+
+            if (!isNaN(value)) {
+
+                value = Number(value);
+
+            }
+
+            if (value == "true" || value == "false") {
+
+                value = boolConvert[value];
+
+            }
+
+            if (location.length == 1) {
+
+                items[itemKey][location[0]] = value;
+
+            } else {
+
+                if (location[0] in items[itemKey]) {
+
+                    items[itemKey][location[0]][location[1]] = value;
+            
+                } else {
+
+                    items[itemKey][location[0]] = {};
+                    items[itemKey][location[0]][location[1]] = value;
+
+                }
+
+            }
+            
+        }
+
+    }
+
+    let jsonData = JSON.stringify(items, null, 4)
+
+    let splitJson = jsonData.split("\n");
+
+    let newTabContent = ""
+
+    for (let id = 0; id < splitJson.length; id++) {
+
+        newTabContent += "<pre>" + splitJson[id] + "</pre>";
+
+    }
+
+    let tab = window.open('about:blank', '_blank');
+
+    tab.document.write(newTabContent);
+    tab.document.close();
+
+    // download("newItemData.json", jsonData);
+
+}
+
+fetch("data/items.json")
+  .then(response => response.json())
+  .then(data => resetItemUI(data));
 

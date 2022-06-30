@@ -1,7 +1,7 @@
 
 function buildBattlefly(x, y)
     return {
-        hp = 100,
+        hp = 60,
 
         knockback = newVec(0,0), knockBackResistance = 1, flash = 0,
 

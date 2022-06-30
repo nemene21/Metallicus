@@ -170,6 +170,10 @@ function love.draw()
     SHADERS.WAVE:send("cameraY", round(camera[2]))
 
     --------------------------------------------------------------------------SCENE CALLED
+    
+    processShockwaves()
+    SHADERS.GLOW_AND_LIGHT:send("motionBlur", dt * 15)
+    
     sceneNew = scenes[scene][1]()
 
     if sceneNew ~= scene then
@@ -180,6 +184,8 @@ function love.draw()
 
     drawAllLights()
     processCamera(); processLight()
+
+    setColor(255, 255, 255)
 
     love.graphics.setCanvas(postProCanvas)
     love.graphics.setShader(SHADERS[postPro])
