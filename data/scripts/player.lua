@@ -183,7 +183,7 @@ function processPlayer(player)
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
-        shock(player.collider.x, player.collider.y, 0.00005, 0.2)
+        shock(player.collider.x, player.collider.y, 0.12, 0.03, 0.25)
 
         player.dashingFrames = 0.2
 

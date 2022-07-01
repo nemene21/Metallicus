@@ -51,6 +51,8 @@ function processTeleporter(teleporter)
 
             playSound("teleport")
 
+            shock(teleporter.x, teleporter.y - 24, 1.5, 0.03, 1)
+
         end
 
     end

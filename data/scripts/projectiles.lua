@@ -353,6 +353,9 @@ function processEnemyProjectiles(enemyProjectiles)
         if rectCollidingCircle(player.collider, P.pos.x, P.pos.y, P.radius * 0.8) then
 
             if player:hit(P.damage) then
+
+                shock(P.pos.x, P.pos.y, 0.2, 0.025, 0.35)
+
                 table.insert(kill, id)
 
                 table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))

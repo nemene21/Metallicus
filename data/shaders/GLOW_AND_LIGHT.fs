@@ -25,6 +25,8 @@ struct Shockwave {
     vec2 position;
 
     float size;
+
+    float force;
     
     float lifetime;
     float lifetimeMax;
@@ -50,16 +52,20 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 
         vec2 normalisedPos = shockwaveOn.position / screenDimensions;
 
-        float multiplier = sin(shockwaveOn.lifetime / shockwaveOn.lifetimeMax * 3.14);
+        float multiplier = shockwaveOn.lifetime / shockwaveOn.lifetimeMax;
 
         vec2 diff = uvs - normalisedPos;
+
+        diff.x /= xRatio;
 
         float dist = length(diff);
 
         diff.x /= dist;
         diff.y /= dist;
 
-        vec2 disp = diff * (step(shockwaveOn.size, length(diff)) * step(shockwaveOn.size * 0.75, length(diff))) * 0.02;
+        float size = (1 - multiplier) * shockwaveOn.size;
+
+        vec2 disp = diff * int(dist < size && dist > size * 0.25) * shockwaveOn.force;
 
         uvs -= disp * multiplier;
 

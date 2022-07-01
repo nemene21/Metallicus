@@ -36,7 +36,7 @@ SHADERS.GLOW_AND_LIGHT:send("xRatio", aspectRatio[2])
 SHADERS.GLOW_AND_LIGHT:send("hurtVignetteIntensity", 0)
 
 -- SHADERS.GLOW_AND_LIGHT:send("screenDimensions", WS)
-SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", 1)
+SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", 0)
 
 SHADERS.PIXEL_PERFECT:send("snapX", 1 / 800 * 3)
 SHADERS.PIXEL_PERFECT:send("snapY", 1 / 600 * 3)
@@ -95,31 +95,34 @@ function processShockwaves()
         local idC = id - 1
 
         SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].lifetime", shockwave.lifetime)
+
         SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].lifetimeMax", shockwave.lifetimeMax)
+
+        SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].force", shockwave.force)
+
         SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].position", {shockwave.position[1] - camera[1], shockwave.position[2] - camera[2]})
+        
         SHADERS.GLOW_AND_LIGHT:send("shockwaves[" .. tostring(idC) .. "].size", shockwave.size)
 
         if shockwave.lifetime < 0 then
 
             table.insert(kill, id)
 
-            SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", #SHOCKWAVES - 1)
-
         end
 
     end SHOCKWAVES = wipeKill(kill, SHOCKWAVES)
 
-end
-
-function shock(x, y, size, lifetime)
-
-    table.insert(SHOCKWAVES, {position = {x, y}, size = size, lifetime = lifetime, lifetimeMax = lifetime})
-
-    SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", #SHOCKWAVES)
+    SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", clamp(#SHOCKWAVES, 0, 16))
 
 end
 
-shock(400, 300, 10, 1)
+function shock(x, y, size, force, lifetime)
+
+    table.insert(SHOCKWAVES, {position = {x, y}, size = size, lifetime = lifetime, force = force, lifetimeMax = lifetime})
+
+end
+
+--shock(400, 300, 10, 1)
 
 -- Table of all post process effects you want, example: postPro = {"PIXEL_PERFECT","GLOW"}
 postPro = {}

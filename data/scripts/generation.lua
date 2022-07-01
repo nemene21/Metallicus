@@ -669,6 +669,8 @@ function roomProcessEnemies(room)
 
         if E.hp < 1 then table.insert(kill,id)
 
+            shock(E.collider.x, E.collider.y, 0.14, 0.02, 0.4)
+
             shake(12 * E.knockBackResistance, 2, 0.1)
             if love.math.random(0, 100) > 90 then
 

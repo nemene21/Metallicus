@@ -268,6 +268,8 @@ TOOLTIP_OFFSET = 80
 RARITY_COLORS = {common={200,200,200},uncommon={0,255,0},rare={44,255,255},epic={128,0,255},mythic={255,0,100}}
 
 function drawTooltip(item)
+
+    local X_OFFSET = -48; local Y_OFFSET = 80;
     
     -- If the item is equippable
     if item.stats ~= nil then
@@ -303,24 +305,24 @@ function drawTooltip(item)
 
         local yOffset = 0
 
-        if yM + 38 + 24 + #item.stats * fontHeight > 600 then yOffset = 600 - 24 + #item.stats * fontHeight end
+        if Y_OFFSET + 38 + 24 + #item.stats * fontHeight > 600 then yOffset = 600 - 24 + #item.stats * fontHeight end
 
         -- Draw rect
         setColor(0,0,0,150)
-        love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM + 38 + yOffset, width + 12, fontHeight * (#textDraws + 1),8, 8)
+        love.graphics.rectangle("fill",X_OFFSET + TOOLTIP_OFFSET - 6, Y_OFFSET + 38 + yOffset, width + 12, fontHeight * (#textDraws + 1),8, 8)
 
         -- Draw stats
 
         for id,T in ipairs(textDraws) do
-            outlinedText(xM + TOOLTIP_OFFSET + STAT_OFFSET, yM + 24 + id * fontHeight + yOffset,2,T,colors[id])
+            outlinedText(X_OFFSET + TOOLTIP_OFFSET + STAT_OFFSET, Y_OFFSET + 24 + id * fontHeight + yOffset,2,T,colors[id])
         end
     end
     -- Draw rect
     setColor(0,0,0,150)
-    love.graphics.rectangle("fill",xM + TOOLTIP_OFFSET - 6, yM - 6, FONT:getWidth(item.name)+12, 38,8, 8)
+    love.graphics.rectangle("fill",X_OFFSET + TOOLTIP_OFFSET - 6, Y_OFFSET - 6, FONT:getWidth(item.name)+12, 38,8, 8)
 
     -- Draw name
-    outlinedText(xM + TOOLTIP_OFFSET,yM,2,item.name,RARITY_COLORS[item.rarity])
+    outlinedText(X_OFFSET + TOOLTIP_OFFSET,Y_OFFSET,2,item.name,RARITY_COLORS[item.rarity])
 end
 
 -- HOLDING STUFF
