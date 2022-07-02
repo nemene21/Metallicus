@@ -178,7 +178,7 @@ listProperties = {
 
 }
 
-function downloadItemsFile() {
+function UIToJson() {
 
     let items = {};
 
@@ -243,7 +243,15 @@ function downloadItemsFile() {
 
     }
 
-    let jsonData = JSON.stringify(items, null, 4)
+    return items;
+
+}
+
+function downloadItemsFile() {
+
+    let items = UIToJson();
+
+    let jsonData = JSON.stringify(items, null, 4);
 
     let splitJson = jsonData.split("\n");
 
@@ -264,7 +272,74 @@ function downloadItemsFile() {
 
 }
 
-fetch("data/items.json")
-  .then(response => response.json())
-  .then(data => resetItemUI(data));
+let ITEM_TYPES = {
 
+    "sword": {
+        "texture": "stoneSword",
+        "name": "none",
+        "rarity": "common",
+        "holdMode": "slash",
+        "armRTaken": true,
+        "armLTaken": false,
+        "holdData": {
+            "attackTimer": 0,
+            "rotation": 90,
+            "rotateTo": 90,
+            "roatationDefault": 90,
+            "turnTo": -1,
+            "distance": 28,
+            "flip": -1,
+            "spriteRotateTo": 0,
+            "spriteRotation": 0
+        },
+        "damageType": "meleeDamage",
+        "projectile": {
+            "speed": 500,
+            "range": 100,
+            "followPlayer": 1,
+            "collides": false,
+            "bounces": 1,
+            "radius": 30,
+            "pirice": 999,
+            "knockback": 300,
+            "burst": 1,
+            "burstTimer": 0,
+            "burstWait": 0,
+            "burstsLeft": 0,
+            "spread": 4,
+            "sound": "slash",
+            "texture": "basicSlash"
+        },
+        "stats": {
+            "dmg": 20,
+            "attackTime": 0.8
+        },
+        "maxStack": 1,
+        "types": [
+            "item"
+        ]
+    },
+
+}
+
+function newItem() {
+
+    try {
+
+        let items = UIToJson();
+
+        let itemType = prompt("Insert item type: ");
+
+        let itemName = prompt("Insert item name: ");
+
+        items[itemName] = JSON.parse(JSON.stringify(ITEM_TYPES[itemType]));
+
+        resetItemUI(JSON.stringify(items));
+
+    } catch {
+
+        console.log("Something went wrong while inputing the number...")
+
+    }
+
+}

@@ -80,7 +80,7 @@ body {
 
 }
 
-#DownloadFileButton {
+#ActionBar button {
 
     margin-right: 32px;
 
@@ -100,7 +100,15 @@ body {
 
 }
 
-#DownloadFileButton:hover {
+#ActionBar button img {
+
+    align-self: center;
+
+    width: 80%; height: auto;
+
+}
+
+#ActionBar button:hover {
 
     background-color: rgb(120, 120, 180);
 
