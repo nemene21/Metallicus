@@ -113,6 +113,14 @@ function resetItemUI(data) {
 
         itemElement.name = itemKey;
 
+
+        let itemKeyName = document.createElement("p");
+        itemKeyName.textContent = itemKey;
+
+        itemKeyName.classList.add("ItemKeyName");
+
+        itemElement.appendChild(itemKeyName);
+
         for (let propertyKey in item) {
 
             if (propertyKey in functionsUI) {

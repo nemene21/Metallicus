@@ -218,3 +218,17 @@ body {
     filter: drop-shadow(0 28px 8px);
 
 }
+
+.ItemKeyName {
+
+    color: white;
+
+    text-shadow: 0 0 4px rgba(255, 255, 255 , 128);
+    font-size: 60px;
+    font-weight: bolder;
+
+    margin-top: 0;
+    margin-bottom: 12px;
+
+
+}
