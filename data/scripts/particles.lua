@@ -138,51 +138,51 @@ function processParticleSystems()
 
     love.graphics.setCanvas(particleCanvas)
 
-    if particleSystem.timer < 0 and particleSystem.ticks ~= 0 and particleSystem.spawning then
-            
-        particleSystem.ticks = particleSystem.ticks - 1
-        particleSystem.timer = love.math.random(particleSystem.tickSpeed.a*100,particleSystem.tickSpeed.b*100)*0.01
-
-        particlesGoingToSpawn = love.math.random(particleSystem.amount.a,particleSystem.amount.b)
-
-        for i=0,particlesGoingToSpawn do
-            
-            -- Make pos
-            local data = SPAWNS[particleSystem.spawnShape.mode](particleSystem.x,particleSystem.y,particleSystem.spawnShape.data,particleSystem,particlesGoingToSpawn,i)
-
-            local particlePos = data[1]; local newVel = data[2]
-
-            -- Make lifetime
-            newLf = love.math.random(particleSystem.particleData.lifetime.a*100,particleSystem.particleData.lifetime.b*100)/100
-            -- Rgba
-            local r=love.math.random(particleSystem.particleData.color.r.a*100,particleSystem.particleData.color.r.b*100)*0.01
-            local g=love.math.random(particleSystem.particleData.color.g.a*100,particleSystem.particleData.color.g.b*100)*0.01
-            local b=love.math.random(particleSystem.particleData.color.b.a*100,particleSystem.particleData.color.b.b*100)*0.01
-            local a=love.math.random(particleSystem.particleData.color.a.a*100,particleSystem.particleData.color.a.b*100)*0.01
-
-            -- Width
-            local width = nil
-            if type(particleSystem.particleData.width) == "table" then
-                width = love.math.random(particleSystem.particleData.width.a,particleSystem.particleData.width.b)
-            else
-                width = particleSystem.particleData.width
-            end
-
-            -- SET ALL THE VALUES OF THE PARTICLE AND APPEND IT TO THE LIST
-            table.insert(particleSystem.particles,{
-                x=particlePos.x, y=particlePos.y,
-                vel=newVel,
-                width=width, 
-                lifetime=newLf, lifetimeStart=newLf,
-                color={r=r,g=g,b=b,a=a},
-                rotation=love.math.random(particleSystem.particleData.rotation.a,particleSystem.particleData.rotation.b)
-            })
-        end
-    end
-
     for id, particleSystem in ipairs(ALL_PARTICLES) do
 
         particleSystem.timer = particleSystem.timer - dt
+    
+        if particleSystem.timer < 0 and particleSystem.ticks ~= 0 and particleSystem.spawning then
+            
+            particleSystem.ticks = particleSystem.ticks - 1
+            particleSystem.timer = love.math.random(particleSystem.tickSpeed.a*100,particleSystem.tickSpeed.b*100)*0.01
+    
+            particlesGoingToSpawn = love.math.random(particleSystem.amount.a,particleSystem.amount.b)
+    
+            for i=0,particlesGoingToSpawn do
+                
+                -- Make pos
+                local data = SPAWNS[particleSystem.spawnShape.mode](particleSystem.x,particleSystem.y,particleSystem.spawnShape.data,particleSystem,particlesGoingToSpawn,i)
+    
+                local particlePos = data[1]; local newVel = data[2]
+    
+                -- Make lifetime
+                newLf = love.math.random(particleSystem.particleData.lifetime.a*100,particleSystem.particleData.lifetime.b*100)/100
+                -- Rgba
+                local r=love.math.random(particleSystem.particleData.color.r.a*100,particleSystem.particleData.color.r.b*100)*0.01
+                local g=love.math.random(particleSystem.particleData.color.g.a*100,particleSystem.particleData.color.g.b*100)*0.01
+                local b=love.math.random(particleSystem.particleData.color.b.a*100,particleSystem.particleData.color.b.b*100)*0.01
+                local a=love.math.random(particleSystem.particleData.color.a.a*100,particleSystem.particleData.color.a.b*100)*0.01
+    
+                -- Width
+                local width = nil
+                if type(particleSystem.particleData.width) == "table" then
+                    width = love.math.random(particleSystem.particleData.width.a,particleSystem.particleData.width.b)
+                else
+                    width = particleSystem.particleData.width
+                end
+    
+                -- SET ALL THE VALUES OF THE PARTICLE AND APPEND IT TO THE LIST
+                table.insert(particleSystem.particles,{
+                    x=particlePos.x, y=particlePos.y,
+                    vel=newVel,
+                    width=width, 
+                    lifetime=newLf, lifetimeStart=newLf,
+                    color={r=r,g=g,b=b,a=a},
+                    rotation=love.math.random(particleSystem.particleData.rotation.a,particleSystem.particleData.rotation.b)
+                })
+            end
+        end
     
         local kill = {}
     
