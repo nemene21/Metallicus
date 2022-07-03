@@ -22,6 +22,8 @@ SHADERS = {
     ACTIVE_ITEM = love.graphics.newShader((love.filesystem.read("data/shaders/ACTIVE_ITEM.fs")))
     ,
     WAVE = love.graphics.newShader(nil, love.filesystem.read("data/shaders/WAVE.vs"))
+    ,
+    SCENE_TRANSITION = love.graphics.newShader((love.filesystem.read("data/shaders/SCENE_TRANSITION.fs")))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])

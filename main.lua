@@ -47,15 +47,36 @@ function love.load()
     particleCanvas = love.graphics.newCanvas(WS[1], WS[2])
     postProCanvas = love.graphics.newCanvas(WS[1],WS[2])
 
-    love.window.setTitle(title)
-
-    local icon = love.image.newImageData("data/images/icon.png")
-    love.window.setIcon(icon); icon = nil
-
     -- Imports
     json = require "data.scripts.json"; require "data.scripts.misc"; require "data.scripts.loading"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
     require "data.scripts.buttons"; require "data.scripts.enemies"; require "data.scripts.projectiles"; require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
     require "data.scripts.debugLine"
+
+    transitionSurf = love.graphics.newCanvas(WS[1] / 4, WS[2] / 4) -- Making the transition noise
+    love.graphics.setCanvas(transitionSurf)
+
+    for x = 0, WS[1] / 4 do
+
+        for y = 0, WS[2] / 4 do
+            
+            local noise = math.abs(love.math.noise(x * 0.03, y * 0.03))
+
+            love.graphics.setColor(noise, noise, noise)
+
+            love.graphics.points(x, y)
+
+        end
+
+    end
+
+    SHADERS.SCENE_TRANSITION:send("transitionNoise", transitionSurf)
+    love.graphics.setCanvas()
+    transitionSurf:release()
+
+    love.window.setTitle(title)
+
+    local icon = love.image.newImageData("data/images/icon.png")
+    love.window.setIcon(icon); icon = nil
 
     -- Mouse
     love.mouse.setVisible(false)
@@ -101,7 +122,7 @@ function love.load()
     for id,J in pairs(JOYSTICKS) do JOYSTICK_LAST_PRESSES[id] = "none" end
 
     -- Transitions
-    transition = 1; transitionSpeed = 1.25
+    transition = 1; transitionTime = 0.5
 
     MIN_DELTA = 1 / 30
 
@@ -173,6 +194,8 @@ function love.draw()
     
     processShockwaves()
     SHADERS.GLOW_AND_LIGHT:send("motionBlur", dt * 15)
+
+    transition = clamp(transition - dt / transitionTime, 0, 1)
     
     sceneNew = scenes[scene][1]()
 
@@ -199,10 +222,6 @@ function love.draw()
         love.graphics.draw(UI_LAYER)
     end
 
-    setColor(0,0,0,255 * transition)
-    love.graphics.rectangle("fill",0,0,800,600)
-    transition = clamp(transition - dt * transitionSpeed,0,1)
-
     -- Reset particles
     love.graphics.setColor(1,1,1)
     love.graphics.setCanvas(particleCanvas)
@@ -210,12 +229,16 @@ function love.draw()
 
     -- Draw display
     love.graphics.setCanvas()
+    love.graphics.setShader(SHADERS.SCENE_TRANSITION)
+    SHADERS.SCENE_TRANSITION:send("transition", 1 - transition * transition)
  
     local displayScaleNow = displayScale * zoomInEffect
 
     love.graphics.draw(postProCanvas, w * 0.5 + screenshake[1] * displayScaleNow, h * 0.5 + screenshake[2] * displayScaleNow, math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008, displayScaleNow, displayScaleNow, postProCanvas:getWidth() * 0.5, postProCanvas:getHeight() * 0.5)
 
     love.graphics.setColor(1,1,1)
+
+    love.graphics.setShader()
 
     screenshotAnim = screenshotAnim - dt
     if screenshotAnim > 0 then
