@@ -122,7 +122,7 @@ function love.load()
     for id,J in pairs(JOYSTICKS) do JOYSTICK_LAST_PRESSES[id] = "none" end
 
     -- Transitions
-    transition = 1; transitionTime = 0.5
+    transition = 1; transitionTime = 0.35
 
     MIN_DELTA = 1 / 30
 
