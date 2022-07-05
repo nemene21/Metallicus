@@ -183,7 +183,13 @@ function generate(amount, biome)
         else if num == amount - 1 then
 
                 layout = "data/layouts/end.json"
-                table.insert(room.structures, ENTERABLES.house(420, 576))
+                table.insert(room.structures, ENTERABLES.house(420, 579))
+
+                if love.math.random(0, 100) > 0 then
+
+                    table.insert(room.structures, newChest(220, 563))
+
+                end
 
             else
                 layout = biome.layoutPath..tostring(love.math.random(1,biome.nLayouts + 1))..".json"
@@ -682,22 +688,9 @@ function roomProcessEnemies(room)
             local particlesAdding = deepcopyTable(PARTICLES_ENEMY_DIE_BLAST)
             particlesAdding.rotation = E.knockback:getRot()
 
-            for id,I in pairs(E.drops) do
+            for id, I in ipairs(getLootTable(E.stringKey .. "Drop"):returnDrops()) do
 
-                local amount = 0
-                local percentage = I
-
-                while percentage > 100 do
-
-                    percentage = percentage - 100; amount = amount + 1
-
-                end
-
-                if love.math.random(1, 100) < percentage then amount = amount + 1 end
-
-                local item = ITEMS[id]; item.amount = amount
-
-                if item.amount ~= 0 then table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, item)) end
+                table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, I))
 
             end
 

@@ -22,6 +22,8 @@ function buildEnemy(name, x, y)
     
     enemy.name = ENEMY_NAMES[name]
 
+    enemy.stringKey = name
+
     enemy.ID = ENEMY_ID
     ENEMY_ID = ENEMY_ID + 1
 

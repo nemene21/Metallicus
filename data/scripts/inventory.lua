@@ -640,10 +640,10 @@ end
 
 --                                                            ITEMS ON FLOOR
 
-function newItem(x,y,item)
+function newItem(x,y,item, vel)
 
     return {
-        pos = newVec(x, y), vel = newVec(0, 0),
+        pos = newVec(x, y), vel = vel or newVec(0, 0),
 
         data = deepcopyTable(item),
 
@@ -685,7 +685,7 @@ end
 
 function drawDroppedItem(item)
 
-    local sine =  math.sin(globalTimer * 3) * 8
+    local sine =  math.sin(globalTimer * 3) * 4
 
     love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
     setColor(RARITY_COLORS[item.data.rarity][1], RARITY_COLORS[item.data.rarity][2], RARITY_COLORS[item.data.rarity][3])

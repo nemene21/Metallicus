@@ -16,17 +16,17 @@
 },
 {
     "name" : "quiver",
-    "materials" : [["stone", 8], ["stick", 8], ["wood", 4]],
+    "materials" : [["stone", 6], ["stick", 6], ["wood", 4]],
     "amount" : 1
 },
 {
     "name" : "stoneSword",
-    "materials" : [["stone", 6], ["stick", 4]],
+    "materials" : [["stick", 4], ["stone", 8]],
     "amount" : 1
 },
 {
     "name" : "stoneTribow",
-    "materials" : [["stick", 4], ["stone", 12]],
+    "materials" : [["stick", 4], ["stone", 8]],
     "amount" : 1
 },
 {
@@ -51,27 +51,27 @@
 },
 {
     "name" : "jelloRod",
-    "materials" : [["jello", 12], ["stick", 4]],
+    "materials" : [["stick", 4], ["jello", 8]],
     "amount" : 1
 },
 {
     "name" : "rodOfLight",
-    "materials" : [["stick", 4], ["glowDrop", 12]],
+    "materials" : [["stick", 4], ["glowDrop", 8]],
     "amount" : 1
 },
 {
     "name" : "boneDagger",
-    "materials" : [["stick", 4], ["bone", 12]],
+    "materials" : [["stick", 4], ["bone", 8]],
     "amount" : 1
 },
 {
     "name" : "boneBow",
-    "materials" : [["stick", 4], ["bone", 12]],
+    "materials" : [["stick", 4], ["bone", 8]],
     "amount" : 1
 },
 {
     "name" : "boneRod",
-    "materials" : [["stick", 4], ["bone", 12]],
+    "materials" : [["stick", 4], ["bone", 8]],
     "amount" : 1
 },
 {
@@ -96,17 +96,17 @@
 },
 {
     "name" : "shroomBat",
-    "materials" : [["shroomOre", 12], ["stick", 4]],
+    "materials" : [["stick", 4], ["shroomOre", 8]],
     "amount" : 1
 },
 {
     "name" : "mushboomBow",
-    "materials" : [["shroomOre", 12], ["stick", 4]],
+    "materials" : [["stick", 4], ["shroomOre", 8]],
     "amount" : 1
 },
 {
     "name" : "mushboomRod",
-    "materials" : [["shroomOre", 12], ["stick", 4]],
+    "materials" : [["stick", 4], ["shroomOre", 8]],
     "amount" : 1
 },
 {
@@ -131,12 +131,12 @@
 },
 {
     "name" : "flyDustBow",
-    "materials" : [["stick", 4], ["flyDust", 12]],
+    "materials" : [["stick", 4], ["flyDust", 8]],
     "amount" : 1
 },
 {
     "name" : "rodOfChase",
-    "materials" : [["flyDust", 12], ["stick", 4]],
+    "materials" : [["stick", 4], ["flyDust", 8]],
     "amount" : 1
 },
 {

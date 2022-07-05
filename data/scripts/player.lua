@@ -50,6 +50,8 @@ function newPlayer(x,y,stats)
         
         damageReduction = 0,
 
+        scaleX = 1, scaleY = 1,
+
         magicDamage = 0, meleeDamage = 0, rangedDamage = 0,
 
         hp = 100, hpMax = 100, hpBarDelayed = 0,
@@ -251,13 +253,8 @@ function processPlayer(player)
             player.justLanded = true
             if impulse > 0.1 then table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) end -- Fall particles
 
-            -- Move body parts due to force
-
-            player.armL.y = player.armL.y + impulse * 13
-            player.armR.y = player.armL.y + impulse * 13
-
-            player.body.y = player.body.y + impulse * 13
-            player.head.y = player.head.y + impulse * 13
+            player.scaleY = 0.8 * impulse
+            player.scaleX = 1.2 * impulse
 
         end
 
@@ -272,6 +269,9 @@ function processPlayer(player)
 
     if player.jumpPressedTimer > 0 and player.coyoteTime > 0 then -- Jump
         player.vel.y = -620; player.coyoteTime = 0
+
+        player.scaleY = 1.6
+        player.scaleX = 0.4
 
         player.canCutJump = true; playSound("jump", love.math.random(80, 120) * 0.01)
 
@@ -332,16 +332,21 @@ function drawPlayer(player)
     setColor(255,255,255, 255 * (1 - math.abs(math.sin(3.14 * player.iFrames * 5))))
     local lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
 
+    -- Scale
+
+    player.scaleX = lerp(player.scaleX, 1, dt * 8)
+    player.scaleY = lerp(player.scaleY, 1, dt * 8)
+
     -- LEGS
-    drawSprite(PLAYER_ARM, player.collider.x + player.legL.x * lookAt, player.collider.y + player.legL.y, lookAt, 1, player.legLR)
-    drawSprite(PLAYER_ARM, player.collider.x + player.legR.x * lookAt, player.collider.y + player.legR.y, lookAt, 1, player.legRR)
+    drawSprite(PLAYER_ARM, player.collider.x + player.legL.x * lookAt * player.scaleX, player.collider.y + player.legL.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.legLR)
+    drawSprite(PLAYER_ARM, player.collider.x + player.legR.x * lookAt * player.scaleX, player.collider.y + player.legR.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.legRR)
 
     -- HEAD AND BODY
-    drawSprite(PLAYER_BODY, player.collider.x + player.body.x * lookAt, player.collider.y + player.body.y, lookAt, 1, player.bodyR)
-    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMAGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt + (player.wearing.slots["1,1"].item.xOffset or 0) * lookAt, player.collider.y + player.body.y + (player.wearing.slots["1,1"].item.yOffset or 0), lookAt, 1, player.bodyR) end
+    drawSprite(PLAYER_BODY, player.collider.x + player.body.x * lookAt * player.scaleX, player.collider.y + player.body.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.bodyR)
+    if player.wearing.slots["1,1"].item ~= nil then drawSprite(ITEM_IMAGES[player.wearing.slots["1,1"].item.texture],player.collider.x + player.body.x * lookAt + (player.wearing.slots["1,1"].item.xOffset or 0) * lookAt, player.collider.y + player.body.y + (player.wearing.slots["1,1"].item.yOffset or 0), lookAt * player.scaleX, player.scaleY, player.bodyR) end
 
-    drawSprite(PLAYER_HEAD, player.collider.x + player.head.x * lookAt, player.collider.y + player.head.y, lookAt, 1, player.headR)
-    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMAGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt + (player.wearing.slots["1,0"].item.xOffset or 0) * lookAt, player.collider.y + player.head.y + (player.wearing.slots["1,0"].item.yOffset or 0), lookAt, 1, player.headR) end
+    drawSprite(PLAYER_HEAD, player.collider.x + player.head.x * lookAt * player.scaleX, player.collider.y + player.head.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.headR)
+    if player.wearing.slots["1,0"].item ~= nil then drawSprite(ITEM_IMAGES[player.wearing.slots["1,0"].item.texture],player.collider.x + player.head.x * lookAt + (player.wearing.slots["1,0"].item.xOffset or 0) * lookAt, player.collider.y + player.head.y + (player.wearing.slots["1,0"].item.yOffset or 0), lookAt * player.scaleX, player.scaleY, player.headR) end
 
     -- ITEM IN HAND
     local holding = tostring(player.slotOn)..",0"
@@ -363,8 +368,8 @@ function drawPlayer(player)
     end
 
     -- ARMS
-    if handed < 1 then drawSprite(PLAYER_ARM, player.collider.x + player.armR.x * lookAt, player.collider.y + player.armR.y, lookAt, 1, player.armRR) end
-    if handed < 2 then drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt, player.collider.y + player.armL.y, lookAt, 1, player.armLR) end
+    if handed < 1 then drawSprite(PLAYER_ARM, player.collider.x + player.armR.x * lookAt * player.scaleX, player.collider.y + player.armR.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.armRR) end
+    if handed < 2 then drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt * player.scaleX, player.collider.y + player.armL.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.armLR) end
 
     love.graphics.setShader()
 
@@ -440,7 +445,7 @@ end
 
 function sayPlayer(player, text, priority)
 
-    if player.textPriority < (priority or 1) then
+    if player.textPriority < (priority or 1) and UI_ALPHA > 0.9 then
         player.textPriority = priority or 1
 
         player.text = text

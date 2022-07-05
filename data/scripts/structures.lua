@@ -23,6 +23,10 @@ require "data.scripts.structures.textDisplayers"
 
 require "data.scripts.structures.spinTrap"
 
+--                                                          LOOT
+
+require "data.scripts.structures.chest"
+
 IN_ROOM_STRUCTURES = {
 
 spinTrap = newSpinTrap

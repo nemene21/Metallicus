@@ -16,7 +16,7 @@ float PI2 = 6.2831;
 
 float iterations = directions * quality - 15;
 
-float intensityBloom = 0.75;
+float intensityBloom = 0.6;
 
 extern float xRatio;
 
