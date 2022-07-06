@@ -134,12 +134,12 @@ function game()
             end
 
         end
-        
-        ROOM:processItems()
 
         ROOM:processEnemies()
 
         ROOM:process()
+
+        ROOM:processItems()
 
         processPlayerProjectiles(playerProjectiles)
         processEnemyProjectiles(enemyProjectiles)
