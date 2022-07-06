@@ -115,7 +115,7 @@ function processEnterableRoom(room)
     trackPitch = lerp(trackPitch, 0.8, dt * 3)
 
     -- Check if player entered door
-    if room.entranceParticles ~= nil then
+    if room.entranceParticles ~= nil and transition < 0.1 then
         if player.collider.x < room.entranceParticles.x - 3 then swtichRoom(0)
         
             player.collider.x = room.outsideExit.x; player.collider.y = room.outsideExit.y
@@ -157,12 +157,20 @@ function drawEnterable(enterable)
             ROOM = enterable.room
             ambientLight = enterable.ambientLight or BIOMES[biomeOn].ambientLight
             transition = 1
+
             player.collider.x = ROOM.entranceParticles.x + 12; player.collider.y = ROOM.entranceParticles.y + 48
+
             player.walkParticles.particles = {}
+            player.dashParticles.particles = {}
+
+            ALL_TEXT_PARTICLES = {}
+
             playerProjectiles = {}
             enemyProjectiles = {}
 
             player.inventory.justUpdated = true
+
+            
             
         end
 

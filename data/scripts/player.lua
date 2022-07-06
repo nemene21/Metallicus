@@ -365,8 +365,7 @@ function drawPlayer(player)
 
             end
         end end
-    end
-
+    end 
     -- ARMS
     if handed < 1 then drawSprite(PLAYER_ARM, player.collider.x + player.armR.x * lookAt * player.scaleX, player.collider.y + player.armR.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.armRR) end
     if handed < 2 then drawSprite(PLAYER_ARM, player.collider.x + player.armL.x * lookAt * player.scaleX, player.collider.y + player.armL.y * player.scaleY, lookAt * player.scaleX, player.scaleY, player.armLR) end
