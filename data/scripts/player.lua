@@ -490,11 +490,11 @@ function drawPlayerUI(player)
         local offset = 6
         local w = FONT:getWidth(player.text) + offset * 2; local h = FONT:getHeight(player.text) + offset * 2
 
-        setColor(0, 0, 0, 255 * player.textFadeTimer)
+        setColor(0, 0, 0, 100 * player.textFadeTimer)
         love.graphics.rectangle("fill", player.textPos.x, player.textPos.y, w, h, 8, 8)
 
-        love.graphics.circle("fill", player.textPos.x + 18, player.textPos.y + 30, 12 + math.sin(globalTimer * 4 + 1.14))
-        love.graphics.circle("fill", player.textPos.x + 8, player.textPos.y + 50, 6 + math.sin(globalTimer * 4) * 2)
+        love.graphics.circle("fill", player.textPos.x + 18, player.textPos.y + 45, 8 + math.sin(globalTimer * 4 + 1.14))
+        love.graphics.circle("fill", player.textPos.x + 8, player.textPos.y + 60, 5 + math.sin(globalTimer * 4) * 2)
         
         normalText(player.textPos.x + offset, player.textPos.y + offset, player.lettersLoaded, {255, 255, 255, 255 * player.textFadeTimer}, 1, 1, 0, 0)
 

@@ -55,7 +55,11 @@ function returnRandomDrops(lootTable)
 
     for id, oneTimeItems in  ipairs(lootTable.oneTimeDrops) do -- One time drops
 
-        table.insert(items, deepcopyTable(ITEMS[oneTimeItems[love.math.random(1, #oneTimeItems)]]))
+        local item = deepcopyTable(ITEMS[oneTimeItems[love.math.random(1, #oneTimeItems)]])
+
+        item.amount = 1
+
+        table.insert(items, item)
 
     end
 
@@ -78,6 +82,8 @@ getLootTable("giantFireflyDrop"):addMultiple("glowDrop", 250)
 newLootTable("skeletonMinerDrop")                               -- SKELETON MINER
 
 getLootTable("skeletonMinerDrop"):addMultiple("bone", 250)
+
+getLootTable("skeletonMinerDrop"):addMultiple("minerHelmet", 4)
 
 newLootTable("battleflyDrop")                                   -- BATTLE FLY
 
