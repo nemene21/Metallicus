@@ -48,16 +48,35 @@ function ACTIVE_ITEM_PROCESS_PROJECTILE_BURST(item)
 
 end
 
+-- Shield blast
+
+function ACTIVE_ITEM_EFFECT_SHIELD(item)
+
+    shock(player.collider.x, player.collider.y, 0.5, 0.1, 0.45)
+
+    for id, enemy in ipairs(ROOM.enemies) do
+
+        if rectCollidingCircle(enemy.collider, player.collider.x, player.collider.y, 255) then
+
+            enemy:hit(item.stats.dmg, 2000, newVec(enemy.collider.x - player.collider.x, enemy.collider.y - player.collider.y):getRot())
+
+        end
+
+    end
+
+end
+
 ACTIVE_ITEM_EFFECTS = {
 
 addFloat = ACTIVE_ITEM_EFFECT_ADD_FLOAT,
 
-projectileBurst = ACTIVE_ITEM_EFFECT_PROJECTILE_BURST
+projectileBurst = ACTIVE_ITEM_EFFECT_PROJECTILE_BURST,
+
+shield = ACTIVE_ITEM_EFFECT_SHIELD
 
 }
 
 ACTIVE_ITEM_PROCESSES = {
 
 projectileBurst = ACTIVE_ITEM_PROCESS_PROJECTILE_BURST
-
 }

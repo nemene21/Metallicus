@@ -1167,5 +1167,27 @@
     "types": [
         "item"
     ]
+    },
+    "stoneShield": {
+        "texture": "stoneShield",
+        "name": "Stone Shield",
+        "rarity": "uncommon",
+        "holdMode": "hold",
+        "effectProcess": null,
+        "effect": "shield",
+        "maxStack": 1,
+        "noChargeTimer": 0,
+        "noChargeTimerMax": 3,
+        "charge": 1,
+        "chargeSpeed": 400,
+        "alreadyActivated": true,
+        "flashTimer": 0,
+        "stats": {
+            "dmg": 50
+        },
+        "types": [
+            "item",
+            "activeItem"
+        ]
     }
 }
