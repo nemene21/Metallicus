@@ -403,7 +403,7 @@ function MODE_SLASH(player,headed,item)
 
             end
 
-            local pos = newVec(item.holdData.distance,0); pos:rotate(rotation + 180)    
+            local pos = newVec(item.holdData.distance + 24, 0); pos:rotate(rotation + 180)
 
             local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
@@ -589,8 +589,81 @@ function MODE_BOW(player,headed,item)
     return item
 end
 
+function MODE_STAB(player,headed,item)
+
+    -- Slash
+    item.holdData.attackTimer = item.holdData.attackTimer - dt
+
+    item.holdData.attackAnimation = lerp(item.holdData.attackAnimation, 0, dt * 6)
+    
+    -- Shoot
+    item.holdData.attackTimer = item.holdData.attackTimer - dt
+    if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
+        mouseScale = 2.5; mouseRot = 3.14
+
+        -- Reset attack timer
+        item.holdData.attackTimer = item.stats.attackTime
+        item.projectile.burstsLeft = item.stats.burst or 1
+
+        item.holdData.attackAnimation = 1
+    end
+
+
+    item.projectile.burstTimer = item.projectile.burstTimer - dt
+
+    if item.projectile.burstsLeft > 0 and item.projectile.burstTimer <= 0 then
+        item.projectile.burstTimer = item.projectile.burstWait
+        item.projectile.burstsLeft = item.projectile.burstsLeft - 1
+
+        local multiplier = (100 + (player[item.damageType] or 0)) * 0.01
+
+        for x=1, item.stats.amount or 1 do
+            -- Summon projectile
+            local rotation = newVec(player.collider.x - camera[1] - xM, player.collider.y + 8 - camera[2] - yM); rotation = rotation:getRot()
+
+            if item.explosion ~= nil then
+
+                projectile.explosion = deepcopyTable(item.explosion)
+
+            end
+
+            local pos = newVec(item.holdData.distance + 48,0); pos:rotate(rotation + 180)    
+
+            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y + 8), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+            if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y + 8, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
+
+            shake(3, 1, 0.15, rotation)
+            if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+
+            projectile.homingRange = item.projectile.homingRange
+
+            table.insert(playerProjectiles,projectile)
+        end
+    end
+
+    -- Get draw pos and rotation
+    local rotation = newVec(xM - player.collider.x + camera[1], yM - (player.collider.y + 8) + camera[2]); rotation = rotation:getRot()
+
+    local pos = newVec(item.holdData.distance, 0); pos:rotate(rotation)
+
+    pos.x = pos.x * (1 + item.holdData.attackAnimation)
+    pos.y = pos.y * (1 + item.holdData.attackAnimation)
+
+    normalisedPos = newVec(pos.x, pos.y); normalisedPos:normalize()
+
+    -- Draw weapon
+    drawSprite(ITEM_IMAGES[item.texture], player.collider.x + pos.x, player.collider.y + pos.y + 8, 1 + item.holdData.attackAnimation * 0.6, 1 - item.holdData.attackAnimation * 0.6, rotation / 180 * 3.14)
+
+    -- Draw hands
+    drawSprite(PLAYER_ARM, player.collider.x + pos.x - normalisedPos.x * 12, player.collider.y + pos.y - normalisedPos.y * 12 + 8)
+
+    drawSprite(PLAYER_ARM, player.collider.x + pos.x - normalisedPos.x * 28, player.collider.y + pos.y - normalisedPos.y * 24 + 8)
+    
+    return item
+end
+
 HOLD_MODES = {
-hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, bow=MODE_BOW
+hold=MODE_HOLD, slash=MODE_SLASH, shoot=MODE_SHOOT, consumable=MODE_CONSUME, bow=MODE_BOW, stab=MODE_STAB
 }
 
 require "data.scripts.activeItemEffects"

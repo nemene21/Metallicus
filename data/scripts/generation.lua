@@ -678,7 +678,7 @@ function roomProcessEnemies(room)
             shock(E.collider.x, E.collider.y, 0.14, 0.02, 0.4)
 
             shake(12 * E.knockBackResistance, 2, 0.1)
-            if love.math.random(0, 100) > 90 then
+            if love.math.random(0, 100) > 75 then
 
                 local say = {"That "..E.name.." stood no chance!", "Get rekt B)", "Destroyed >:D"}
                 player:say(say[love.math.random(1, #say)])

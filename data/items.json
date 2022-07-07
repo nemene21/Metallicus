@@ -182,7 +182,6 @@
             "knockback": 150,
             "followPlayer": 0,
             "radius": 14,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -227,7 +226,6 @@
             "knockback": 150,
             "followPlayer": 0,
             "radius": 14,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -274,7 +272,6 @@
             "followPlayer": 0,
             "homingRange": 64,
             "radius": 8,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -319,7 +316,6 @@
             "knockback": 150,
             "followPlayer": 0,
             "radius": 14,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -369,7 +365,6 @@
             "knockback": 150,
             "followPlayer": 0,
             "radius": 14,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -713,8 +708,8 @@
         },
         "damageType": "meleeDamage",
         "projectile": {
-            "speed": 500,
-            "range": 100,
+            "speed": 200,
+            "range": 50,
             "followPlayer": 1,
             "collides": false,
             "bounces": 1,
@@ -729,7 +724,7 @@
             "texture": "basicSlash"
         },
         "stats": {
-            "dmg": 25,
+            "dmg": 28,
             "attackTime": 0.8
         },
         "maxStack": 1,
@@ -806,7 +801,7 @@
             "followPlayer": 1,
             "collides": false,
             "bounces": 1,
-            "radius": 18,
+            "radius": 20,
             "pirice": 999,
             "knockback": 100,
             "burstTimer": 0,
@@ -845,15 +840,14 @@
         },
         "damageType": "meleeDamage",
         "projectile": {
-            "speed": 500,
-            "range": 100,
+            "speed": 200,
+            "range": 50,
             "followPlayer": 1,
             "collides": false,
             "bounces": 1,
             "radius": 30,
             "pirice": 999,
             "knockback": 300,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -862,7 +856,7 @@
             "texture": "basicSlash"
         },
         "stats": {
-            "dmg": 20,
+            "dmg": 24,
             "attackTime": 0.8
         },
         "maxStack": 1,
@@ -890,15 +884,14 @@
         },
         "damageType": "meleeDamage",
         "projectile": {
-            "speed": 500,
-            "range": 100,
+            "speed": 200,
+            "range": 50,
             "followPlayer": 1,
             "collides": false,
             "bounces": 1,
             "radius": 30,
             "pirice": 999,
             "knockback": 900,
-            "burst": 1,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -907,7 +900,7 @@
             "texture": "basicSlash"
         },
         "stats": {
-            "dmg": 25,
+            "dmg": 34,
             "attackTime": 0.8
         },
         "maxStack": 1,
@@ -1135,5 +1128,44 @@
             "item",
             "bodyArmor"
         ]
+    },
+"shroomSpear": {
+    "texture": "shroomSpear",
+    "name": "Shroom Spear",
+    "rarity": "common",
+    "holdMode": "stab",
+    "armRTaken": true,
+    "armLTaken": true,
+    "holdData": {
+        "attackTimer": 0,
+        "distance": 38,
+        "attackAnimation" : 0
+    },
+    "damageType": "meleeDamage",
+    "projectile": {
+        "speed": 900,
+        "range": 250,
+        "followPlayer": 1,
+        "collides": true,
+        "bounces": 0,
+        "radius": 20,
+        "pirice": 999,
+        "knockback": 120,
+        "burstTimer": 0,
+        "burstWait": 0.1,
+        "burstsLeft": 0,
+        "spread": 4,
+        "sound": "slash",
+        "texture": "daggerSlash"
+    },
+    "stats": {
+        "dmg" : 8,
+        "attackTime" : 0.8,
+        "burst" : 2
+    },
+    "maxStack": 1,
+    "types": [
+        "item"
+    ]
     }
 }

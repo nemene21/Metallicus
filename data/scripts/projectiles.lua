@@ -71,7 +71,7 @@ end
 
 -- Interpolations
 function sineInterpolation(frames,lifetime,lifetimeStart)
-    return math.sin(3.14 * lifetime / lifetimeStart) * (frames - 1) + 1
+    return math.sin(3.14 * lifetime / lifetimeStart) * frames
 end
 
 function lerpInterpolation(frames,lifetime,lifetimeStart)
@@ -81,7 +81,7 @@ end
 local interpolations = {lerp=lerpInterpolation, sine=sineInterpolation}
 
 function interpolatePlayerProjectile(interpolation,frames,lifetime,lifetimeStart)
-    return clamp(round(interpolations[interpolation](frames,lifetime,lifetimeStart)),1,frames)
+    return clamp(round(interpolations[interpolation](frames,lifetime,lifetimeStart)), 1, frames)
 end
 
 -- Processing

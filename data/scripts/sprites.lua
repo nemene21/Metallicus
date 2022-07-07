@@ -8,7 +8,7 @@ function loadSpritesheet(filename,w,h)
     local sheet = love.graphics.newImage(filename)
     local x = sheet:getWidth()/w; local y = sheet:getHeight()/h
 
-    local images = {}
+    local images = {w = w, h = h}
 
     images.w = x; images.h = y
 
