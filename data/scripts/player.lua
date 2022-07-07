@@ -490,7 +490,7 @@ function drawPlayerUI(player)
         local offset = 6
         local w = FONT:getWidth(player.text) + offset * 2; local h = FONT:getHeight(player.text) + offset * 2
 
-        setColor(0, 0, 0, 100 * player.textFadeTimer)
+        setColor(0, 0, 0, 120 * player.textFadeTimer)
         love.graphics.rectangle("fill", player.textPos.x, player.textPos.y, w, h, 8, 8)
 
         love.graphics.circle("fill", player.textPos.x + 18, player.textPos.y + 45, 8 + math.sin(globalTimer * 4 + 1.14))
