@@ -8,7 +8,9 @@ function menuReload()
 
     BG:buildIndexes()
 
-    PLAY_BUTTON = newButton(400, 300, "Play")
+    PLAY_BUTTON =    newButton(400, 250, "Play")
+    OPTIONS_BUTTON = newButton(400, 350, "Options")
+    QUIT_BUTTON =    newButton(400, 450, "Quit")
 
     camera = {0,0}; boundCamPos = {0,0}; zoomInEffect = 1; UI_ALPHA = 255
     cameraWallOffset = 100
@@ -109,6 +111,10 @@ function menu()
     challangesOffset = clamp(challangesOffset + dt * 5 * (boolToInt(not challangesOpen) * 2 - 1), 0, 1)
 
     if PLAY_BUTTON:process() then sceneAt = "game"; transition = 1 end
+
+    if OPTIONS_BUTTON:process() then end
+
+    if QUIT_BUTTON:process() then love.event.quit() end
 
     -- Mouse
     love.graphics.draw(mouse[mouseMode], xM, yM, 0, SPRSCL, SPRSCL, mouse[mouseMode]:getWidth() * mCentered, mouse[mouseMode]:getHeight() * mCentered)

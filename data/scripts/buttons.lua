@@ -1,6 +1,4 @@
 
-BUTTON_IMAGE = love.graphics.newImage("data/images/UI/button.png")
-
 function newButton(x, y, text)
     return {x = x, y = y, text = text, animation = 0, process = processButton}
 end
@@ -24,13 +22,15 @@ function processButton(btn)
     local scale = 1 + 0.2 * btn.animation
     local offsetY = - 16 * btn.animation
 
-    SHADERS.FLASH:send("intensity", btn.animation * 0.2)
-    love.graphics.setShader(SHADERS.FLASH)
+    if btn.animation > 0.01 then
 
-    drawSprite(BUTTON_IMAGE, btn.x, btn.y + offsetY, scale, scale)
-    outlinedText(btn.x, btn.y + offsetY - 6, 2, btn.text, {255, 255, 255}, scale + 0.8, scale + 0.8, 0.5, 0.5)
+        setColor(38, 43, 68)
+        love.graphics.rectangle("fill", 0, btn.y - 32 * btn.animation, 800, 64 * btn.animation)
 
-    love.graphics.setShader()
+    end
+
+    outlinedText(btn.x, btn.y, 2, btn.text, {255, 255, 255}, scale + 0.8, scale + 0.8, 0.5, 0.5)
+
     return pressed
 end
 
