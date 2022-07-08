@@ -81,16 +81,19 @@ end
 
 -- Draw cool debug rects
 function drawCollider(collider)
-    setColor(0,0,255, 150)
     love.graphics.setLineWidth(4)
     love.graphics.rectangle("line", collider.x - collider.w * 0.5 - camera[1], collider.y - collider.h * 0.5 - camera[2], collider.w, collider.h)
-    setColor(255,255,255,255)
 end
 
 function drawColliders(colliders)
+    setColor(255,100,255, 150)
+
     for id,C in pairs(colliders) do
         drawCollider(C)
-end end
+    end
+    
+    setColor(255,255,255,255)
+end
 
 function rectCollidingCircle(rect,cX,cY,rad)
     local x = clamp(cX, rect.x - rect.w * 0.5, rect.x + rect.w * 0.5)

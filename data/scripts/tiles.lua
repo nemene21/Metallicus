@@ -30,6 +30,21 @@ function buildTilemapIndexes(tilemap)
     for id, T in pairs(tilemap.tiles) do table.insert(tilemap.indexes, id) end
 end
 
+function isSolidTile(tilemap, x, y)
+
+    local checkingSolid = false
+    local checking = tilemap.tiles[tostring(x)..","..tostring(y)]
+
+    if checking ~= nil then
+
+        checkingSolid = not (checking[1] > 3 and checking[2] > 5)
+
+    end
+
+    return checkingSolid
+
+end
+
 -- Build colliders (goes trough all tiles, places a collider on them in the tilemap.collided if they dont have a neightbour somewhere)
 function buildTilemapColliders(tilemap)
     tilemap.colliders = {}; tilemap.collidersWithFalltrough = {}
@@ -40,11 +55,9 @@ function buildTilemapColliders(tilemap)
         local pos = splitString(id,",")
         local tileX = tonumber(pos[1]); local tileY = tonumber(pos[2])
 
-        place = tilemap.tiles[tostring(tileX - 1)..","..tostring(tileY)] == nil or tilemap.tiles[tostring(tileX + 1)..","..tostring(tileY)] == nil or
-                tilemap.tiles[tostring(tileX)..","..tostring(tileY - 1)] == nil or tilemap.tiles[tostring(tileX)..","..tostring(tileY + 1)] == nil
+        place = (not isSolidTile(tilemap, tileX - 1, tileY)) or (not isSolidTile(tilemap, tileX + 1, tileY)) or (not isSolidTile(tilemap, tileX, tileY - 1)) or (not isSolidTile(tilemap, tileX, tileY + 1))
 
         if place then
-
             
             -- Is tile falltrough
             if T[1] > 3 and T[2] > 5 then

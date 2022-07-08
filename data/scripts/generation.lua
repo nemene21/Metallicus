@@ -593,7 +593,13 @@ function roomDrawBg(room)
     end
 end
 
-function roomDrawTiles(room) setColor(255,255,255); room.tilemap:draw()
+function roomDrawTiles(room)
+    
+    setColor(255,255,255)
+    
+    room.tilemap:draw()
+
+    -- drawColliders(room.tilemap.colliders)
 
     for id, F in ipairs(room.decorations.foreground) do
         
