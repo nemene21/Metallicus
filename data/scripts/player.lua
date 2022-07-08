@@ -20,9 +20,6 @@ function newPlayer(x,y,stats)
     local startingWeapon = deepcopyTable(ITEMS["bat"]); startingWeapon.amount = 1
     hotbar:addItem(startingWeapon)
 
-    local startingWeapon = deepcopyTable(ITEMS["stoneShield"]); startingWeapon.amount = 1
-    hotbar:addItem(startingWeapon)
-    
     -- Adding slots to the equipment section
     wearing = addSlot(wearing,1,0,"headArmor","headArmor","equipmentSlot")
     wearing = addSlot(wearing,1,1,"bodyArmor","bodyArmor","equipmentSlot")
@@ -100,6 +97,12 @@ function hitPlayer(player, damage, knockback)
 end
 
 function processPlayer(player)
+
+    if justPressed("1") then player.slotOn = 0 end
+    if justPressed("2") then player.slotOn = 1 end
+    if justPressed("3") then player.slotOn = 2 end
+    if justPressed("4") then player.slotOn = 3 end
+    if justPressed("5") then player.slotOn = 4 end
 
     player.knockback.x = lerp(player.knockback.x, 0, dt * 5)
     player.knockback.y = lerp(player.knockback.y, 0, dt * 5)
@@ -256,8 +259,8 @@ function processPlayer(player)
             player.justLanded = true
             if impulse > 0.1 then table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) end -- Fall particles
 
-            player.scaleY = 0.8 * impulse
-            player.scaleX = 1.2 * impulse
+            player.scaleY = 1 - 0.4 * impulse
+            player.scaleX = 1 + 0.4 * impulse
 
         end
 
@@ -512,6 +515,7 @@ function drawPlayerUI(player)
     drawSprite(HOLDING_ARROW, 42 + INVENTORY_SPACING * player.slotOn, 558, 1, 1, 0, 0)
     drawInventory(player.hotbar)
 
+
     -- Draw active item
 
     local activeItemSlot = player.wearing.slots["1,2"]
@@ -519,6 +523,8 @@ function drawPlayerUI(player)
         local activeItem = activeItemSlot.item
 
         if activeItem ~= nil then
+
+            if activeItem.alwaysActive == true then activeItem.charge = 1 end
 
             local process = ACTIVE_ITEM_PROCESSES[activeItem.effectProcess or "NONE"]
             if process ~= nil then
@@ -537,11 +543,14 @@ function drawPlayerUI(player)
 
             if activeItem.chargeSpeed == -1 and activeItem.noChargeTimer < 0 then activeItem.charge = 1 end
 
+            local used = false
             if justPressed("lshift") and activeItem.charge == 1 and activeItem.noChargeTimer < 0 then
 
                 activeItem.charge = 0
                 ACTIVE_ITEM_EFFECTS[activeItem.effect](activeItem)
                 activeItem.noChargeTimer = activeItem.noChargeTimerMax
+
+                used = true
 
             end
 
@@ -562,7 +571,7 @@ function drawPlayerUI(player)
             drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset - 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 - 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset + 3, 530 + 3, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
-            
+
             if activeItem.flashTimer > 0.2 then
 
                 love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
@@ -585,9 +594,46 @@ function drawPlayerUI(player)
             drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemAppear), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemAppear, math.sin(globalTimer * 2) * 0.2, 0)
             love.graphics.setShader()
 
+            if activeItem.amount ~= 1 then
+
+                outlinedText(730 + player.activeItemOffset - 40, 530 + 40, 3, tostring(activeItem.amount), nil, 2, 2, 0.5, 0.5)
+
+            end
+
+            if activeItem.consumedOnUse == true and used == true then
+
+                activeItem.amount = activeItem.amount - 1
+
+                if activeItem.amount == 0 then
+
+                    player.activeItemDeleted = activeItemSlot.item
+                    player.activeItemDeletedAnim = 1
+                    
+                    activeItemSlot.item = nil
+
+                end
+            
+            end
+
         else
 
             player.hasActiveItem = false
+
+        end
+
+    end
+
+    if player.activeItemDeleted ~= nil then
+
+        player.activeItemDeletedAnim = clamp(player.activeItemDeletedAnim - dt * 4, 0, 1)
+
+        local activeItem = player.activeItemDeleted
+
+        drawSprite(ITEM_IMAGES[activeItem.texture], 730 + player.activeItemOffset, 530, 3 + 0.25 * math.sin(globalTimer * 2 + 1) + activeItem.flashTimer + (1 - player.activeItemDeletedAnim), (3 + 0.25 * math.sin(globalTimer * 2 + 2) + activeItem.flashTimer) * player.activeItemDeletedAnim, math.sin(globalTimer * 2) * 0.2, 0)
+
+        if player.activeItemDeletedAnim == 0 then
+
+            player.activeItemDeleted = nil
 
         end
 

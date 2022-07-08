@@ -802,7 +802,7 @@
             "collides": false,
             "bounces": 1,
             "radius": 20,
-            "pirice": 999,
+            "pirice": 1,
             "knockback": 100,
             "burstTimer": 0,
             "burstWait": 0,
@@ -812,7 +812,7 @@
             "texture": "daggerSlash"
         },
         "stats": {
-            "dmg": 15,
+            "dmg": 22,
             "attackTime": 0.4
         },
         "maxStack": 1,
@@ -1149,7 +1149,7 @@
         "collides": true,
         "bounces": 0,
         "radius": 20,
-        "pirice": 999,
+        "pirice": 1,
         "knockback": 120,
         "burstTimer": 0,
         "burstWait": 0.1,
@@ -1159,7 +1159,7 @@
         "texture": "daggerSlash"
     },
     "stats": {
-        "dmg" : 8,
+        "dmg" : 10,
         "attackTime" : 0.8,
         "burst" : 2
     },
@@ -1179,11 +1179,58 @@
         "noChargeTimer": 0,
         "noChargeTimerMax": 3,
         "charge": 1,
-        "chargeSpeed": 400,
-        "alreadyActivated": true,
+        "chargeSpeed": 800,
+        "alreadyActivated": false,
         "flashTimer": 0,
         "stats": {
             "dmg": 50
+        },
+        "types": [
+            "item",
+            "activeItem"
+        ]
+    },
+    "jelloGrenade": {
+        "texture": "jelloGrenade",
+        "name": "Jello Grenade",
+        "rarity": "uncommon",
+        "holdMode": "hold",
+        "effectProcess": null,
+        "effect": "jelloExplosion",
+        "maxStack": 8,
+        "noChargeTimer": 0,
+        "noChargeTimerMax": 1,
+        "charge": 1,
+        "chargeSpeed": 1300,
+        "alreadyActivated" : false,
+        "alwaysActive" : true,
+        "consumedOnUse" : true,
+        "flashTimer": 0,
+        "projectile": {
+            "speed": 960,
+            "range": 99999,
+            "gravity": 200,
+            "offsetRotation": 40,
+            "collides": true,
+            "bounces": 10,
+            "pirice": 1,
+            "knockback": 150,
+            "followPlayer": 0,
+            "radius": 14,
+            "burstTimer": 0,
+            "burstWait": 0,
+            "burstsLeft": 0,
+            "amount": 1,
+            "spread": 0,
+            "sound": "slash",
+            "texture": "slimeShot",
+            "particles": "slimeShot",
+            "particlesDie": "slimeShot",
+            "particlesSpawn": "slimeShot"
+        },
+        "stats": {
+            "dmg": 30,
+            "amount" : 40
         },
         "types": [
             "item",

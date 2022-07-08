@@ -1,18 +1,20 @@
 
 -- DRAW PARTICLES
 
+OFFSET_PARTICLE_BY_CAMERA = 1
+
 function drawParticleShockwave(P,w)
 
     love.graphics.setLineStyle("rough")
 
     love.graphics.setLineWidth(w)
 
-    love.graphics.circle("line",P.x - camera[1],P.y - camera[2], w)
+    love.graphics.circle("line",P.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA,P.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA, w)
 end
 
 PARTICLE_LIGHT = love.graphics.newImage("data/images/particleLight.png")
 function drawParticleCircle(P,w)
-    love.graphics.circle("fill",P.x - camera[1],P.y - camera[2], w)
+    love.graphics.circle("fill",P.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA,P.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA, w)
 end
 
 function drawParticleCircleGlow(P,w)
@@ -20,14 +22,14 @@ function drawParticleCircleGlow(P,w)
     shine(P.x + 2, P.y + 2, w * 3 + 3, {P.color.r * 255, P.color.g * 255, P.color.b * 255, P.color.a * 255})
 
     love.graphics.setColor(P.color.r,P.color.g,P.color.b,P.color.a)
-    love.graphics.circle("fill",P.x - camera[1],P.y - camera[2], w)
+    love.graphics.circle("fill",P.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA,P.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA, w)
 
 end
 
 function drawParticleSquare(P,data)
     local w = P.width
     local offset = w * 0.5
-    love.graphics.rectangle("fill",P.x - offset - camera[1],P.y - offset - camera[2], w, w)
+    love.graphics.rectangle("fill",P.x - offset - camera[1] * OFFSET_PARTICLE_BY_CAMERA,P.y - offset - camera[2] * OFFSET_PARTICLE_BY_CAMERA, w, w)
 end
 
 function drawParticleSpark(P,data)
@@ -36,10 +38,10 @@ function drawParticleSpark(P,data)
     point1:rotate(P.vel:getRot()); point2:rotate(P.vel:getRot()); point3:rotate(P.vel:getRot()); point4:rotate(P.vel:getRot())
 
     love.graphics.polygon("fill",{
-                                point1.x - camera[1] + P.x, point1.y - camera[2] + P.y, 
-                                point2.x - camera[1] + P.x, point2.y - camera[2] + P.y, 
-                                point3.x - camera[1] + P.x, point3.y - camera[2] + P.y, 
-                                point4.x - camera[1] + P.x, point4.y - camera[2] + P.y})
+                                point1.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA + P.x, point1.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA + P.y, 
+                                point2.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA + P.x, point2.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA + P.y, 
+                                point3.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA + P.x, point3.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA + P.y, 
+                                point4.x - camera[1] * OFFSET_PARTICLE_BY_CAMERA + P.x, point4.y - camera[2] * OFFSET_PARTICLE_BY_CAMERA + P.y})
 end
 
 DRAWS = {
@@ -139,6 +141,8 @@ function processParticleSystems()
     love.graphics.setCanvas(particleCanvas)
 
     for id, particleSystem in ipairs(ALL_PARTICLES) do
+
+        OFFSET_PARTICLE_BY_CAMERA = particleSystem.offsetByCamera or 1
 
         particleSystem.timer = particleSystem.timer - dt
     

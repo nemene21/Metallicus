@@ -84,14 +84,14 @@ cave = {
 
     foreground = {
 
-        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 3, 40, {0.5, 0}, 0.2, 0.5, nil, nil, "WAVE")
+        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 2, 50, {0.5, 0}, 0.2, 0.5, nil, nil, "WAVE")
 
     }
     },
 
     ambientLight = {50, 50, 50},
 
-    layoutPath = "data/layouts/cave/", nLayouts = 2,
+    layoutPath = "data/layouts/cave/", nLayouts = 5,
 
     ambientParticles = "data/particles/ambient/waterDrops.json", particleOffset = newVec(0, - 350),
 
@@ -131,7 +131,7 @@ sporeCavern = {
     }
     },
     
-    layoutPath = "data/layouts/cave/", nLayouts = 2,
+    layoutPath = "data/layouts/cave/", nLayouts = 5,
     
     ambientParticles = "data/particles/ambient/spores.json",
     
@@ -192,8 +192,10 @@ function generate(amount, biome)
                 end
 
             else
-                layout = biome.layoutPath..tostring(love.math.random(1,biome.nLayouts + 1))..".json"
+                layout = biome.layoutPath..tostring(love.math.random(1, biome.nLayouts))..".json"
         end end
+
+        print(layout)
 
         if firstRoomEver then
 

@@ -308,7 +308,7 @@ ENEMY_PROJECTILE_PARTICLES["mediumOrb"].particleData.width.b = 20
 -- Init
 function newEnemyProjectile(img, pos, speed, dir, radius, damage, glowColor)
     local projectile = {
-        animation = 0, draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
+        dead = false, animation = 0, draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
     }
 
     if ENEMY_PROJECTILE_PARTICLES[img] ~= nil then projectile.spawnParticles = newParticleSystem(pos.x, pos.y, deepcopyTable(ENEMY_PROJECTILE_PARTICLES[img])); projectile.spawnParticles.following = true end
@@ -363,9 +363,20 @@ function processEnemyProjectiles(enemyProjectiles)
 
             end
 
-        else if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id) end
+        else if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then
+            
+            table.insert(kill, id)
+
+        else if P.dead then
+
+            shock(P.pos.x, P.pos.y, 0.2, 0.025, 0.35)
+
+            table.insert(kill, id)
+
+            table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
+            table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))  
         
-        end
+        end end end
 
     end enemyProjectiles = wipeKill(kill,enemyProjectiles)
 end
