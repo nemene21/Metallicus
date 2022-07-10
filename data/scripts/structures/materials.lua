@@ -99,11 +99,11 @@ function newRock(x, y)
 end
     
 function newWood(x, y)
-    return newMaterial(x, y, "wood", {wood = 350}, "hitOre")
+    return newMaterial(x, y, "wood", {wood = 350}, "hitWood")
 end
     
 function newShroomOre(x, y)
-    return newMaterial(x, y, "shroomOre", {shroomOre = 350}, "hitOre")
+    return newMaterial(x, y, "shroomOre", {shroomOre = 350}, "hitShroom")
 end
     
 MATERIAL_CONSTRUCTORS = {

@@ -181,25 +181,35 @@ function processAnvil(anvil)
 
                     drawTooltip(ITEMS[S.name])
 
-                    if mouseJustPressed(1) and (S.craftable or infiniteMaterials) then -- I pressed
-                        
-                        S.scale = 1.4
+                    if mouseJustPressed(1) then -- I pressed
 
-                        -- Give the item
-                        local item = ITEMS[S.name]; item.amount = S.amount
+                        if S.craftable or infiniteMaterials then
 
-                        item = player.hotbar:addItem(item)
+                            playSound("craft", love.math.random(90, 110) * 0.01)
+                            
+                            S.scale = 1.4
 
-                        if item.amount ~= 0 then player.inventory:addItem(item) end
+                            -- Give the item
+                            local item = ITEMS[S.name]; item.amount = S.amount
 
-                        if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 24 * (boolToInt(player.collider.x - camera[1] < xM) * 2 - 1), player.collider.y, item)) end
-                        
-                        -- Remove the requrements
+                            item = player.hotbar:addItem(item)
 
-                        if not infiniteMaterials then anvil:take(id) end
+                            if item.amount ~= 0 then player.inventory:addItem(item) end
 
-                        -- Cheeck crafts again
-                        anvil:checkCrafts()
+                            if item.amount ~= 0 then table.insert(ROOM.items, newItem(player.collider.x + 24 * (boolToInt(player.collider.x - camera[1] < xM) * 2 - 1), player.collider.y, item)) end
+                            
+                            -- Remove the requrements
+
+                            if not infiniteMaterials then anvil:take(id) end
+
+                            -- Cheeck crafts again
+                            anvil:checkCrafts()
+
+                        else
+
+                            playSound("cantCraft", love.math.random(90, 110) * 0.01)
+
+                        end
                     end
 
                 else

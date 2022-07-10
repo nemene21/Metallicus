@@ -408,8 +408,10 @@ function MODE_SLASH(player,headed,item)
             local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
+            if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
+
             shake(3, 1, 0.15, rotation)
-            if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+            if item.projectile.sound ~= nil then playSound(item.projectile.sound, (item.projectile.soundPitch or 1) + love.math.random(-20, 20) * 0.01) end
 
             projectile.homingRange = item.projectile.homingRange
 
@@ -487,7 +489,7 @@ function MODE_SHOOT(player,headed,item)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
             shake(3, 1, 0.15, rotation)
-            if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+            if item.projectile.sound ~= nil then playSound(item.projectile.sound, (item.projectile.soundPitch or 1) + love.math.random(-20, 20) * 0.01) end
 
             projectile.homingRange = item.projectile.homingRange
 
@@ -557,7 +559,7 @@ function MODE_BOW(player,headed,item)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
     
             shake(3, 1, 0.15, rotation)
-            if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+            if item.projectile.sound ~= nil then playSound(item.projectile.sound, (item.projectile.soundPitch or 1) + love.math.random(-20, 20) * 0.01) end
 
             projectile.homingRange = item.projectile.homingRange
     
@@ -632,8 +634,10 @@ function MODE_STAB(player,headed,item)
             local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y + 8), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y + 8, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
+            if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
+
             shake(3, 1, 0.15, rotation)
-            if item.projectile.sound ~= nil then playSound(item.projectile.sound, love.math.random(80, 120) * 0.01) end
+            if item.projectile.sound ~= nil then playSound(item.projectile.sound, (item.projectile.soundPitch or 1) + love.math.random(-20, 20) * 0.01) end
 
             projectile.homingRange = item.projectile.homingRange
 

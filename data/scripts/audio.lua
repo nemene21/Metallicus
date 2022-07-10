@@ -7,12 +7,19 @@ jump = love.audio.newSource("data/sounds/SFX/player/jump.wav", "stream"),
 talk = love.audio.newSource("data/sounds/SFX/player/talk.wav", "stream"),
 
 hitOre = love.audio.newSource("data/sounds/SFX/structures/hitOre.wav", "stream"), -- Structure sounds
+hitWood = love.audio.newSource("data/sounds/SFX/structures/hitWood.wav", "stream"),
+hitShroom = love.audio.newSource("data/sounds/SFX/structures/hitShroom.wav", "stream"),
+
 teleport = love.audio.newSource("data/sounds/SFX/structures/teleport.wav", "stream"),
+
+craft = love.audio.newSource("data/sounds/SFX/structures/craft.wav", "stream"),
+cantCraft = love.audio.newSource("data/sounds/SFX/structures/cantCraft.wav", "stream"),
 
 inventoryClick = love.audio.newSource("data/sounds/SFX/inventory/tick.wav", "stream"), -- Inventory sounds
 scroll = love.audio.newSource("data/sounds/SFX/inventory/scroll.wav", "stream"), 
 
-slash = love.audio.newSource("data/sounds/SFX/slash.wav", "stream"), -- Item sounds
+shoot = love.audio.newSource("data/sounds/SFX/shoot.wav", "stream"), -- Item sounds
+slash = love.audio.newSource("data/sounds/SFX/slash.wav", "stream"),
 
 pickup = love.audio.newSource("data/sounds/SFX/inventory/pickup.wav", "stream"),
 
@@ -67,7 +74,7 @@ function switchTracks()
 end
     
 function playSound(string, pitch, maxPlays, vol)
-    if (maxPlays or 8) > SOUNDS_NUM_PLAYING[string]  then
+    if (maxPlays or 12) > SOUNDS_NUM_PLAYING[string]  then
         local pitch = pitch or 1
         local NEW_SOUND = SOUNDS[string]:clone(); NEW_SOUND:setPitch(pitch); NEW_SOUND:setVolume((vol or 1) * MASTER_VOLUME * SFX_VOLUME); NEW_SOUND:play()
         table.insert(SOUNDS_PLAYING,{NEW_SOUND, string})

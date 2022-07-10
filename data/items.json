@@ -101,7 +101,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 6,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "woodenArrow",
             "particlesDie": "arrow",
             "particles": "arrowTrail"
@@ -187,7 +187,7 @@
             "burstsLeft": 0,
             "amount": 1,
             "spread": 0,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "slimeShot",
             "particles": "slimeShot",
             "particlesDie": "slimeShot",
@@ -231,7 +231,7 @@
             "burstsLeft": 0,
             "amount": 1,
             "spread": 4,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "lightShot",
             "particles": "lightShot",
             "particlesDie": "lightShot",
@@ -277,7 +277,7 @@
             "burstsLeft": 0,
             "amount": 1,
             "spread": 45,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "boneShot",
             "particles": "boneShot",
             "particlesDie": "boneShot",
@@ -321,7 +321,7 @@
             "burstsLeft": 0,
             "amount": 1,
             "spread": 0,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "mushboomShot",
             "particles": "mushboomShot",
             "particlesDie": "mushboomDie",
@@ -371,7 +371,7 @@
             "amount": 1,
             "spread": 0,
             "homingRange": 164,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "starShot",
             "particles": "starShot",
             "particlesDie": "starShot",
@@ -415,7 +415,7 @@
             "burstsLeft": 0,
             "amount": 1,
             "spread": 0,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "crystalShot",
             "particles": "crystalShot",
             "particlesDie": "crystalShot",
@@ -459,7 +459,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 45,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "bullet",
             "particlesSpawn": "bullet"
         },
@@ -501,7 +501,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 2,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "woodenArrow",
             "particlesDie": "arrow",
             "particles": "arrowTrail"
@@ -543,7 +543,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 25,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "woodenArrow",
             "particlesDie": "arrow",
             "particles": "arrowTrail"
@@ -586,7 +586,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 2,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "boneArrow",
             "particlesDie": "arrow",
             "particles": "arrowTrail"
@@ -628,7 +628,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 2,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "flydustArrow",
             "particlesDie": "arrow",
             "particles": "arrowTrail"
@@ -670,7 +670,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 2,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "shroomArrow",
             "particlesDie": "mushboom",
             "particles": "mushboomShot"
@@ -721,6 +721,7 @@
             "burstsLeft": 0,
             "spread": 4,
             "sound": "slash",
+            "soundPitch" : 0.6,
             "texture": "basicSlash"
         },
         "stats": {
@@ -809,7 +810,8 @@
             "burstsLeft": 0,
             "spread": 30,
             "sound": "slash",
-            "texture": "daggerSlash"
+            "texture": "daggerSlash",
+            "particlesDie": "stab"
         },
         "stats": {
             "dmg": 22,
@@ -852,7 +854,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 4,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "basicSlash"
         },
         "stats": {
@@ -896,7 +898,7 @@
             "burstWait": 0,
             "burstsLeft": 0,
             "spread": 4,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "basicSlash"
         },
         "stats": {
@@ -1156,10 +1158,12 @@
         "burstsLeft": 0,
         "spread": 4,
         "sound": "slash",
-        "texture": "daggerSlash"
+        "soundPitch" : 0.75,
+        "texture": "daggerSlash",
+        "particlesDie": "stab"
     },
     "stats": {
-        "dmg" : 10,
+        "dmg" : 8,
         "attackTime" : 0.8,
         "burst" : 2
     },
@@ -1212,7 +1216,7 @@
             "gravity": 200,
             "offsetRotation": 40,
             "collides": true,
-            "bounces": 10,
+            "bounces": 12,
             "pirice": 1,
             "knockback": 150,
             "followPlayer": 0,
@@ -1222,14 +1226,14 @@
             "burstsLeft": 0,
             "amount": 1,
             "spread": 0,
-            "sound": "slash",
+            "sound": "shoot",
             "texture": "slimeShot",
             "particles": "slimeShot",
             "particlesDie": "slimeShot",
             "particlesSpawn": "slimeShot"
         },
         "stats": {
-            "dmg": 30,
+            "dmg": 24,
             "amount" : 40
         },
         "types": [

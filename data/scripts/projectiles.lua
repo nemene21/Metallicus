@@ -55,7 +55,9 @@ crystalShot = loadJson("data/particles/playerProjectiles/crystalShotDie.json"),
 
 boneShot = loadJson("data/particles/playerProjectiles/boneShotDie.json"),
 
-lightShot = loadJson("data/particles/playerProjectiles/lightShotDie.json")
+lightShot = loadJson("data/particles/playerProjectiles/lightShotDie.json"),
+
+stab = loadJson("data/particles/playerProjectiles/stabDie.json")
 }
 
 -- Init
