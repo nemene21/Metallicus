@@ -115,6 +115,8 @@ function processInventory(inventory)
 
         -- PROCESSING
 
+        S.justUpdated = false
+
         -- If getting hovered
         if S.on then
             slotHovered = S
@@ -134,6 +136,7 @@ function processInventory(inventory)
                 -- Same items, it tries to sum the items count
                     
                     S.item.amount = S.item.amount + IN_HAND.amount
+                    S.justUpdated = true
 
                     -- Over max stack, leaves the rest to the hand
                     if S.item.amount > S.item.maxStack then
@@ -151,6 +154,8 @@ function processInventory(inventory)
                     hold = S.item
                     S.item = IN_HAND
                     IN_HAND = hold
+
+                    S.justUpdated = true
                 end end
                 
                 else
@@ -159,12 +164,16 @@ function processInventory(inventory)
                         hold = S.item
                         S.item = IN_HAND
                         IN_HAND = hold
+
+                        S.justUpdated = true
                     
                     -- Hand not empty, it switches
                     else if elementIndex(IN_HAND.types,S.type) ~= -1 then
                         hold = S.item
                         S.item = IN_HAND
                         IN_HAND = hold
+
+                        S.justUpdated = true
                     end end
                 end
             end
@@ -185,6 +194,8 @@ function processInventory(inventory)
                     IN_HAND = deepcopyTable(S.item); IN_HAND.amount = left
                     S.item.amount = half
 
+                    S.justUpdated = true
+
                 end end
 
                 else
@@ -195,12 +206,16 @@ function processInventory(inventory)
                         S.item.amount = 1
 
                         IN_HAND.amount = IN_HAND.amount - 1
+
+                        S.justUpdated = true
                     end
                     -- If hand is not empty and the slot is not empty and their name is the same, place one item in the slot
                     else if S.item.amount ~= S.item.maxStack and S.item.name == IN_HAND.name then
                         S.item.amount = S.item.amount + 1
 
                         IN_HAND.amount = IN_HAND.amount - 1
+
+                        S.justUpdated = true
                     end end
                 end
             end

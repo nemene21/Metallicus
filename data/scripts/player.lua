@@ -533,7 +533,7 @@ function drawPlayerUI(player)
 
             end
 
-            if player.hasActiveItem == false then
+            if player.hasActiveItem == false or activeItemSlot.justUpdated then
 
                 player.hasActiveItem = true
 
