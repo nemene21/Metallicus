@@ -825,7 +825,11 @@ function roomProcessItems(room)
         if rectCollidingCircle(player.collider, I.pos.x, I.pos.y, 8) then 
             
             local startAmount = I.data.amount
-            I.data = player.hotbar:addItem(I.data)
+            I.data = player.hotbar:convenientlyAddItem(I.data)
+
+            if I.data.amount ~= 0 then I.data = player.inventory:convenientlyAddItem(I.data) end
+
+            if I.data.amount ~= 0 then I.data = player.hotbar:addItem(I.data) end
 
             if I.data.amount ~= 0 then I.data = player.inventory:addItem(I.data) end
 

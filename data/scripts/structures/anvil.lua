@@ -192,7 +192,11 @@ function processAnvil(anvil)
                             -- Give the item
                             local item = ITEMS[S.name]; item.amount = S.amount
 
-                            item = player.hotbar:addItem(item)
+                            item = player.hotbar:convenientlyAddItem(item)
+
+                            if item.amount ~= 0 then player.inventory:convenientlyAddItem(item) end
+
+                            if item.amount ~= 0 then player.hotbar:addItem(item) end
 
                             if item.amount ~= 0 then player.inventory:addItem(item) end
 

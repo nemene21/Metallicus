@@ -10,7 +10,7 @@ for id,I in pairs(ITEMS) do I.amount = 1; I.index = id end
 
 -- Init
 function newInventory(ox,oy,w,h,image)
-    local inventory = {hovered = false, addItem = inventoryAddItem, x=ox,y=oy,slots={},slotIndexes={}}
+    local inventory = {hovered = false, addItem = inventoryAddItem, convenientlyAddItem = inventoryConvenientlyAddItem, x=ox,y=oy,slots={},slotIndexes={}}
     local image = image or "slot"
 
     for y=0,h-1 do
@@ -56,6 +56,42 @@ function inventoryAddItem(inventory, item)
             end
 
         end end
+
+        inventory.slots[id] = S
+
+        if item.amount == 0 then break end
+
+    end
+
+    return item
+end
+
+function inventoryConvenientlyAddItem(inventory, item)
+    inventory.justUpdated = true
+
+    for id, S in ipairs(inventory.slotIndexes) do
+        id = S; S = inventory.slots[S]
+
+        if S.item ~= nil then
+
+            if S.item.index == item.index then
+
+                S.item.amount = S.item.amount + item.amount
+                
+                if S.item.amount > S.item.maxStack then
+
+                    item.amount = S.item.amount - S.item.maxStack
+                    S.item.amount = S.item.maxStack
+
+                else
+
+                    item.amount = 0
+
+                end
+
+            end
+            
+        end
 
         inventory.slots[id] = S
 
