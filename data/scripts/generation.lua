@@ -202,7 +202,7 @@ function generate(amount, biome)
             firstRoomEver = false
             layout = "data/layouts/firstRoom.json"
 
-            table.insert(room.structures, newTextDisplayer(400, 250, "A and S to move"))
+            table.insert(room.structures, newTextDisplayer(400, 250, "A and D to move"))
             table.insert(room.structures, newTextDisplayer(400, 350, "Space and right click to jump and dash!"))
 
             playSound("enter")

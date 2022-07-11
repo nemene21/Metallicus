@@ -65,6 +65,11 @@
     "amount" : 1
 },
 {
+    "name" : "glowSaber",
+    "materials" : [["stick", 4], ["glowDrop", 8]],
+    "amount" : 1
+},
+{
     "name" : "rodOfLight",
     "materials" : [["stick", 4], ["glowDrop", 8]],
     "amount" : 1

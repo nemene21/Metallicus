@@ -4,6 +4,7 @@
 PLAYER_PROJECTILE_IMAGES = {
 basicSlash = loadSpritesheet("data/images/projectiles/player/basicSlash.png",24,16),
 daggerSlash = loadSpritesheet("data/images/projectiles/player/daggerSlash.png",24,12),
+glowStab = loadSpritesheet("data/images/projectiles/player/glowStab.png",24,12),
 
 slimeShot = loadSpritesheet("data/images/projectiles/player/slimeShot.png",8,8),
 crystalShot = loadSpritesheet("data/images/projectiles/player/crystalShot.png",8,6),
@@ -57,7 +58,9 @@ boneShot = loadJson("data/particles/playerProjectiles/boneShotDie.json"),
 
 lightShot = loadJson("data/particles/playerProjectiles/lightShotDie.json"),
 
-stab = loadJson("data/particles/playerProjectiles/stabDie.json")
+stab = loadJson("data/particles/playerProjectiles/stabDie.json"),
+glowStabSpawn = loadJson("data/particles/playerProjectiles/glowStabSpawn.json"),
+glowStabDie = loadJson("data/particles/playerProjectiles/glowStabDie.json")
 }
 
 -- Init

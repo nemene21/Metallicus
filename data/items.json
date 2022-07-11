@@ -96,7 +96,7 @@
             "pirice": 1,
             "knockback": 150,
             "followPlayer": 0,
-            "radius": 8,
+            "radius": 16,
             "burstTimer": 0,
             "burstWait": 0,
             "burstsLeft": 0,
@@ -1150,7 +1150,7 @@
         "followPlayer": 1,
         "collides": true,
         "bounces": 0,
-        "radius": 20,
+        "radius": 16,
         "pirice": 1,
         "knockback": 120,
         "burstTimer": 0,
@@ -1163,7 +1163,7 @@
         "particlesDie": "stab"
     },
     "stats": {
-        "dmg" : 8,
+        "dmg" : 12,
         "attackTime" : 0.8,
         "burst" : 2
     },
@@ -1239,6 +1239,53 @@
         "types": [
             "item",
             "activeItem"
+        ]
+    },
+    "glowSaber": {
+        "texture": "glowSaber",
+        "name": "Glow Saber",
+        "rarity": "uncommon",
+        "holdMode": "slash",
+        "armRTaken": true,
+        "armLTaken": false,
+        "holdData": {
+            "attackTimer": 0,
+            "rotation": 90,
+            "rotateTo": 90,
+            "roatationDefault": 90,
+            "turnTo": -1,
+            "distance": 28,
+            "flip": -1,
+            "spriteRotateTo": 0,
+            "spriteRotation": 0
+        },
+        "damageType": "meleeDamage",
+        "projectile": {
+            "speed": 1000,
+            "range": 400,
+            "followPlayer": 1,
+            "collides": true,
+            "bounces": 0,
+            "radius": 30,
+            "pirice": 1,
+            "knockback": 300,
+            "burstTimer": 0,
+            "burstWait": 0.15,
+            "burstSpread" : 33,
+            "burstsLeft": 0,
+            "spread": 0,
+            "sound": "slash",
+            "texture": "glowStab",
+            "particlesSpawn" : "glowStabSpawn",
+            "particlesDie" : "glowStabDie"
+        },
+        "stats": {
+            "dmg": 6,
+            "attackTime": 1, "burst" : 3, "light" : 50
+        },
+        "maxStack": 1,
+        "types": [
+            "item"
         ]
     }
 }

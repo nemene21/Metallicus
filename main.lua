@@ -178,7 +178,7 @@ function love.draw()
     xM = xM - (w*0.5-dw*0.5*displayScale)
     yM = yM - (h*0.5-dh*0.5*displayScale)
     xM = xM/displayScale; yM = yM/displayScale
-
+ 
     -- Bg and canvas resetting
     love.graphics.setCanvas(UI_LAYER)
     love.graphics.clear(0,0,0,0)

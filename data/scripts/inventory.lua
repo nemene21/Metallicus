@@ -441,10 +441,16 @@ function MODE_SLASH(player,headed,item)
 
             local pos = newVec(item.holdData.distance + 24, 0); pos:rotate(rotation + 180)
 
-            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
+            local projectile =  newPlayerProjectile(item.projectile.texture, PLAYER_PROJECTILE_IMAGES[item.projectile.texture].w, "sine", newVec(player.collider.x + pos.x, player.collider.y + pos.y), item.projectile.gravity, item.projectile.speed, rotation + love.math.random(-item.projectile.spread, item.projectile.spread) + ((item.projectile.burstSpread or 0) * (math.sin(1.57 * item.projectile.burstsLeft / (item.stats.burst or 1)) - 0.5) * item.holdData.turnTo * - 1), round(item.stats.dmg * multiplier), item.projectile.range, item.projectile.followPlayer, item.projectile.radius, item.projectile.pirice, item.projectile.knockback, item.projectile.collides, item.projectile.bounces)
             if item.projectile.particles ~= nil then projectile.particles = newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES[item.projectile.particles])) end
 
             if item.projectile.particlesDie ~= nil then projectile.particlesDie = item.projectile.particlesDie end
+
+            if item.projectile.particlesSpawn ~= nil then
+            
+                table.insert(ROOM.particleSystems, newParticleSystem(player.collider.x + pos.x, player.collider.y + pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[item.projectile.particlesSpawn])))
+                
+            end
 
             shake(3, 1, 0.15, rotation)
             if item.projectile.sound ~= nil then playSound(item.projectile.sound, (item.projectile.soundPitch or 1) + love.math.random(-20, 20) * 0.01) end
