@@ -507,7 +507,7 @@
             "particles": "arrowTrail"
         },
         "stats": {
-            "dmg": 22,
+            "dmg": 25,
             "attackTime": 0.5
         },
         "types": [
@@ -592,7 +592,7 @@
             "particles": "arrowTrail"
         },
         "stats": {
-            "dmg": 25,
+            "dmg": 22,
             "attackTime": 0.5
         },
         "types": [
@@ -676,12 +676,12 @@
             "particles": "mushboomShot"
         },
         "explosion": {
-            "dmg": 15,
+            "dmg": 20,
             "radius": 96,
             "particles": "mushboomExplosion"
         },
         "stats": {
-            "dmg": 15,
+            "dmg": 8,
             "attackTime": 0.5
         },
         "types": [
@@ -1239,6 +1239,39 @@
         "types": [
             "item",
             "activeItem"
+        ]
+    },
+    "shroomKettleHelmet": {
+        "texture": "shroomKettleHelmet",
+        "name": "Shroom Kettle Helmet",
+        "rarity": "uncommon",
+        "holdMode": "hold",
+        "stats": {
+            "def": 10,
+            "rangedDamage": 5
+        },
+        "yOffset": -12,
+        "maxStack": 1,
+        "types": [
+            "item",
+            "headArmor"
+        ]
+    },
+    "shroomCape": {
+        "texture": "shroomCape",
+        "name": "Shroom Cape",
+        "rarity": "rare",
+        "holdMode": "hold",
+        "xOffset" : -9,
+        "yOffset" : 3,
+        "stats": {
+            "def": 15,
+            "rangedDamage": 10
+        },
+        "maxStack": 1,
+        "types": [
+            "item",
+            "bodyArmor"
         ]
     },
     "glowSaber": {

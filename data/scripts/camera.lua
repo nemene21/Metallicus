@@ -54,9 +54,9 @@ function processCamera()
 
     camera[1] = lerp(camera[1],boundCamPos[1], dt*lerpSpeed)
     camera[2] = lerp(camera[2],boundCamPos[2], dt*lerpSpeed)
-
-    screenshake[1] = lerp(lastScreenshake[1], boundScreenshake[1], shakeTimer.time / shakeTimer.timeMax)
-    screenshake[2] = lerp(lastScreenshake[2], boundScreenshake[2], shakeTimer.time / shakeTimer.timeMax)
+    
+    screenshake[1] = boundScreenshake[1] * math.sin(3.14 * shakeTimer.time / shakeTimer.timeMax)
+    screenshake[2] = boundScreenshake[2] * math.sin(3.14 * shakeTimer.time / shakeTimer.timeMax)
 
 end
 
