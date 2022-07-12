@@ -1106,7 +1106,7 @@
         "rarity": "uncommon",
         "holdMode": "hold",
         "stats": {
-            "def": 10,
+            "def": 5,
             "rangedDamage": 5
         },
         "yOffset": -9,
@@ -1248,7 +1248,7 @@
         "holdMode": "hold",
         "stats": {
             "def": 10,
-            "rangedDamage": 5
+            "rangedDamage": 15
         },
         "yOffset": -12,
         "maxStack": 1,
@@ -1265,8 +1265,8 @@
         "xOffset" : -9,
         "yOffset" : 3,
         "stats": {
-            "def": 15,
-            "rangedDamage": 10
+            "def": 20,
+            "rangedDamage": 20
         },
         "maxStack": 1,
         "types": [
