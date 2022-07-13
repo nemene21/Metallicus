@@ -213,7 +213,7 @@ function love.draw()
     love.graphics.setCanvas(postProCanvas)
     love.graphics.setShader(SHADERS[postPro])
 
-    love.graphics.draw(display)
+    love.graphics.draw(display, screenshake[1], screenshake[2], math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008)
 
     love.graphics.setShader()
     
@@ -234,7 +234,7 @@ function love.draw()
  
     local displayScaleNow = displayScale * zoomInEffect
 
-    love.graphics.draw(postProCanvas, w * 0.5 + screenshake[1] * displayScaleNow, h * 0.5 + screenshake[2] * displayScaleNow, math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008, displayScaleNow, displayScaleNow, postProCanvas:getWidth() * 0.5, postProCanvas:getHeight() * 0.5)
+    love.graphics.draw(postProCanvas, w * 0.5, h * 0.5, 0, displayScaleNow, displayScaleNow, postProCanvas:getWidth() * 0.5, postProCanvas:getHeight() * 0.5)
 
     love.graphics.setColor(1,1,1)
 

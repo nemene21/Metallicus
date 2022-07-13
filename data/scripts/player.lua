@@ -387,7 +387,7 @@ function changeStat(player, S, way)
 
         way = way or 1
 
-        player.damageReduction = player.damageReduction - (S.item.stats.def or 0) * way
+        player.damageReduction = player.damageReduction + (S.item.stats.def or 0) * way
 
         player.lightScale = player.lightScale + (S.item.stats.light or 0) * way
 
