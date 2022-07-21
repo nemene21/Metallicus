@@ -168,7 +168,7 @@ function game()
 
         -- Earthquake
         timeUntillQuake = timeUntillQuake - dt
-        if timeUntillQuake < 0 and quakeWarnings ~= 0 then
+        if timeUntillQuake < 0 and timeUntillQuake > -999 and quakeWarnings ~= 0 then
             
             timeUntillQuake = (18 * #ROOMS) * 0.33
             quakeWarnings = quakeWarnings - 1

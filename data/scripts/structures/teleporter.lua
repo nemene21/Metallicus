@@ -97,7 +97,108 @@ function processTeleporter(teleporter)
 
         roomOn = 1
 
-        ROOMS = generate(5,fetchNextBiome())
+        local biome = fetchNextBiome()
+        biome = BIOMES[biome]
+
+        if isBossFloor then -- GENERATE BOSS ROOM
+
+            local bossRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
+
+            -- Ambient particles
+            bossRoom.ambientParticles = newParticleSystem(0, 0, loadJson(biome.ambientParticles))
+    
+            bossRoom.particleOffset = biome.particleOffset or newVec(0, 0)
+    
+            bossRoom.playerTookHits = 0
+    
+            bossRoom.structures = {newTeleporter(560, 580, false)}
+
+            -- Layout
+
+            local levelPreset = loadJson("data/layouts/bossRoom.json")
+            bossRoom.tilemap = newTilemap(loadSpritesheet(biome.tilesetPath, 16, 16), 48, levelPreset.tiles)
+    
+            -- Place structures from the preset
+    
+            for _, S in ipairs(levelPreset.structures) do
+    
+                table.insert(bossRoom.structures, IN_ROOM_STRUCTURES[S[1]](S[2], S[3], S))
+    
+            end
+
+            local first = true -- Place edges
+            for id,T in pairs(bossRoom.tilemap.tiles) do
+    
+                -- Get pos and is tile collidable
+                local pos = splitString(id,",")
+                local tileX = tonumber(pos[1]); local tileY = tonumber(pos[2])
+                
+                if first then first = false -- Set the start value if its the first
+    
+                    bossRoom.endLeft = tileX; bossRoom.endRight = tileX
+                    bossRoom.endUp = tileY; bossRoom.endDown = tileY
+    
+                else -- Look for a record
+    
+                    if bossRoom.endUp > tileY then bossRoom.endUp = tileY end
+    
+                    if bossRoom.endDown < tileY then bossRoom.endDown = tileY end
+    
+                    if bossRoom.endLeft > tileX then bossRoom.endLeft = tileX end
+    
+                    if bossRoom.endRight < tileX then bossRoom.endRight = tileX end
+                end
+    
+            end
+
+            -- Set bg
+            bossRoom.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
+            for x=bossRoom.endLeft,bossRoom.endRight do for y=bossRoom.endUp,bossRoom.endDown do
+
+                if
+                bossRoom.tilemap:getTile(x + 1, y) == nil or
+                    bossRoom.tilemap:getTile(x - 1, y) == nil or
+                    bossRoom.tilemap:getTile(x, y + 1) == nil or
+                    bossRoom.tilemap:getTile(x, y - 1) == nil
+                then
+
+                    bossRoom.bgTilemap:setTile(x,y,{1,love.math.random(1,3)})
+
+                end
+
+            end end -- Place tiles
+
+            -- Get the edges actual position and width
+
+            bossRoom.endHeight = (bossRoom.endUp - bossRoom.endDown) * 48
+            bossRoom.endWidth = (bossRoom.endLeft - bossRoom.endRight) * 48
+
+
+            bossRoom.endLeft = newVec(bossRoom.endLeft * 48 - 48, bossRoom.endHeight * 0.5)
+
+            bossRoom.endRight = newVec(bossRoom.endRight * 48 + 96, bossRoom.endHeight * 0.5)
+
+            bossRoom.endUp = newVec(bossRoom.endWidth * 0.5, bossRoom.endUp * 48 - 48)
+
+            bossRoom.endDown = newVec(bossRoom.endWidth * 0.5, bossRoom.endDown * 48 + 96)
+
+            bossRoom.tilemap:buildColliders()
+            bossRoom.tilemap:buildIndexes()
+            bossRoom.bgTilemap:buildIndexes()
+
+            -- Place decoration
+            decorateRoom(bossRoom, biome)
+
+            ROOMS = {bossRoom} -- Construct a new room sequence that includes just the boss room
+
+            timeUntillQuake = -1000
+
+        else -- GENERATE NORMAL ROOM SEQUENCE
+
+            ROOMS = generate(5,fetchNextBiome())
+
+        end
+
         ROOM = ROOMS[roomOn]
     
         playerProjectiles = {}; enemyProjectiles = {}

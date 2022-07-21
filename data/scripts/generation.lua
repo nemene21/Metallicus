@@ -11,14 +11,25 @@ occlusion = 1
 
 LAST_ENEMY_DIE_PARTICLES = loadJson("data/particles/enemies/lastEnemyDie.json")
 
+isBossFloor = false
+
 function fetchNextBiome(degrade)
     local degrade = degrade or true
+
+    if degrade then isBossFloor = false end
 
     for id, B in ipairs(BIOME_ORDER) do
 
         if BIOME_ORDER[id][2] ~= 0 then
 
-            if degrade then BIOME_ORDER[id][2] = BIOME_ORDER[id][2] - 1 end
+            if degrade then
+                
+                BIOME_ORDER[id][2] = BIOME_ORDER[id][2] - 1
+
+                if BIOME_ORDER[id][2] == 0 then isBossFloor = true end
+            
+            end
+
             biomeOn = BIOME_ORDER[id][1]
             return BIOME_ORDER[id][1]
 
@@ -703,6 +714,7 @@ function roomProcessEnemies(room)
             if #room.enemies - #kill == 0 then
 
                 shake(20, 4, 0.1)
+                shock(E.collider.x, E.collider.y, 0.8, 0.02, 0.3)
 
                 table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(LAST_ENEMY_DIE_PARTICLES)))
 
