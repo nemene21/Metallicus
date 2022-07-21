@@ -71,7 +71,7 @@
     "quiver": {
         "texture": "quiver",
         "name": "Quiver",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "effectProcess": "projectileBurst",
         "effect": "projectileBurst",
@@ -160,7 +160,7 @@
     "jelloRod": {
         "texture": "jelloRod",
         "name": "Jello Rod",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "shoot",
         "maxStack": 1,
         "armRTaken": true,
@@ -204,7 +204,7 @@
     "rodOfLight": {
         "texture": "rodOfLight",
         "name": "Rod of Light",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "shoot",
         "maxStack": 1,
         "armRTaken": true,
@@ -249,7 +249,7 @@
     "boneRod": {
         "texture": "boneRod",
         "name": "Bone Rod",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "shoot",
         "maxStack": 1,
         "armRTaken": true,
@@ -294,7 +294,7 @@
     "mushboomRod": {
         "texture": "mushboomRod",
         "name": "Mushboom Rod",
-        "rarity": "rare",
+        "rarity": "uncommon",
         "holdMode": "shoot",
         "maxStack": 1,
         "armRTaken": true,
@@ -388,7 +388,7 @@
     "crystalRod": {
         "texture": "crystalRod",
         "name": "Crystal rod",
-        "rarity": "rare",
+        "rarity": "mythic",
         "holdMode": "shoot",
         "maxStack": 1,
         "armRTaken": true,
@@ -602,7 +602,7 @@
     "flyDustBow": {
         "texture": "flydustBow",
         "name": "Flydust Bow",
-        "rarity": "common",
+        "rarity": "uncommon",
         "holdMode": "bow",
         "maxStack": 1,
         "armRTaken": true,
@@ -691,7 +691,7 @@
     "stoneSword": {
         "texture": "stoneSword",
         "name": "Stone Sword",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "slash",
         "armRTaken": true,
         "armLTaken": false,
@@ -736,7 +736,7 @@
     "steelDagger": {
         "texture": "steelDagger",
         "name": "Steel Dagger",
-        "rarity": "uncommon",
+        "rarity": "mythic",
         "holdMode": "slash",
         "armRTaken": true,
         "armLTaken": false,
@@ -780,7 +780,7 @@
     "boneDagger": {
         "texture": "boneDagger",
         "name": "Bone Dagger",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "slash",
         "armRTaken": true,
         "armLTaken": false,
@@ -913,7 +913,7 @@
     "stoneHelmet": {
         "texture": "stoneHelmet",
         "name": "Stone Helmet",
-        "rarity": "epic",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 10,
@@ -928,7 +928,7 @@
     "stoneArmor": {
         "texture": "stoneArmor",
         "name": "Stone Armor",
-        "rarity": "rare",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 15,
@@ -943,7 +943,7 @@
     "boneHelmet": {
         "texture": "boneHelmet",
         "name": "Bone Helmet",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 15,
@@ -960,7 +960,7 @@
     "boneArmor": {
         "texture": "boneArmor",
         "name": "Bone Armor",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 20,
@@ -990,7 +990,7 @@
     "shroomArmor": {
         "texture": "shroomArmor",
         "name": "Shroom Armor",
-        "rarity": "rare",
+        "rarity": "uncommon",
         "holdMode": "hold",
         "stats": {
             "def": 30,
@@ -1005,7 +1005,7 @@
     "boneCrown": {
         "texture": "boneCrown",
         "name": "Bone Crown",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 5,
@@ -1021,7 +1021,7 @@
     "boneRobe": {
         "texture": "boneRobe",
         "name": "Bone Robe",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 15,
@@ -1054,7 +1054,7 @@
     "goldenHelmet": {
         "texture": "goldenHelmet",
         "name": "Golden Helmet",
-        "rarity": "epic",
+        "rarity": "mythic",
         "holdMode": "hold",
         "stats": {
             "def": 10,
@@ -1103,7 +1103,7 @@
     "jelloBycocket": {
         "texture": "jelloBycocket",
         "name": "Jello Bycocket",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 5,
@@ -1119,7 +1119,7 @@
     "jelloLightArmor": {
         "texture": "jelloLightArmor",
         "name": "Jelllo Light Armor",
-        "rarity": "rare",
+        "rarity": "common",
         "holdMode": "hold",
         "stats": {
             "def": 15,
@@ -1134,7 +1134,7 @@
 "shroomSpear": {
     "texture": "shroomSpear",
     "name": "Shroom Spear",
-    "rarity": "common",
+    "rarity": "uncommon",
     "holdMode": "stab",
     "armRTaken": true,
     "armLTaken": true,
@@ -1175,7 +1175,7 @@
     "stoneShield": {
         "texture": "stoneShield",
         "name": "Stone Shield",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "effectProcess": null,
         "effect": "shield",
@@ -1197,7 +1197,7 @@
     "jelloGrenade": {
         "texture": "jelloGrenade",
         "name": "Jello Grenade",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "hold",
         "effectProcess": null,
         "effect": "jelloExplosion",
@@ -1260,7 +1260,7 @@
     "shroomCape": {
         "texture": "shroomCape",
         "name": "Shroom Cape",
-        "rarity": "rare",
+        "rarity": "uncommon",
         "holdMode": "hold",
         "xOffset" : -9,
         "yOffset" : 3,
@@ -1277,7 +1277,7 @@
     "glowSaber": {
         "texture": "glowSaber",
         "name": "Glow Saber",
-        "rarity": "uncommon",
+        "rarity": "common",
         "holdMode": "slash",
         "armRTaken": true,
         "armLTaken": false,

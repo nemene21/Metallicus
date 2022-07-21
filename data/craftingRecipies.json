@@ -150,6 +150,16 @@
     "amount" : 1
 },
 {
+    "name" : "shroomKettleHelmet",
+    "materials" : [["shroomOre", 8]],
+    "amount" : 1
+},
+{
+    "name" : "shroomCape",
+    "materials" : [["shroomOre", 12]],
+    "amount" : 1
+},
+{
     "name" : "flyDustBow",
     "materials" : [["stick", 4], ["flyDust", 8]],
     "amount" : 1

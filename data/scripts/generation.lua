@@ -9,6 +9,8 @@ biomeOn = ""
 
 occlusion = 1
 
+LAST_ENEMY_DIE_PARTICLES = loadJson("data/particles/enemies/lastEnemyDie.json")
+
 function fetchNextBiome(degrade)
     local degrade = degrade or true
 
@@ -194,8 +196,6 @@ function generate(amount, biome)
             else
                 layout = biome.layoutPath..tostring(love.math.random(1, biome.nLayouts))..".json"
         end end
-
-        print(layout)
 
         if firstRoomEver then
 
@@ -643,12 +643,10 @@ function roomDrawEdge(room)
 
     -- Edge
 
-    drawSprite(EDGE_LEFT, room.endLeft.x, room.endLeft.y, 1, room.endHeight)
-    drawSprite(EDGE_RIGHT, room.endRight.x, room.endRight.y, 1, room.endHeight)
-    drawSprite(EDGE_DOWN, room.endDown.x, room.endDown.y, room.endWidth)
-    drawSprite(EDGE_UP, room.endUp.x, room.endUp.y, room.endWidth)
-
-    drawSprite(PLAYER_HEAD, room.endUp.x, room.endUp.y)
+    drawSprite(EDGE_LEFT, room.endLeft.x, room.endLeft.y + 432 * 1.5, 1, room.endHeight + 432)
+    drawSprite(EDGE_RIGHT, room.endRight.x, room.endRight.y + 432 * 1.5, 1, room.endHeight + 432)
+    drawSprite(EDGE_DOWN, room.endDown.x + 432 * 2, room.endDown.y, room.endWidth + 432)
+    drawSprite(EDGE_UP, room.endUp.x + 432 * 2, room.endUp.y, room.endWidth + 432)
 end
 
 -- Particles
@@ -703,6 +701,10 @@ function roomProcessEnemies(room)
             end
 
             if #room.enemies - #kill == 0 then
+
+                shake(20, 4, 0.1)
+
+                table.insert(room.particleSystems, newParticleSystem(E.collider.x, E.collider.y, deepcopyTable(LAST_ENEMY_DIE_PARTICLES)))
 
                 local say = {
                     {"That was easy!", "Sweeped >:D", "Wooosh!"},
