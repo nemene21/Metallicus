@@ -113,3 +113,6 @@ battlefly = buildBattlefly,
 skeletonMiner = buildSkeletonMiner
 }
 
+-- Bosses
+
+require "data.scripts.enemies.bosses.skeleton"

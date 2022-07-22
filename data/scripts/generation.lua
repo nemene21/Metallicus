@@ -13,6 +13,8 @@ LAST_ENEMY_DIE_PARTICLES = loadJson("data/particles/enemies/lastEnemyDie.json")
 
 isBossFloor = false
 
+bosses = {newSkeletonBoss()}
+
 function fetchNextBiome(degrade)
     local degrade = degrade or true
 
@@ -40,6 +42,9 @@ function fetchNextBiome(degrade)
 end
 
 function resetBiomes()
+
+    bosses = {newSkeletonBoss()}
+
     BIOME_ORDER = {
         {"cave", 2},
         {"sporeCavern", -1}
@@ -746,6 +751,13 @@ function roomProcessEnemies(room)
         end
         
     end room.enemies = wipeKill(kill,room.enemies)
+
+    if room.boss ~= nil then
+
+        room.boss.states[room.boss.state](room.boss)
+        room.boss:draw()
+
+    end
 
 end
 

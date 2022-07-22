@@ -186,6 +186,9 @@ function processTeleporter(teleporter)
             bossRoom.tilemap:buildIndexes()
             bossRoom.bgTilemap:buildIndexes()
 
+            bossRoom.boss = bosses[1]
+            table.remove(bosses, 1)
+
             -- Place decoration
             decorateRoom(bossRoom, biome)
 
