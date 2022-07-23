@@ -4,22 +4,22 @@ MATERIAL_SPRITES = {
     shroomOre = {love.graphics.newImage("data/images/structures/shroomOre1.png"),love.graphics.newImage("data/images/structures/shroomOre1.png")}
     }
     
-    DESTROY_RESOURCE_PARTICLES = loadJson("data/particles/resourceDestroyed.json")
+DESTROY_RESOURCE_PARTICLES = loadJson("data/particles/resourceDestroyed.json")
     
-    STRUCTURE_ID = 0.5
+STRUCTURE_ID = 0.5
     
-    function newMaterial(x, y, name, drops, hitSound)
-        STRUCTURE_ID = STRUCTURE_ID + 1
-        local mat = {x = x, y = y, name = name, process = processMaterial, draw = drawMaterial, hp = 50, id = STRUCTURE_ID, sprite = love.math.random(1,#MATERIAL_SPRITES[name]), hitTimer = 0, drops = drops, hitSound = hitSound}
+function newMaterial(x, y, name, drops, hitSound)
+    STRUCTURE_ID = STRUCTURE_ID + 1
+    local mat = {x = x, y = y, name = name, process = processMaterial, draw = drawMaterial, hp = 50, id = STRUCTURE_ID, sprite = love.math.random(1,#MATERIAL_SPRITES[name]), hitTimer = 0, drops = drops, hitSound = hitSound}
     
-        return mat
-    end
+    return mat
+end
     
 function processMaterial(mat)
     
     for id, P in ipairs(playerProjectiles) do
     
-        if newVec(P.pos.x - mat.x, P.pos.y - mat.y):getLen() < 36 + P.radius then
+        if newVec(P.pos.x - mat.x, P.pos.y - mat.y):getLen() < 36 + P.radius and P.hit == false then
     
             local isInHitlist = false
     
@@ -28,6 +28,8 @@ function processMaterial(mat)
             end
     
             if not isInHitlist then
+
+                P.hit = true
     
                 playSound(mat.hitSound, love.math.random(80, 120) * 0.01)
 

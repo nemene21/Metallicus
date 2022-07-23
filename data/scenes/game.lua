@@ -276,8 +276,7 @@ function game()
     mouseRot = lerp(mouseRot, 0, dt * 12)
 
     love.graphics.draw(mouse[mouseMode], xM, yM, mouseRot, SPRSCL * mouseScale, SPRSCL * mouseScale, mouse[mouseMode]:getWidth() * mCentered, mouse[mouseMode]:getHeight() * mCentered)
-    
-    --print(attackMouseLine)
+
     if attackMouseLine ~= nil and not player.inventoryOpen then
 
         love.graphics.setLineWidth(5)
@@ -291,8 +290,7 @@ function game()
         setColor(255, 255, 255)
         love.graphics.line(xM - 12, yM + 24, xM - 12 + 24 * attackMouseLine, yM + 24)
 
-    end
-    
+    end    
     
     love.graphics.setCanvas(display)
 
@@ -315,7 +313,7 @@ function swtichRoom(num)
     if num > 0 then
         player.collider.x = ROOM.entranceParticles.x + 32; player.collider.y = ROOM.entranceParticles.y + 48
     else if num < 0 then
-        player.collider.x = ROOM.exitParticles.x - 32; player.collider.y = ROOM.exitParticles.y + 48
+        player.collider.x = ROOM.exitParticles.x - 36; player.collider.y = ROOM.exitParticles.y + 48
     end end
 
     camera[1] = player.collider.x; camera[2] = player.collider.y - 300

@@ -663,6 +663,16 @@ function roomDrawEdge(room)
     drawSprite(EDGE_RIGHT, room.endRight.x, room.endRight.y + 432 * 1.5, 1, room.endHeight + 432)
     drawSprite(EDGE_DOWN, room.endDown.x + 432 * 2, room.endDown.y, room.endWidth + 432)
     drawSprite(EDGE_UP, room.endUp.x + 432 * 2, room.endUp.y, room.endWidth + 432)
+
+    if ROOM.boss ~= nil then
+
+        love.graphics.setCanvas(UI_LAYER)
+        
+        ROOM.boss:drawBar()
+
+        love.graphics.setCanvas(display)
+    
+    end
 end
 
 -- Particles

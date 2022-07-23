@@ -12,11 +12,16 @@ function newSkeletonBoss()
         state = 1,
 
         draw = drawSkeletonBoss,
+        drawBar = drawBossBarDefault,
 
         pos = newVec(300, 300),
 
         handSlamPos = newVec(330, 330),
-        handShootPos = newVec(270, 330)
+        handShootPos = newVec(270, 330),
+
+        hp = 1500,
+
+        hitbox = newRect(300, 300, 96, 96)
 
     }
 
@@ -30,6 +35,9 @@ function steletonBossAttack2Hands(boss)
 
     boss.handShootPos.x = lerp(boss.handShootPos.x, boss.pos.x - 64, dt * 5)
 
+    boss.hitbox.x = boss.pos.x
+    boss.hitbox.y = boss.pos.y
+
 end
 
 function drawSkeletonBoss(boss)
@@ -38,5 +46,7 @@ function drawSkeletonBoss(boss)
 
     drawSprite(SKELETON_BOSS_ARM_SLAM, boss.handSlamPos.x, boss.handSlamPos.y)
     drawSprite(SKELETON_BOSS_ARM_SHOOT, boss.handShootPos.x, boss.handShootPos.y)
+
+    drawCollider(boss.hitbox)
 
 end

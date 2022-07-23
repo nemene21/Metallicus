@@ -91,6 +91,7 @@ end
 
 -- Processing
 function processPlayerProjectile(projectile)
+
     projectile.lifetime = projectile.lifetime - dt
 
     projectile.vel.y = projectile.vel.y + projectile.gravity * dt
@@ -169,6 +170,8 @@ function processPlayerProjectiles(playerProjectiles)
     setColor(255,255,255); kill = {}
     for id,P in ipairs(playerProjectiles) do
 
+        P.hit = false
+
         if P.particles ~= nil then P.particles.x = P.pos.x; P.particles.y = P.pos.y; P.particles:process(); setColor(255,255,255) end
         P:process()
 
@@ -218,16 +221,14 @@ function processPlayerProjectiles(playerProjectiles)
 
         else
 
-            local hit = false
-
             for enemyId,E in ipairs(ROOM.enemies) do
 
                 local isInHitlist = false
                 for hitId,H in ipairs(P.hitlist) do if H == E.ID then isInHitlist = true end end
 
-                if not isInHitlist and rectCollidingCircle(E.collider,P.pos.x,P.pos.y,P.radius) and E.hp > 0 and not hit then
+                if not isInHitlist and rectCollidingCircle(E.collider,P.pos.x,P.pos.y,P.radius) and E.hp > 0 and not P.hit then
 
-                    hit = true
+                    P.hit = true
 
                     E:hit(P.damage, P.knockback, P.vel:getRot())
                     table.insert(P.hitlist, E.ID)

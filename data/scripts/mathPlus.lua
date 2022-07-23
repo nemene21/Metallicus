@@ -80,7 +80,8 @@ function moveRect(rect,motion,collidesWith)
 end
 
 -- Draw cool debug rects
-function drawCollider(collider)
+function drawCollider(collider, color)
+    local color = color or {0, 0, 255, 155}
     love.graphics.setLineWidth(4)
     love.graphics.rectangle("line", collider.x - collider.w * 0.5 - camera[1], collider.y - collider.h * 0.5 - camera[2], collider.w, collider.h)
 end

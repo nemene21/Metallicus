@@ -38,6 +38,9 @@ function processEnemy(enemy)
     enemy.knockback.x = lerp(enemy.knockback.x, 0, dt * 2)
     enemy.knockback.y = lerp(enemy.knockback.y, 0, dt * 2)
 
+    if enemy.collider.touching.x ~= 0 then enemy.knockback.x = enemy.knockback.x * -0.5 end
+    if enemy.collider.touching.y ~= 0 then enemy.knockback.y = enemy.knockback.y * -0.5 end
+
     enemy.flash = lerp(enemy.flash, 0, dt * 6)
 
     setColor(255, 255, 255)
@@ -116,3 +119,11 @@ skeletonMiner = buildSkeletonMiner
 -- Bosses
 
 require "data.scripts.enemies.bosses.skeleton"
+
+BOSS_BAR = love.graphics.newImage("data/images/UI/bossBar.png")
+
+function drawBossBarDefault()
+
+    drawSprite(BOSS_BAR, 400, 28, 1, 1, 0, 0)
+
+end
