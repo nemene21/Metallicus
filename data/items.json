@@ -726,7 +726,7 @@
         },
         "stats": {
             "dmg": 28,
-            "attackTime": 0.8
+            "attackTime": 0.4
         },
         "maxStack": 1,
         "types": [
@@ -770,7 +770,7 @@
         },
         "stats": {
             "dmg": 15,
-            "attackTime": 0.4
+            "attackTime": 0.2
         },
         "maxStack": 1,
         "types": [
@@ -815,7 +815,7 @@
         },
         "stats": {
             "dmg": 22,
-            "attackTime": 0.4
+            "attackTime": 0.2
         },
         "maxStack": 1,
         "types": [
@@ -859,7 +859,7 @@
         },
         "stats": {
             "dmg": 24,
-            "attackTime": 0.8
+            "attackTime": 0.4
         },
         "maxStack": 1,
         "types": [
@@ -903,7 +903,7 @@
         },
         "stats": {
             "dmg": 34,
-            "attackTime": 0.8
+            "attackTime": 0.4
         },
         "maxStack": 1,
         "types": [
@@ -1164,7 +1164,7 @@
     },
     "stats": {
         "dmg" : 12,
-        "attackTime" : 0.8,
+        "attackTime" : 0.4,
         "burst" : 2
     },
     "maxStack": 1,
@@ -1314,7 +1314,7 @@
         },
         "stats": {
             "dmg": 6,
-            "attackTime": 1, "burst" : 3, "light" : 50
+            "attackTime": 0.5, "burst" : 3, "light" : 50
         },
         "maxStack": 1,
         "types": [

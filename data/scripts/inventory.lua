@@ -414,9 +414,6 @@ function MODE_SLASH(player,headed,item)
     -- Rotate anchor and sprite
     item.holdData.rotation = lerp(item.holdData.rotation,item.holdData.rotateTo,dt * 8)
     item.holdData.spriteRotation = lerp(item.holdData.spriteRotation,item.holdData.spriteRotateTo,dt * 8)
-
-    -- Slash
-    item.holdData.attackTimer = item.holdData.attackTimer - dt
     
     -- Shoot
     item.holdData.attackTimer = item.holdData.attackTimer - dt
@@ -656,7 +653,6 @@ function MODE_STAB(player,headed,item)
     item.holdData.attackAnimation = lerp(item.holdData.attackAnimation, 0, dt * 6)
     
     -- Shoot
-    item.holdData.attackTimer = item.holdData.attackTimer - dt
     if (mousePressed(1) or ((joystickGetAxis(1, 3).y or 0) > 0.15)) and player.inventoryOpen ~= true and item.holdData.attackTimer < 0 then
         mouseScale = 2.5; mouseRot = 3.14
 

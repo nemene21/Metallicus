@@ -764,8 +764,49 @@ function roomProcessEnemies(room)
 
     if room.boss ~= nil then
 
+        ROOM.boss.flash = ROOM.boss.flash - dt
+
         room.boss.states[room.boss.state](room.boss)
         room.boss:draw()
+
+        for id, P in ipairs(playerProjectiles) do
+    
+            if newVec(P.pos.x -room. boss.pos.x, P.pos.y - room.boss.pos.y):getLen() < 36 + P.radius and P.hit == false then
+        
+                local isInHitlist = false
+        
+                for _, ID in ipairs(P.hitlist) do
+                    if ID == room.boss.id then isInHitlist = true end
+                end
+        
+                if not isInHitlist then
+    
+                    P.hit = true
+        
+                    playSound("basicHit", love.math.random(80, 120) * 0.01)
+    
+                    addNewText(tostring(P.damage), room.boss.pos.x + love.math.random(-24, 24), room.boss.pos.y + love.math.random(-24, 24) - 24, {255, 0, 0})
+        
+                    room.boss.hp = room.boss.hp - P.damage
+                    room.boss.flash = 1
+                    P.pirice = P.pirice - 1
+    
+                    local activeItemSlot = player.wearing.slots["1,2"]
+                    if activeItemSlot ~= nil then
+                        local activeItem = activeItemSlot.item
+                
+                        if activeItem ~= nil then
+                            activeItem.charge = clamp(activeItem.charge + P.damage / activeItem.chargeSpeed, 0, 1)
+                        end
+                    end
+        
+                    table.insert(P.hitlist, room.boss.id)
+        
+                end
+                    
+            end
+        
+        end
 
     end
 

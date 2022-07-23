@@ -19,9 +19,16 @@ function newSkeletonBoss()
         handSlamPos = newVec(330, 330),
         handShootPos = newVec(270, 330),
 
-        hp = 1500,
+        maxHp = 1500,
+        hp = 1000,
 
-        hitbox = newRect(300, 300, 96, 96)
+        barDelay = 306,
+
+        flash = 0,
+
+        hitbox = newRect(300, 300, 96, 96),
+
+        id = 3.141592
 
     }
 
@@ -42,11 +49,13 @@ end
 
 function drawSkeletonBoss(boss)
 
+    if boss.flash > 0.8 then love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1) end
+
     drawSprite(SKELETON_BOSS_HEAD, boss.pos.x, boss.pos.y)
 
     drawSprite(SKELETON_BOSS_ARM_SLAM, boss.handSlamPos.x, boss.handSlamPos.y)
     drawSprite(SKELETON_BOSS_ARM_SHOOT, boss.handShootPos.x, boss.handShootPos.y)
 
-    drawCollider(boss.hitbox)
+    love.graphics.setShader()
 
 end
