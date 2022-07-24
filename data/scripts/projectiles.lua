@@ -319,7 +319,7 @@ ENEMY_PROJECTILE_PARTICLES["mediumOrb"].particleData.width.b = 20
 -- Init
 function newEnemyProjectile(img, pos, speed, dir, radius, damage, glowColor)
     local projectile = {
-        dead = false, animation = 0, draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
+        dead = false, animation = 0, draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), acceleration = newVec(0, 0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
     }
 
     if ENEMY_PROJECTILE_PARTICLES[img] ~= nil then projectile.spawnParticles = newParticleSystem(pos.x, pos.y, deepcopyTable(ENEMY_PROJECTILE_PARTICLES[img])); projectile.spawnParticles.following = true end
@@ -336,6 +336,9 @@ function processEnemyProjectile(projectile)
 
     projectile.pos.x = projectile.pos.x + projectile.vel.x * dt
     projectile.pos.y = projectile.pos.y + projectile.vel.y * dt
+
+    projectile.vel.x = projectile.vel.x + projectile.acceleration.x * dt
+    projectile.vel.y = projectile.vel.y + projectile.acceleration.y * dt
 
     if projectile.spawnParticles ~= nil then
         projectile.spawnParticles.x = projectile.pos.x

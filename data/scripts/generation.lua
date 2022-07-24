@@ -218,6 +218,8 @@ function generate(amount, biome)
             firstRoomEver = false
             layout = "data/layouts/firstRoom.json"
 
+            --oom.boss = bosses[1]
+
             table.insert(room.structures, newTextDisplayer(400, 250, "A and D to move"))
             table.insert(room.structures, newTextDisplayer(400, 350, "Space and right click to jump and dash!"))
 
@@ -639,6 +641,8 @@ EDGE_UP = love.graphics.newImage("data/images/roomEdge/up.png")
 EDGE_DOWN = love.graphics.newImage("data/images/roomEdge/down.png")
 
 function roomDrawEdge(room)
+
+    if room.boss ~= nil then room.boss:draw() end
     
     -- Door particles
 
@@ -762,54 +766,6 @@ function roomProcessEnemies(room)
         
     end room.enemies = wipeKill(kill,room.enemies)
 
-    if room.boss ~= nil then
-
-        ROOM.boss.flash = ROOM.boss.flash - dt
-
-        room.boss.states[room.boss.state](room.boss)
-        room.boss:draw()
-
-        for id, P in ipairs(playerProjectiles) do
-    
-            if newVec(P.pos.x -room. boss.pos.x, P.pos.y - room.boss.pos.y):getLen() < 36 + P.radius and P.hit == false then
-        
-                local isInHitlist = false
-        
-                for _, ID in ipairs(P.hitlist) do
-                    if ID == room.boss.id then isInHitlist = true end
-                end
-        
-                if not isInHitlist then
-    
-                    P.hit = true
-        
-                    playSound("basicHit", love.math.random(80, 120) * 0.01)
-    
-                    addNewText(tostring(P.damage), room.boss.pos.x + love.math.random(-24, 24), room.boss.pos.y + love.math.random(-24, 24) - 24, {255, 0, 0})
-        
-                    room.boss.hp = room.boss.hp - P.damage
-                    room.boss.flash = 1
-                    P.pirice = P.pirice - 1
-    
-                    local activeItemSlot = player.wearing.slots["1,2"]
-                    if activeItemSlot ~= nil then
-                        local activeItem = activeItemSlot.item
-                
-                        if activeItem ~= nil then
-                            activeItem.charge = clamp(activeItem.charge + P.damage / activeItem.chargeSpeed, 0, 1)
-                        end
-                    end
-        
-                    table.insert(P.hitlist, room.boss.id)
-        
-                end
-                    
-            end
-        
-        end
-
-    end
-
 end
 
 -- Bodies
@@ -883,6 +839,53 @@ function processRoom(room)
         if S.dead then table.insert(kill, id) end
 
     end room.structures = wipeKill(kill, room.structures)
+
+    if room.boss ~= nil then
+
+        room.boss.flash = room.boss.flash - dt
+
+        room.boss.states[room.boss.state](room.boss)
+
+        for id, P in ipairs(playerProjectiles) do
+    
+            if rectCollidingCircle(room.boss.hitbox, P.pos.x, P.pos.y, P.radius) then
+
+                local isInHitlist = false
+        
+                for _, ID in ipairs(P.hitlist) do
+                    if ID == room.boss.id then isInHitlist = true end
+                end
+        
+                if not isInHitlist then
+    
+                    P.hit = true
+        
+                    playSound("basicHit", love.math.random(80, 120) * 0.01)
+    
+                    addNewText(tostring(P.damage), room.boss.pos.x + love.math.random(-24, 24), room.boss.pos.y + love.math.random(-24, 24) - 24, {255, 0, 0})
+        
+                    room.boss.hp = room.boss.hp - P.damage
+                    room.boss.flash = 1
+                    P.pirice = P.pirice - 1
+    
+                    local activeItemSlot = player.wearing.slots["1,2"]
+                    if activeItemSlot ~= nil then
+                        local activeItem = activeItemSlot.item
+                
+                        if activeItem ~= nil then
+                            activeItem.charge = clamp(activeItem.charge + P.damage / activeItem.chargeSpeed, 0, 1)
+                        end
+                    end
+        
+                    table.insert(P.hitlist, room.boss.id)
+        
+                end
+                    
+            end
+        
+        end
+
+    end
 
 end
 
