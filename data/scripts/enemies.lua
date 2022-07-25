@@ -127,7 +127,7 @@ function drawBossBarDefault(boss)
     drawSprite(BOSS_BAR, 400, 28, 1, 1, 0, 0)
 
     local barLenght = boss.hp / boss.maxHp * 306
-    boss.barDelay = lerp(boss.barDelay, barLenght, dt * 3)
+    if boss.flash < 0 then boss.barDelay = lerp(boss.barDelay, barLenght, dt * 3) end
 
     setColor(255, 255, 255)
     love.graphics.rectangle("fill", 247, 19, boss.barDelay, 18) -- Delayed bar
