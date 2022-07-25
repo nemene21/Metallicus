@@ -12,23 +12,28 @@ occlusion = 1
 LAST_ENEMY_DIE_PARTICLES = loadJson("data/particles/enemies/lastEnemyDie.json")
 
 isBossFloor = false
+assumedIsBossFloor = false
 
 bosses = {newSkeletonBoss()}
 
 function fetchNextBiome(degrade)
     local degrade = degrade or true
 
-    if degrade then isBossFloor = false end
+    if degrade then isBossFloor = assumedIsBossFloor end
+
+    assumedIsBossFloor = false
 
     for id, B in ipairs(BIOME_ORDER) do
 
         if BIOME_ORDER[id][2] ~= 0 then
 
-            if degrade then
+            if degrade and not isBossFloor then
                 
                 BIOME_ORDER[id][2] = BIOME_ORDER[id][2] - 1
 
-                if BIOME_ORDER[id][2] == 0 then isBossFloor = true end
+                print(id, B[2])
+
+                if BIOME_ORDER[id][2] == 0 then assumedIsBossFloor = true end
             
             end
 
@@ -46,7 +51,7 @@ function resetBiomes()
     bosses = {newSkeletonBoss()}
 
     BIOME_ORDER = {
-        {"cave", 2},
+        {"cave", 1},
         {"sporeCavern", -1}
     }
 

@@ -98,9 +98,10 @@ function processTeleporter(teleporter)
         roomOn = 1
 
         local biome = fetchNextBiome()
-        biome = BIOMES[biome]
 
         if isBossFloor then -- GENERATE BOSS ROOM
+
+            biome = BIOMES[biome]
 
             local bossRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 
@@ -198,7 +199,7 @@ function processTeleporter(teleporter)
 
         else -- GENERATE NORMAL ROOM SEQUENCE
 
-            ROOMS = generate(5,fetchNextBiome())
+            ROOMS = generate(5,biome)
 
         end
 
