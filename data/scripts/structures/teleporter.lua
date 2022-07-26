@@ -101,7 +101,11 @@ function processTeleporter(teleporter)
 
         if isBossFloor then -- GENERATE BOSS ROOM
 
-            biome = BIOMES[biome]
+            for id, biomeOn in ipairs(BIOME_ORDER) do
+
+                if BIOME_ORDER[id + 1][1] == biome then biome = BIOMES[biomeOn[1]] break end
+
+            end
 
             local bossRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, processParticles=roomParticles, particleSystems={}}
 

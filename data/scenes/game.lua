@@ -46,6 +46,8 @@ function gameReload()
     ENEMY_HP_SCALE = 1
 
     playTrack("cave", 0.5)
+
+    bossAnimationTimer = 0
 end
 
 function gameDie()
@@ -61,6 +63,8 @@ function game()
 
     -- Loop
     if not paused then
+
+        bossAnimationTimer = lerp(bossAnimationTimer, boolToInt(ROOM.boss ~= nil), dt * 4)
 
         -- Set mouse
 

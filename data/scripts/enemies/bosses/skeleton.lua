@@ -30,10 +30,14 @@ function newSkeletonBoss()
 
         id = 3.141592,
 
-        -- Attack timers
+        -- Attack timers and stuff
         armShootingUp = 0,
 
-        isArmShootingUpTimer = 0,
+        isArmShootingUpTimer = 3,
+
+        armSlamTimer = 4,
+        armSlamAnimation = 0,
+        slamming = false
 
         smoke = newParticleSystem(300, 300, loadJson("data/particles/enemies/skeletonBossSmoke.json")),
 
@@ -57,9 +61,6 @@ function steletonBossAttack2Hands(boss)
     boss.handSlamSmoke.x = boss.handSlamPos.x; boss.handSlamSmoke.y = boss.handSlamPos.y
     boss.handShootSmoke.x = boss.handShootPos.x; boss.handShootSmoke.y = boss.handShootPos.y
 
-    boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5)
-    boss.handSlamPos.y = lerp(boss.handSlamPos.y, boss.pos.y + 64, dt * 5)
-
     boss.handShootPos.x = lerp(boss.handShootPos.x, boss.pos.x + 64, dt * 5)
     boss.handShootPos.y = lerp(boss.handShootPos.y, boss.pos.y + 30 - 128 * boolToInt(boss.isArmShootingUpTimer < 0), dt * 3)
 
@@ -72,7 +73,7 @@ function steletonBossAttack2Hands(boss)
         boss.armShootingUp = boss.armShootingUp - dt
     end
 
-    if boss.isArmShootingUpTimer < - 6 then boss.isArmShootingUpTimer = 4 end
+    if boss.isArmShootingUpTimer < - 6 then boss.isArmShootingUpTimer = 4 end -- Shoot from arm
 
     if boss.armShootingUp < 0 then
 
@@ -83,6 +84,28 @@ function steletonBossAttack2Hands(boss)
         projectile.acceleration.y = 300
 
         table.insert(enemyProjectiles, projectile)
+
+    end
+
+    boss.armSlamTimer = boss.armSlamTimer - dt -- Slam arm down
+    
+    if boss.armSlamTimer < 0 then
+
+        boss.armSlamTimer = 4
+
+        boss.slamming = true
+
+    end
+
+    if boss.smalling then
+
+        boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5)
+        boss.handSlamPos.y = lerp(boss.handSlamPos.y, boss.pos.y + 64, dt * 5)
+    
+    else
+
+        boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5)
+        boss.handSlamPos.y = lerp(boss.handSlamPos.y, boss.pos.y + 64, dt * 5)
 
     end
 

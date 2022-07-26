@@ -124,19 +124,22 @@ BOSS_BAR = love.graphics.newImage("data/images/UI/bossBar.png")
 
 function drawBossBarDefault(boss)
 
-    drawSprite(BOSS_BAR, 400, 28, 1, 1, 0, 0)
+    local animationI = 1 - bossAnimationTimer
+    local yOffset = animationI * - 100
+
+    drawSprite(BOSS_BAR, 400, 28 + yOffset, 1, 1, 0, 0)
 
     local barLenght = boss.hp / boss.maxHp * 306
     if boss.flash < 0 then boss.barDelay = lerp(boss.barDelay, barLenght, dt * 3) end
 
     setColor(255, 255, 255)
-    love.graphics.rectangle("fill", 247, 19, boss.barDelay, 18) -- Delayed bar
+    love.graphics.rectangle("fill", 247, 19 + yOffset, boss.barDelay, 18) -- Delayed bar
     
     setColor(228, 59, 68)
-    love.graphics.rectangle("fill", 247, 19, barLenght, 18) -- Hp bar
+    love.graphics.rectangle("fill", 247, 19 + yOffset, barLenght, 18) -- Hp bar
 
     setColor(158, 40, 53)
-    love.graphics.rectangle("fill", 247, 31, barLenght, 6)  -- Shadow
+    love.graphics.rectangle("fill", 247, 31 + yOffset, barLenght, 6)  -- Shadow
 
     setColor(255, 255, 255)
 
