@@ -1,5 +1,6 @@
 
 SKELETON_BOSS_HEAD = love.graphics.newImage("data/images/bosses/skeletonBossHead.png")
+SKELETON_BOSS_JAW = love.graphics.newImage("data/images/bosses/skeletonBossJaw.png")
 SKELETON_BOSS_ARM_SLAM = love.graphics.newImage("data/images/bosses/skeletonBossFist.png")
 SKELETON_BOSS_ARM_SHOOT = love.graphics.newImage("data/images/bosses/skeletonBossHand.png")
 
@@ -33,11 +34,12 @@ function newSkeletonBoss()
         -- Attack timers and stuff
         armShootingUp = 0,
 
-        isArmShootingUpTimer = 3,
+        isArmShootingUpTimer = 5,
 
-        armSlamTimer = 4,
-        armSlamAnimation = 0,
-        slamming = false
+        armSlamTimer = 6,
+        armGoingToSlamTimer = 4,
+        slamming = false,
+        slamArmBounceAnim = 0,
 
         smoke = newParticleSystem(300, 300, loadJson("data/particles/enemies/skeletonBossSmoke.json")),
 
@@ -49,6 +51,8 @@ function newSkeletonBoss()
 end
 
 function steletonBossAttack2Hands(boss)
+
+    boss.slamArmBounceAnim = lerp(boss.slamArmBounceAnim, 0, dt * 4)
 
     boss.pos.x = 380 + 210 * math.sin(globalTimer)
     boss.pos.y = 240 + 96 * math.sin(globalTimer * 0.5)
@@ -80,6 +84,7 @@ function steletonBossAttack2Hands(boss)
         boss.armShootingUp = 0.2
 
         local projectile = newEnemyProjectile("mediumOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 200, 90 + love.math.random(-33, 33), 24, 10, {255,200,200})
+        if love.math.random(0, 100) > 50 then projectile = newEnemyProjectile("smallOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 250, 90 + love.math.random(-33, 33), 18, 10, {255,200,200}) end
 
         projectile.acceleration.y = 300
 
@@ -87,25 +92,54 @@ function steletonBossAttack2Hands(boss)
 
     end
 
-    boss.armSlamTimer = boss.armSlamTimer - dt -- Slam arm down
+    boss.armSlamTimer = boss.armSlamTimer - dt -- Start slam attack
     
     if boss.armSlamTimer < 0 then
 
-        boss.armSlamTimer = 4
+        boss.armSlamTimer = 7 + love.math.random(1, 3)
+        boss.armGoingToSlamTimer = 4
 
         boss.slamming = true
 
     end
 
-    if boss.smalling then
+    if boss.slamming then -- Slam attack processing
 
-        boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5)
-        boss.handSlamPos.y = lerp(boss.handSlamPos.y, boss.pos.y + 64, dt * 5)
+        boss.armGoingToSlamTimer = boss.armGoingToSlamTimer - dt
+
+        if boss.armGoingToSlamTimer < 1 then boss.slamArmBounceAnim = math.sin(3.14 * 8 * boss.armGoingToSlamTimer) * 0.35 end
+
+        if boss.armGoingToSlamTimer < 0 then -- Slam the arm down
+
+            boss.handSlamPos.y = boss.handSlamPos.y + dt * 750
+            
+            if ROOM.tilemap:getTile(math.floor(boss.handSlamPos.x / 48), math.floor(boss.handSlamPos.y / 48)) ~= nil then -- See if the arm got slammed
+
+                boss.slamming = false
+
+                boss.slamArmBounceAnim = 0.6
+
+                for i = 1, 8 do -- Summon bullets
+
+                    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.handSlamPos.x, boss.handSlamPos.y), 250, 45 * i, 18, 10, {255,200,200}))
+
+                end
+
+            end
+
+        else
+
+            boss.handSlamPos.x = lerp(boss.handSlamPos.x, player.collider.x, dt * 5) -- Arm not slammed, it locks to the player
+            boss.handSlamPos.y = lerp(boss.handSlamPos.y, 280, dt * 5)
+
+        end
     
     else
 
-        boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5)
+        boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5) -- Slam attack not initiated, the arm follows the boss
         boss.handSlamPos.y = lerp(boss.handSlamPos.y, boss.pos.y + 64, dt * 5)
+
+        boss.armGoingToSlamTimer = lerp(boss.armGoingToSlamTimer, 4, dt * 4)
 
     end
 
@@ -120,17 +154,23 @@ function drawSkeletonBoss(boss)
 
     setColor(255, 255, 255)
 
-    if boss.flash > 0.8 then love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1) end
+    if boss.flash > 0.8 then love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1) end -- Flash
 
-    local distortion = clamp((boss.flash - 0.8) / 0.2, 0, 1) * 0.2
+    local distortion = clamp((boss.flash - 0.8) / 0.2, 0, 1) * 0.2 -- Draw head and jaw
 
-    drawSprite(SKELETON_BOSS_HEAD, boss.pos.x, boss.pos.y, 1 + distortion, 1 - distortion)
+    drawSprite(SKELETON_BOSS_HEAD, boss.pos.x, boss.pos.y - 12 * (1 - distortion), 1 + distortion, 1 - distortion)
+
+    drawSprite(SKELETON_BOSS_JAW, boss.pos.x, boss.pos.y + 36 * (1 - distortion), 1 + distortion, 1 - distortion)
 
     love.graphics.setShader()
 
-    drawSprite(SKELETON_BOSS_ARM_SLAM, boss.handSlamPos.x, boss.handSlamPos.y)
+    local slammingAnim = 1 - boss.armGoingToSlamTimer / 4
+    shine(boss.handSlamPos.x, boss.handSlamPos.y, 144, {255, 60, 60, 80 * slammingAnim}) -- Draw slamming hand
+    
+    love.graphics.setColor(1, 0.75 - slammingAnim + 0.25, 0.75 - slammingAnim + 0.25)
+    drawSprite(SKELETON_BOSS_ARM_SLAM, boss.handSlamPos.x, boss.handSlamPos.y, 1 + boss.slamArmBounceAnim, 1 - boss.slamArmBounceAnim)
 
-    local shootingAnim = clamp(boss.isArmShootingUpTimer, -1, 0) * -1
+    local shootingAnim = clamp(boss.isArmShootingUpTimer, -1, 0) * -1 -- Draw shooting hand
 
     if boss.isArmShootingUpTimer > 3 then shootingAnim = boss.isArmShootingUpTimer - 3 end
 
@@ -138,5 +178,7 @@ function drawSkeletonBoss(boss)
     drawSprite(SKELETON_BOSS_ARM_SHOOT, boss.handShootPos.x, boss.handShootPos.y)
 
     shine(boss.handShootPos.x, boss.handShootPos.y, 144, {255, 60, 60, 80 * shootingAnim})
+
+    drawCollider(boss.hitbox)
 
 end

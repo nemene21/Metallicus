@@ -8,7 +8,7 @@ function newChest(x, y, lootTable)
 
     return {
 
-        x = x, y = y, open = false, lootTable = lootTable, rect = newRect(x - 24, y - 33, 48, 33), animation = 0,
+        x = x, y = y, open = false, lootTable = lootTable, rect = newRect(x, y, 48, 33), animation = 0,
 
         draw = drawChest, process = processChest
 

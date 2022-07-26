@@ -32,7 +32,7 @@ giantFireflyShoot = love.audio.newSource("data/sounds/SFX/enemies/giantFireflySh
 quack = love.audio.newSource("data/sounds/SFX/quack.wav", "stream") -- Quack
 }
 
-MASTER_VOLUME = 1
+MASTER_VOLUME = 0
 SFX_VOLUME = 1
 MUSIC_VOLUME = 0.5
 
