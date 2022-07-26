@@ -64,7 +64,7 @@ function game()
     -- Loop
     if not paused then
 
-        bossAnimationTimer = lerp(bossAnimationTimer, boolToInt(ROOM.boss ~= nil), dt * 4)
+        bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil) * 0.75, 0, 1)
 
         -- Set mouse
 

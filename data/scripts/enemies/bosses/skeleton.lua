@@ -152,33 +152,31 @@ end
 
 function drawSkeletonBoss(boss)
 
-    setColor(255, 255, 255)
+    setColor(255, 255, 255, 255 * bossAnimationTimer)
 
     if boss.flash > 0.8 then love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1) end -- Flash
 
     local distortion = clamp((boss.flash - 0.8) / 0.2, 0, 1) * 0.2 -- Draw head and jaw
 
-    drawSprite(SKELETON_BOSS_HEAD, boss.pos.x, boss.pos.y - 12 * (1 - distortion), 1 + distortion, 1 - distortion)
+    drawSprite(SKELETON_BOSS_HEAD, boss.pos.x, boss.pos.y - 12 * (1 - distortion), (1 + distortion) * bossAnimationTimer, (1 - distortion) * bossAnimationTimer)
 
-    drawSprite(SKELETON_BOSS_JAW, boss.pos.x, boss.pos.y + 36 * (1 - distortion), 1 + distortion, 1 - distortion)
+    drawSprite(SKELETON_BOSS_JAW, boss.pos.x, boss.pos.y + 36 * (1 - distortion), (1 + distortion) * bossAnimationTimer, (1 - distortion) * bossAnimationTimer)
 
     love.graphics.setShader()
 
     local slammingAnim = 1 - boss.armGoingToSlamTimer / 4
-    shine(boss.handSlamPos.x, boss.handSlamPos.y, 144, {255, 60, 60, 80 * slammingAnim}) -- Draw slamming hand
+    shine(boss.handSlamPos.x, boss.handSlamPos.y, 144, {255, 60, 60, 80 * slammingAnim * bossAnimationTimer}) -- Draw slamming hand
     
-    love.graphics.setColor(1, 0.75 - slammingAnim + 0.25, 0.75 - slammingAnim + 0.25)
-    drawSprite(SKELETON_BOSS_ARM_SLAM, boss.handSlamPos.x, boss.handSlamPos.y, 1 + boss.slamArmBounceAnim, 1 - boss.slamArmBounceAnim)
+    love.graphics.setColor(1, 0.75 - slammingAnim + 0.25, 0.75 - slammingAnim + 0.25, bossAnimationTimer)
+    drawSprite(SKELETON_BOSS_ARM_SLAM, boss.handSlamPos.x, boss.handSlamPos.y, (1 + boss.slamArmBounceAnim) * bossAnimationTimer, (1 - boss.slamArmBounceAnim) * bossAnimationTimer)
 
     local shootingAnim = clamp(boss.isArmShootingUpTimer, -1, 0) * -1 -- Draw shooting hand
 
     if boss.isArmShootingUpTimer > 3 then shootingAnim = boss.isArmShootingUpTimer - 3 end
 
-    love.graphics.setColor(1, 0.75 - shootingAnim + 0.25, 0.75 - shootingAnim + 0.25)
-    drawSprite(SKELETON_BOSS_ARM_SHOOT, boss.handShootPos.x, boss.handShootPos.y)
+    love.graphics.setColor(1, 0.75 - shootingAnim + 0.25, 0.75 - shootingAnim + 0.25, bossAnimationTimer)
+    drawSprite(SKELETON_BOSS_ARM_SHOOT, boss.handShootPos.x, boss.handShootPos.y, bossAnimationTimer, bossAnimationTimer)
 
-    shine(boss.handShootPos.x, boss.handShootPos.y, 144, {255, 60, 60, 80 * shootingAnim})
-
-    drawCollider(boss.hitbox)
+    shine(boss.handShootPos.x, boss.handShootPos.y, 144, {255, 60, 60, 80 * shootingAnim * bossAnimationTimer})
 
 end

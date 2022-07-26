@@ -39,6 +39,16 @@ function returnRandomDrops(lootTable)
 
     local items = {}
 
+    for id, oneTimeItems in  ipairs(lootTable.oneTimeDrops) do -- One time drops
+
+        local item = deepcopyTable(ITEMS[oneTimeItems[love.math.random(1, #oneTimeItems)]])
+
+        item.amount = 1
+
+        table.insert(items, item)
+
+    end
+
     for id, item in ipairs(lootTable.multipleDrops) do -- Multiple drops
 
         local rawChance = item.chance / 100
@@ -50,16 +60,6 @@ function returnRandomDrops(lootTable)
         if love.math.random(0, 100) < extraChance * 100 then amount = amount + 1 end
 
         for x = 1, amount do table.insert(items, deepcopyTable(ITEMS[item.name])) end
-
-    end
-
-    for id, oneTimeItems in  ipairs(lootTable.oneTimeDrops) do -- One time drops
-
-        local item = deepcopyTable(ITEMS[oneTimeItems[love.math.random(1, #oneTimeItems)]])
-
-        item.amount = 1
-
-        table.insert(items, item)
 
     end
 
