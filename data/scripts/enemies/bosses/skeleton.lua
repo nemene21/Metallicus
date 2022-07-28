@@ -22,8 +22,8 @@ function newSkeletonBoss()
         handSlamPos = newVec(270, 330),
         handShootPos = newVec(330, 330),
 
-        maxHp = 1500,
-        hp = 1500,
+        maxHp = 2000,
+        hp = 2000,
 
         barDelay = 306,
 

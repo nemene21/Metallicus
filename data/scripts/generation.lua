@@ -51,7 +51,7 @@ function resetBiomes()
     bosses = {newSkeletonBoss()}
 
     BIOME_ORDER = {
-        {"cave", 1},
+        {"cave", 3},
         {"sporeCavern", -1}
     }
 
