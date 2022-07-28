@@ -98,7 +98,7 @@ function giantFireflyStateCircle(giantFirefly)
 
     love.graphics.setShader(); setColor(255, 255, 255)
 
-    shine(giantFirefly.collider.x - 9 * turned, giantFirefly.collider.y, 100, {255, 170, 50, 40})
+    shine(giantFirefly.collider.x - 9 * turned, giantFirefly.collider.y, 100, {255, 170 * (1 - headScalePlus * 2), 50 * (1 - headScalePlus * 2), 40 + 60 * (headScalePlus * 2)})
     love.graphics.setCanvas(display)
     love.graphics.setCanvas(display)
 end
