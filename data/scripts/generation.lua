@@ -51,7 +51,7 @@ function resetBiomes()
     bosses = {newSkeletonBoss()}
 
     BIOME_ORDER = {
-        {"cave", 3},
+        {"cave", 1},
         {"sporeCavern", -1}
     }
 
@@ -182,7 +182,7 @@ function generate(amount, biome)
 
     ambientLight = biome.ambientLight
 
-    timeUntillQuake = (18 * amount) * 0.33
+    timeUntillQuake = (18 * amount) * 0.22
     quakeWarnings = 3
 
     for num=0,amount - 1 do

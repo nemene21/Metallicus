@@ -203,6 +203,8 @@ function processTeleporter(teleporter)
 
             timeUntillQuake = -1000
 
+            quakeWarnings = 3
+
         else -- GENERATE NORMAL ROOM SEQUENCE
 
             ROOMS = generate(5,biome)
