@@ -88,6 +88,15 @@ function game()
 
                     table.insert(ROOM.particleSystems, newParticleSystem(lastBossPos.x, lastBossPos.y, deepcopyTable(BOSS_DIE_PARTICLES)))
 
+                    for id, P in ipairs(enemyProjectiles) do -- Destroy bullets
+
+                        table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
+                        table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
+
+                    end
+
+                    enemyProjectiles = {}
+
                 end
 
                 shake(8, 1, 0.15)
@@ -103,17 +112,17 @@ function game()
 
                 bossDieAnimationTimer = lerp(bossDieAnimationTimer, 0, dt)
 
-                if bossDieAnimationTimer < 0.05 then
+                if bossDieAnimationTimer < 0.05 then -- Animation done
 
-                    for id, I in ipairs(getLootTable(boss.lootTable .. "BossDrops"):returnDrops()) do
+                    for id, I in ipairs(getLootTable(ROOM.boss.lootTable .. "BossDrops"):returnDrops()) do -- Drops
 
-                        table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, I))
+                        table.insert(ROOM.items, newItem(ROOM.boss.pos.x + love.math.random(-16, 16), ROOM.boss.pos.y, I, newVec(love.math.random(-600, 600), love.math.random(-600, 0))))
         
                     end
 
                     ROOM.boss = nil
 
-                    for id, structure in ipairs(ROOM.structures) do
+                    for id, structure in ipairs(ROOM.structures) do -- Repair teleporter
 
                         if structure.isTeleporter == true then
                             
@@ -124,15 +133,6 @@ function game()
                         end
 
                     end
-
-                    for id, P in ipairs(enemyProjectiles) do
-
-                        table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
-                        table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
-
-                    end
-
-                    enemyProjectiles = {}
 
                 end
 

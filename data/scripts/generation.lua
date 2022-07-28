@@ -869,7 +869,7 @@ function processRoom(room)
     
                     addNewText(tostring(P.damage), room.boss.pos.x + love.math.random(-24, 24), room.boss.pos.y + love.math.random(-24, 24) - 24, {255, 0, 0})
         
-                    room.boss.hp = room.boss.hp - P.damage
+                    room.boss.hp = clamp(room.boss.hp - P.damage, 0, room.boss.maxHp)
                     room.boss.flash = 1
                     P.pirice = P.pirice - 1
     
