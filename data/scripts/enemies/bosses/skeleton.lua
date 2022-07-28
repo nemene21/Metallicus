@@ -34,10 +34,10 @@ function newSkeletonBoss()
         -- Attack timers and stuff
         armShootingUp = 0,
 
-        isArmShootingUpTimer = 5,
+        isArmShootingUpTimer = 3,
 
         armSlamTimer = 6,
-        armGoingToSlamTimer = 4,
+        armGoingToSlamTimer = 3,
         slamming = false,
         slamArmBounceAnim = 0,
 
@@ -97,7 +97,7 @@ function steletonBossAttack2Hands(boss)
     if boss.armSlamTimer < 0 then
 
         boss.armSlamTimer = 7 + love.math.random(1, 3)
-        boss.armGoingToSlamTimer = 4
+        boss.armGoingToSlamTimer = 3
 
         boss.slamming = true
 
@@ -139,7 +139,7 @@ function steletonBossAttack2Hands(boss)
         boss.handSlamPos.x = lerp(boss.handSlamPos.x, boss.pos.x - 64, dt * 5) -- Slam attack not initiated, the arm follows the boss
         boss.handSlamPos.y = lerp(boss.handSlamPos.y, boss.pos.y + 64, dt * 5)
 
-        boss.armGoingToSlamTimer = lerp(boss.armGoingToSlamTimer, 4, dt * 4)
+        boss.armGoingToSlamTimer = lerp(boss.armGoingToSlamTimer, 3, dt * 4)
 
     end
 
@@ -164,7 +164,7 @@ function drawSkeletonBoss(boss)
 
     love.graphics.setShader()
 
-    local slammingAnim = 1 - boss.armGoingToSlamTimer / 4
+    local slammingAnim = 1 - boss.armGoingToSlamTimer / 3
     shine(boss.handSlamPos.x, boss.handSlamPos.y, 144, {255, 60, 60, 80 * slammingAnim * bossAnimationTimer}) -- Draw slamming hand
     
     love.graphics.setColor(1, 0.75 - slammingAnim + 0.25, 0.75 - slammingAnim + 0.25, bossAnimationTimer)

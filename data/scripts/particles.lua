@@ -1,4 +1,30 @@
 
+-- Draw boss die ray
+
+function drawGodRay(pos, w, h, dir, lf)
+
+    local points = {
+
+        newVec(0, h * lf * 0.1),
+        newVec(w, h * lf),
+        newVec(w, - h * lf),
+        newVec(0, - h * lf * 0.1)
+
+    }
+
+    for id, point in ipairs(points) do
+
+        point:rotate(dir)
+
+        point.x = point.x + pos.x - camera[1]
+        point.y = point.y + pos.y - camera[2]
+
+    end
+
+    love.graphics.polygon("fill", points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y, points[4].x, points[4].y)
+
+end
+
 -- DRAW PARTICLES
 
 OFFSET_PARTICLE_BY_CAMERA = 1

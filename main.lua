@@ -34,7 +34,7 @@ function love.load()
     postPro = ""
 
     -- Get screenRes
-    screenRes = {love.graphics.getWidth(),love.graphics.getHeight()}
+    screenRes = {love.graphics.getWidth(), love.graphics.getHeight()}
 
     -- Window and defaulting
     globalTimer = 0; love.graphics.setDefaultFilter("nearest","nearest")

@@ -845,13 +845,13 @@ function processRoom(room)
 
     end room.structures = wipeKill(kill, room.structures)
 
-    if room.boss ~= nil then
+    if room.boss ~= nil and not bossDead then -- Process boss if he exists and is alive
 
         room.boss.flash = room.boss.flash - dt
 
         room.boss.states[room.boss.state](room.boss)
 
-        for id, P in ipairs(playerProjectiles) do
+        for id, P in ipairs(playerProjectiles) do -- Hit the boss with any player projectiles
     
             if rectCollidingCircle(room.boss.hitbox, P.pos.x, P.pos.y, P.radius) then
 

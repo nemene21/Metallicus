@@ -48,6 +48,14 @@ function gameReload()
     playTrack("cave", 0.5)
 
     bossAnimationTimer = 0
+    bossDieAnimationTimer = 1
+
+    bossDead = true
+
+    lastBossPos = newVec(0, 0)
+
+    BOSS_DIE_PARTICLES = loadJson("data/particles/enemies/bossDeath.json")
+    TELEPORTER_REBUILT_PARTICLES = loadJson("data/particles/teleporterRebuilt.json")
 end
 
 function gameDie()
@@ -64,21 +72,57 @@ function game()
     -- Loop
     if not paused then
 
-        bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil), 0, 1)
+        bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil) * 2, 0, 1)
 
         if ROOM.boss ~= nil then
 
-            if ROOM.boss.hp < 0 then
+            lastBossPos = newVec(ROOM.boss.pos.x, ROOM.boss.pos.y)
 
-                ROOM.boss = nil
+            if ROOM.boss.hp <= 0 then
 
-                for id, structure in ipairs(ROOM.structures) do
+                if not bossDead then -- Reset boss die animation
+                
+                    bossDieAnimationTimer = 1
 
-                    if structure.isTeleporter == true then ROOM.structures[id] = newTeleporter(560, 580, false) end
+                    shock(ROOM.boss.pos.x, ROOM.boss.pos.y, 0.8, 0.05, 1)
+
+                    table.insert(ROOM.particleSystems, newParticleSystem(lastBossPos.x, lastBossPos.y, deepcopyTable(BOSS_DIE_PARTICLES)))
+
+                end
+
+                shake(8, 1, 0.15)
+
+                bindCamera(ROOM.boss.pos.x, ROOM.boss.pos.y, 99)
+
+                bossAnimationTimer = bossDieAnimationTimer
+
+                bossDead = true
+
+                bossDieAnimationTimer = lerp(bossDieAnimationTimer, 0, dt)
+
+                if bossDieAnimationTimer < 0.05 then
+
+                    ROOM.boss = nil
+
+                    for id, structure in ipairs(ROOM.structures) do
+
+                        if structure.isTeleporter == true then
+                            
+                            ROOM.structures[id] = newTeleporter(560, 580, false)
+
+                            table.insert(ROOM.particleSystems, newParticleSystem(structure.x, structure.y, deepcopyTable(TELEPORTER_REBUILT_PARTICLES)))
+                        
+                        end
+
+                    end
 
                 end
 
             end
+
+        else
+
+            bossDieAnimationTimer = lerp(bossDieAnimationTimer, 1, dt * 4)
 
         end
 
@@ -171,6 +215,22 @@ function game()
         attackMouseLine = nil
         if player.hp > 0 then -- Draw player
             player:draw()
+        end
+
+        if bossDieAnimationTimer < 0.99 then -- Boss die animation
+
+            love.graphics.setCanvas(particleCanvas)
+
+            local dirOffset = 180 * (1 - bossDieAnimationTimer * bossDieAnimationTimer)
+
+            drawGodRay(lastBossPos, 600, 48, 33 + dirOffset, 1 - bossDieAnimationTimer * bossDieAnimationTimer)
+            drawGodRay(lastBossPos, 600, 64, 180 + dirOffset, 1 - bossDieAnimationTimer * bossDieAnimationTimer)
+            drawGodRay(lastBossPos, 600, 38, -45 + dirOffset, 1 - bossDieAnimationTimer * bossDieAnimationTimer)
+
+            love.graphics.circle("fill", lastBossPos.x - camera[1], lastBossPos.y - camera[2], 128 * (1 - bossDieAnimationTimer * bossDieAnimationTimer))
+
+            love.graphics.setCanvas(display)
+        
         end
 
         player:resetStats()
