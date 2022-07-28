@@ -690,18 +690,18 @@ function drawPlayerUI(player)
     if (justPressed("e") or joystickJustPressed(1, 4)) and not debugLineOpen then
         
         player.inventoryOpen = not player.inventoryOpen
-
-        if not player.inventoryOpen and IN_HAND ~= nil then
-
-            local lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
-            local item = newItem(player.collider.x + 36 * lookAt, player.collider.y, IN_HAND)
-
-            item.vel.x = 60 * lookAt
-            table.insert(ROOM.items, item)
-
-            IN_HAND = nil
-        end
     
+    end
+
+    if not player.inventoryOpen and IN_HAND ~= nil then -- Drop item in cursor when the inventory is closed
+
+        local lookAt = boolToInt(xM > (player.collider.x - camera[1])) * 2 - 1
+        local item = newItem(player.collider.x + 36 * lookAt, player.collider.y, IN_HAND)
+
+        item.vel.x = 60 * lookAt
+        table.insert(ROOM.items, item)
+
+        IN_HAND = nil
     end
 
     -- Process inventory when open
