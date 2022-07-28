@@ -127,3 +127,15 @@ getLootTable("sporeCavernChest"):addOneTime({
     "mushboomRod", "rodOfChase"
 
 })
+
+-- Boss loot tables
+
+newLootTable("skeletonBossDrops")
+
+getLootTable("skeletonBossDrops"):addMultiple("bone", 1250)
+
+getLootTable("skeletonBossDrops"):addOneTime({
+
+    "boneBow", "boneDagger", "boneRod"
+
+})

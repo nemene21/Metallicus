@@ -92,7 +92,10 @@ function game()
 
                 shake(8, 1, 0.15)
 
-                bindCamera(ROOM.boss.pos.x, ROOM.boss.pos.y, 99)
+                local camX = clamp(ROOM.boss.pos.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset)
+                local camY = clamp(ROOM.boss.pos.y, ROOM.endUp.y + 300 - cameraWallOffset, ROOM.endDown.y - 300 + cameraWallOffset)
+
+                bindCamera(camX, camY, 99)
 
                 bossAnimationTimer = bossDieAnimationTimer
 
@@ -101,6 +104,12 @@ function game()
                 bossDieAnimationTimer = lerp(bossDieAnimationTimer, 0, dt)
 
                 if bossDieAnimationTimer < 0.05 then
+
+                    for id, I in ipairs(getLootTable(boss.lootTable .. "BossDrops"):returnDrops()) do
+
+                        table.insert(room.items, newItem(E.collider.x + love.math.random(-16, 16), E.collider.y, I))
+        
+                    end
 
                     ROOM.boss = nil
 
@@ -115,6 +124,15 @@ function game()
                         end
 
                     end
+
+                    for id, P in ipairs(enemyProjectiles) do
+
+                        table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_SHOCK)))
+                        table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(ENEMY_PROJECTILE_DIE_CIRCLE)))
+
+                    end
+
+                    enemyProjectiles = {}
 
                 end
 
@@ -220,6 +238,8 @@ function game()
         if bossDieAnimationTimer < 0.99 then -- Boss die animation
 
             love.graphics.setCanvas(particleCanvas)
+
+            setColor(255, 255, 255)
 
             local dirOffset = 180 * (1 - bossDieAnimationTimer * bossDieAnimationTimer)
 

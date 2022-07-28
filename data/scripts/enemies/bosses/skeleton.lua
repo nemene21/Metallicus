@@ -12,6 +12,8 @@ function newSkeletonBoss()
 
         state = 1,
 
+        lootTable = "skeleton",
+
         draw = drawSkeletonBoss,
         drawBar = drawBossBarDefault,
 
