@@ -14,7 +14,7 @@ PARTICLES_TELEPORT = loadJson("data/particles/teleport.json")
 PARTICLES_TELEPORT_BURST = loadJson("data/particles/teleportBurst.json")
 
 function newTeleporter(x, y, broken)
-    local teleporter = {x = x, y = y}
+    local teleporter = {x = x, y = y, isTeleporter = true}
 
     if broken then
 
@@ -58,6 +58,8 @@ function processTeleporter(teleporter)
     end
 
     if teleporter.pressed then -- Teleporting animation
+
+        player.inventoryOpen = false
 
         bindCamera(clamp(teleporter.x, ROOM.endLeft.x + 400 - cameraWallOffset, ROOM.endRight.x - 400 + cameraWallOffset), clamp(teleporter.y + 300 - cameraWallOffset, ROOM.endUp.y, ROOM.endDown.y - 300 + cameraWallOffset), 2)
 
@@ -116,7 +118,7 @@ function processTeleporter(teleporter)
     
             bossRoom.playerTookHits = 0
     
-            bossRoom.structures = {newTeleporter(560, 580, false)}
+            bossRoom.structures = {newTeleporter(560, 580, true)}
 
             -- Layout
 

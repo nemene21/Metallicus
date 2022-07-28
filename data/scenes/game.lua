@@ -64,7 +64,23 @@ function game()
     -- Loop
     if not paused then
 
-        bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil) * 0.75, 0, 1)
+        bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil), 0, 1)
+
+        if ROOM.boss ~= nil then
+
+            if ROOM.boss.hp < 0 then
+
+                ROOM.boss = nil
+
+                for id, structure in ipairs(ROOM.structures) do
+
+                    if structure.isTeleporter == true then ROOM.structures[id] = newTeleporter(560, 580, false) end
+
+                end
+
+            end
+
+        end
 
         -- Set mouse
 

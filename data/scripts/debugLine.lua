@@ -36,7 +36,7 @@ end
 
 function WARP_COMMAND(cmd)
 
-    swtichRoom((cmd[2] or 1) - roomOn)
+    swtichRoom(clamp(cmd[2] or 1, 1, #ROOMS) - roomOn)
 
 end
 
