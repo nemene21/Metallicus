@@ -72,6 +72,8 @@ function game()
     -- Loop
     if not paused then
 
+        zoomInEffect = lerp(zoomInEffect, 1, dt * 4)
+
         bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil) * 2, 0, 1)
 
         if ROOM.boss ~= nil then
@@ -111,6 +113,8 @@ function game()
                 bossDead = true
 
                 bossDieAnimationTimer = lerp(bossDieAnimationTimer, 0, dt)
+
+                zoomInEffect = lerp(1, 1.4, 1 - bossDieAnimationTimer)
 
                 if bossDieAnimationTimer < 0.05 then -- Animation done
 

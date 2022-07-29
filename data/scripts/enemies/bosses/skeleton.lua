@@ -43,6 +43,10 @@ function newSkeletonBoss()
         slamming = false,
         slamArmBounceAnim = 0,
 
+        spitAttackTimer = 2,
+        spitAttackDelay = 2,
+        jawOffset = 0,
+
         smoke = newParticleSystem(300, 300, loadJson("data/particles/enemies/skeletonBossSmoke.json")),
 
         handSlamSmoke = newParticleSystem(270, 330, loadJson("data/particles/enemies/skeletonBossArmSmoke.json")),
@@ -94,11 +98,36 @@ function steletonBossAttack2Hands(boss)
 
     end
 
+    boss.spitAttackTimer = boss.spitAttackTimer - dt -- Spit attack
+
+    boss.jawOffset = lerp(boss.jawOffset, 0, dt * 2)
+
+    if boss.spitAttackTimer < 0 then
+        
+        boss.spitAttackDelay = boss.spitAttackDelay - dt
+
+        boss.jawOffset = 48 * (1 - boss.spitAttackDelay / 2)
+    
+    end
+
+    if boss.spitAttackDelay < 0 then
+
+        boss.spitAttackTimer = 2 + love.math.random(1, 3)
+        boss.spitAttackDelay = 2
+
+        local dir = newVec(boss.pos.x - player.collider.x, boss.pos.y - player.collider.y):getRot()
+
+        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 200, dir + 33, 18, 10, {255,200,200}))
+        table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb", newVec(boss.pos.x, boss.pos.y + 36), 200, dir, 24, 10, {255,200,200}))
+        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 200, dir - 33, 18, 10, {255,200,200}))
+
+    end
+
     boss.armSlamTimer = boss.armSlamTimer - dt -- Start slam attack
     
     if boss.armSlamTimer < 0 then
 
-        boss.armSlamTimer = 7 + love.math.random(1, 3)
+        boss.armSlamTimer = 6 + love.math.random(1, 3)
         boss.armGoingToSlamTimer = 3
 
         boss.slamming = true
@@ -162,7 +191,9 @@ function drawSkeletonBoss(boss)
 
     drawSprite(SKELETON_BOSS_HEAD, boss.pos.x, boss.pos.y - 12 * (1 - distortion), (1 + distortion) * bossAnimationTimer, (1 - distortion) * bossAnimationTimer)
 
-    drawSprite(SKELETON_BOSS_JAW, boss.pos.x, boss.pos.y + 36 * (1 - distortion), (1 + distortion) * bossAnimationTimer, (1 - distortion) * bossAnimationTimer)
+    drawSprite(SKELETON_BOSS_JAW, boss.pos.x, boss.pos.y + boss.jawOffset + 36 * (1 - distortion), (1 + distortion) * bossAnimationTimer, (1 - distortion) * bossAnimationTimer)
+
+    shine(boss.pos.x, boss.pos.y + 36, 144 * (boss.jawOffset / 48), {255, 30, 30, 150 * (boss.jawOffset / 48)})
 
     love.graphics.setShader()
 
