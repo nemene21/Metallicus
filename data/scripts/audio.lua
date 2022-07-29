@@ -42,9 +42,12 @@ for id,S in pairs(SOUNDS) do SOUNDS_NUM_PLAYING[id] = 0 end
 SOUNDS_PLAYING = {}
 
 MUSIC = {
-cave = love.audio.newSource("data/sounds/music/cave.wav", "stream"),
+cave = love.audio.newSource("data/sounds/music/cave.wav", "stream"),         -- Biomes
 
-crafting = love.audio.newSource("data/sounds/music/crafting.wav", "stream")
+crafting = love.audio.newSource("data/sounds/music/crafting.wav", "stream"), -- Custom rooms
+
+skeletonBoss = love.audio.newSource("data/sounds/music/bosses/skeletonBoss.wav", "stream") -- Bosses
+
 }
 
 TRACK_PLAYING = "NONE"

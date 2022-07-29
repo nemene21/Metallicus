@@ -77,12 +77,15 @@ function game()
         bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil) * 2, 0, 1)
 
         if ROOM.boss ~= nil then
+            trackPitch = 1
 
             lastBossPos = newVec(ROOM.boss.pos.x, ROOM.boss.pos.y)
 
             if ROOM.boss.hp <= 0 then
 
                 if not bossDead then -- Reset boss die animation
+
+                    playTrack("cave", 3)
                 
                     bossDieAnimationTimer = 1
 
@@ -139,6 +142,10 @@ function game()
                     end
 
                 end
+
+            else
+
+                playTrack(ROOM.boss.track, 0.1)
 
             end
 

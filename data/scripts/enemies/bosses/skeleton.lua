@@ -30,6 +30,7 @@ function newSkeletonBoss()
         flash = 0,
 
         hitbox = newRect(300, 300, 96, 96),
+        track = "skeletonBoss",
 
         id = 3.141592,
 
