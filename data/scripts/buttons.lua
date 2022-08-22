@@ -11,7 +11,7 @@ function processButton(btn)
 
         btn.animation = lerp(btn.animation, 1, dt * 10)
 
-        if mouseJustPressed(1) then pressed = true end
+        if mouseJustPressed(1) then pressed = true; playSound("buttonPressed") end
 
     else
 
@@ -166,6 +166,8 @@ function process01Button(button)
             button.animation = 0.4
 
             button.value = not button.value
+
+            playSound("buttonPressed")
 
         end
     

@@ -16,8 +16,10 @@ teleport = love.audio.newSource("data/sounds/SFX/structures/teleport.wav", "stre
 craft = love.audio.newSource("data/sounds/SFX/structures/craft.wav", "stream"),
 cantCraft = love.audio.newSource("data/sounds/SFX/structures/cantCraft.wav", "stream"),
 
-inventoryClick = love.audio.newSource("data/sounds/SFX/inventory/tick.wav", "stream"), -- Inventory sounds
-scroll = love.audio.newSource("data/sounds/SFX/inventory/scroll.wav", "stream"), 
+inventoryClick = love.audio.newSource("data/sounds/SFX/inventory/tick.wav", "stream"), -- UI sounds
+scroll = love.audio.newSource("data/sounds/SFX/inventory/scroll.wav", "stream"),
+
+buttonPressed = love.audio.newSource("data/sounds/SFX/buttonPressed.wav", "stream"),
 
 shoot = love.audio.newSource("data/sounds/SFX/shoot.wav", "stream"), -- Item sounds
 slash = love.audio.newSource("data/sounds/SFX/slash.wav", "stream"),
