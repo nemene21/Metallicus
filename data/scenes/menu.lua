@@ -46,10 +46,11 @@ function menuReload()
 
     optionsUI.screenShake = newSlider(1200, 80 + UIDist * 5, "Screen Shake", OPT.screenShake, 0.1, "%")
     optionsUI.brightness = newSlider(1200, 80 + UIDist * 6, "Brightness", OPT.brightness, 0.1, "%")
-    optionsUI.fullscreen = new01Button(1200, 80 + UIDist * 7, "Fullscreen", OPT.fullscreen)
-    optionsUI.textPopups = new01Button(1200, 80 + UIDist * 8, "Text Popups", OPT.textPopups)
+    optionsUI.fullscreen = new01Button(1200, 120 + UIDist * 7, "Fullscreen", OPT.fullscreen)
+    optionsUI.colorBlindMode = newSlider(1200, 80 + UIDist * 8, "Color Blind Mode (may help)", OPT.colorBlindMode / 3, 0.33)
+    optionsUI.textPopups = new01Button(1200, 120 + UIDist * 9, "Text Popups", OPT.textPopups)
 
-    optionsUI.tutorial = new01Button(1200, 80 + UIDist * 9, "Tutorial", OPT.tutorial)
+    optionsUI.tutorial = new01Button(1200, 120 + UIDist * 11, "Tutorial", OPT.tutorial)
 
     optionsOpen = false
 
@@ -202,19 +203,26 @@ function processOptions()
     optionsUI.brightness.displayValue = OPT.brightness * 100
     optionsUI.brightness:process()
     optionsUI.brightness:draw()
+    OPT.brightness = optionsUI.brightness:value()
 
     optionsUI.fullscreen:process()
     optionsUI.fullscreen:draw()
     OPT.fullscreen = optionsUI.fullscreen.value
 
+    optionsUI.colorBlindMode.displayValue = OPT.colorBlindMode
+    optionsUI.colorBlindMode:process()
+    optionsUI.colorBlindMode:draw()
+
+    OPT.colorBlindMode = round(optionsUI.colorBlindMode:value() * 3)
+
     optionsUI.textPopups:process()
     optionsUI.textPopups:draw()
     OPT.textPopups = optionsUI.textPopups.value
 
+    outlinedText(1200 - camera[1], 120 + UIDist * 10 - camera[2] + optionsScroll, 3, "Miscellaneous", {255, 255, 255}, 3, 3, 0.5, 0.5) -- Misc
+
     optionsUI.tutorial:process()
     optionsUI.tutorial:draw()
     OPT.tutorial = optionsUI.tutorial.value
-
-    OPT.brightness = optionsUI.brightness:value()
 
 end

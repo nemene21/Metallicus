@@ -88,7 +88,7 @@ function steletonBossAttack2Hands(boss)
 
     if boss.armShootingUp < 0 then
 
-        boss.armShootingUp = 0.2
+        boss.armShootingUp = 0.3
 
         local projectile = newEnemyProjectile("mediumOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 200, 90 + love.math.random(-33, 33), 24, 12, {255,200,200})
         if love.math.random(0, 100) > 50 then projectile = newEnemyProjectile("smallOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 250, 90 + love.math.random(-33, 33), 18, 12, {255,200,200}) end
@@ -113,7 +113,7 @@ function steletonBossAttack2Hands(boss)
 
     if boss.spitAttackDelay < 0 then
 
-        boss.spitAttackTimer = 2 + love.math.random(1, 3)
+        boss.spitAttackTimer = 3 + love.math.random(1, 3)
         boss.spitAttackDelay = 2
 
         local dir = newVec(boss.pos.x - player.collider.x, boss.pos.y - player.collider.y):getRot()
@@ -128,7 +128,7 @@ function steletonBossAttack2Hands(boss)
     
     if boss.armSlamTimer < 0 then
 
-        boss.armSlamTimer = 6 + love.math.random(1, 3)
+        boss.armSlamTimer = 8 + love.math.random(1, 3)
         boss.armGoingToSlamTimer = 3
 
         boss.slamming = true
@@ -153,7 +153,7 @@ function steletonBossAttack2Hands(boss)
 
                 for i = 1, 8 do -- Summon bullets
 
-                    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.handSlamPos.x, boss.handSlamPos.y), 250, 45 * i, 12, 12, {255,200,200}))
+                    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.handSlamPos.x, boss.handSlamPos.y), 250, 45 * i, 18, 12, {255,200,200}))
 
                 end
 

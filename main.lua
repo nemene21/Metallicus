@@ -218,6 +218,7 @@ function love.draw()
     
     processShockwaves()
     SHADERS.GLOW_AND_LIGHT:send("colorBlindMode", OPT.colorBlindMode)
+    SHADERS.UI:send("colorBlindMode", OPT.colorBlindMode)
 
     transition = clamp(transition - dt / transitionTime, 0, 1)
     
@@ -238,13 +239,16 @@ function love.draw()
     love.graphics.setShader(SHADERS[postPro])
 
     love.graphics.draw(display, screenshake[1], screenshake[2], math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008 * (OPT.screenShake * 2))
-
-    love.graphics.setShader()
     
     if (drawUi or sceneAt ~= "game") and UI_ALPHA > 0.01 then
+
+        love.graphics.setShader(SHADERS.UI)
+
         love.graphics.setColor(1,1,1, UI_ALPHA / 255)
         love.graphics.draw(UI_LAYER)
     end
+
+    love.graphics.setShader()
 
     -- Reset particles
     love.graphics.setColor(1,1,1)

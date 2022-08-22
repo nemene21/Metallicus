@@ -15,7 +15,7 @@ end
 function round(a) return math.floor(a+0.5) end -- floor(A + 0.5)
 
 function floorSnap(a,b) return math.floor(a/b)*b end -- floor(A / B) * B
-function snap(a,b) return round(a/b+0.5)*b end -- round(A / B) * B
+function snap(a,b) return round(a/b)*b end -- round(A / B) * B
 
 function boolToInt(booleon)
     if booleon then return 1 end

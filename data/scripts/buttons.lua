@@ -75,17 +75,21 @@ end
 
 function processSlider(slider)
 
-    slider.takeAnimation = lerp(slider.takeAnimation, 0, dt * 4)
+    if newVec((slider.x + slider.point * 400) - (xM + camera[1]), slider.y + 64 - yM + optionsScroll):getLen() < 24 then
 
-    if mouseJustPressed(1) then
+        if not slider.held then slider.takeAnimation = lerp(slider.takeAnimation, 0.15, dt * 12) end
 
-        if newVec((slider.x + slider.point * 400) - (xM + camera[1]), slider.y + 64 - yM + optionsScroll):getLen() < 24 then
+        if mouseJustPressed(1) then
 
             slider.held = true
 
-            slider.takeAnimation = 0.4
+            slider.takeAnimation = 0.5
 
         end
+
+    else
+
+        if not slider.held then slider.takeAnimation = lerp(slider.takeAnimation, 0, dt * 16) end
 
     end
 
@@ -94,7 +98,9 @@ function processSlider(slider)
     if slider.held then
 
         slider.point = (clamp(xM + camera[1], slider.x - 200, slider.x + 200) - slider.x) / 400
-        slider.point = floorSnap(slider.point, slider.snap)
+        slider.point = snap(slider.point + 0.5, slider.snap) - 0.5
+
+        slider.takeAnimation = lerp(slider.takeAnimation, 0.15, dt * 12)
 
     end
 

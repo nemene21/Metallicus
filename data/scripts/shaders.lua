@@ -34,6 +34,8 @@ SHADERS = {
     ITEM_SHINE = love.graphics.newShader((love.filesystem.read("data/shaders/ITEM_SHINE.fs")))
     ,
     BULLET_TRAIL = love.graphics.newShader((love.filesystem.read("data/shaders/BULLET_TRAIL.fs")))
+    ,
+    UI = love.graphics.newShader((love.filesystem.read("data/shaders/UI.fs")))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
