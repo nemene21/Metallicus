@@ -19,7 +19,7 @@ function processMaterial(mat)
     
     for id, P in ipairs(playerProjectiles) do
     
-        if newVec(P.pos.x - mat.x, P.pos.y - mat.y):getLen() < 36 + P.radius and P.hit == false then
+        if newVec(P.pos.x - mat.x, P.pos.y - mat.y + 24):getLen() < 28 + P.radius and P.hit == false then
     
             local isInHitlist = false
     

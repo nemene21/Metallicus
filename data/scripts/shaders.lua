@@ -21,13 +21,22 @@ SHADERS = {
     ,
     ACTIVE_ITEM = love.graphics.newShader((love.filesystem.read("data/shaders/ACTIVE_ITEM.fs")))
     ,
+
     WAVE = love.graphics.newShader(nil, love.filesystem.read("data/shaders/WAVE.vs"))
     ,
+    CAVE_WATERFALL = love.graphics.newShader((love.filesystem.read("data/shaders/CAVE_WATERFALL.fs")))
+
+    ,
     SCENE_TRANSITION = love.graphics.newShader((love.filesystem.read("data/shaders/SCENE_TRANSITION.fs")))
+    ,
+    BREWING_ARROWS = love.graphics.newShader((love.filesystem.read("data/shaders/BREWING_ARROWS.fs")))
+    ,
+    ITEM_SHINE = love.graphics.newShader((love.filesystem.read("data/shaders/ITEM_SHINE.fs")))
+    ,
+    BULLET_TRAIL = love.graphics.newShader((love.filesystem.read("data/shaders/BULLET_TRAIL.fs")))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
--- SHADERS.BLUR:send("xRatio",aspectRatio[2])
 SHADERS.GLITCH:send("mask",love.graphics.newImage("data/images/shaderMasks/glitch.png"))
 
 SHADERS.GLOW_AND_LIGHT:send("vignetteMask",love.graphics.newImage("data/images/shaderMasks/vignette.png"))
@@ -37,7 +46,6 @@ SHADERS.GLOW_AND_LIGHT:send("xRatio", aspectRatio[2])
 
 SHADERS.GLOW_AND_LIGHT:send("hurtVignetteIntensity", 0)
 
--- SHADERS.GLOW_AND_LIGHT:send("screenDimensions", WS)
 SHADERS.GLOW_AND_LIGHT:send("ACTIVE_SHOCKWAVES", 0)
 
 SHADERS.PIXEL_PERFECT:send("snapX", 1 / 800 * 3)
@@ -84,6 +92,36 @@ function drawLight(x,y,r,color)
 
 end
 
+function newNoiseTexture(w, h, zoom, seed)
+
+    local zoom = zoom or 1
+    local seed = seed or love.math.random(0, 1000000)
+
+    local noiseTexture = love.graphics.newCanvas(w, h)
+    noiseTexture:setWrap("repeat")
+
+    love.graphics.setCanvas(noiseTexture)
+
+    for x = 0, w do
+
+        for y = 0, h do
+
+            local noise = math.abs(love.math.noise(x * zoom, y * zoom, seed))
+
+            love.graphics.setColor(noise, noise, noise)
+
+            love.graphics.points(x, y)
+
+        end
+
+    end
+
+    love.graphics.setCanvas()
+
+    return noiseTexture
+
+end
+
 SHOCKWAVES = {}
 
 function processShockwaves()
@@ -124,7 +162,7 @@ function shock(x, y, size, force, lifetime)
 
 end
 
---shock(400, 300, 10, 1)
+SHADERS.CAVE_WATERFALL:send("noise", newNoiseTexture(32, 540, 0.1))
 
 -- Table of all post process effects you want, example: postPro = {"PIXEL_PERFECT","GLOW"}
 postPro = {}

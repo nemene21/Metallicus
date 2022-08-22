@@ -30,7 +30,7 @@ end
 -- All global values used in all scenes (display, textures, options, etc.)
 function love.load()
 
-    UI_ALPHA = 255 
+    UI_ALPHA = 255
     postPro = ""
 
     -- Get screenRes
@@ -48,9 +48,13 @@ function love.load()
     postProCanvas = love.graphics.newCanvas(WS[1],WS[2])
 
     -- Imports
-    json = require "data.scripts.json"; require "data.scripts.misc"; require "data.scripts.loading"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
+    json = require "data.scripts.json"; require "data.scripts.loading"
+
+    OPT = loadJson("OPTIONS.json")
+    
+    require "data.scripts.misc"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
     require "data.scripts.buttons"; require "data.scripts.enemies"; require "data.scripts.projectiles"; require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
-    require "data.scripts.debugLine"; require "data.scripts.lootTables"
+    require "data.scripts.debugLine"; require "data.scripts.lootTables"; require "data.scripts.structures.brewer"; require "data.scripts.tutorial"; require "data.scripts.pets"
 
     transitionSurf = love.graphics.newCanvas(WS[1] / 4, WS[2] / 4) -- Making the transition noise
     love.graphics.setCanvas(transitionSurf)
@@ -137,6 +141,7 @@ function love.load()
 
     screenshotAnim = 0
     SS_FOLDER = love.filesystem.getSaveDirectory() .. "/screenshots"
+
 end
 
 -- Play scenes
@@ -145,7 +150,11 @@ function love.update()
     if nextPresenceUpdate < love.timer.getTime() then
 
         if sceneAt == "game" then
-            presence.state = BIOMES[biomeOn].name .. " - Floor " .. tostring(floorOn)
+            if OPT.tutorial then
+                presence.state = "Tutorial..."
+            else
+                presence.state = BIOMES[biomeOn].name .. " - Floor " .. tostring(floorOn)
+            end
         else
             presence.state = ""
         end
@@ -158,6 +167,8 @@ function love.update()
 end
 
 function love.draw()
+
+    ANY_INVENTORY_HOVERED = false
     
     events = {}
 
@@ -166,6 +177,23 @@ function love.draw()
     -- Time and resetting
     dt = math.min(love.timer.getDelta(), MIN_DELTA) * timeMult
     globalTimer = globalTimer + dt
+
+    MASTER_VOLUME = OPT.masterVolume
+    MUSIC_VOLUME = OPT.musicVolume
+    SFX_VOLUME = OPT.SFXVolume
+
+    -- Send shader data
+    SHADERS.GLOW_AND_LIGHT:send("brightness", 2 * OPT.brightness)
+
+    SHADERS.WAVE:send("timePassed", globalTimer)
+    SHADERS.WAVE:send("cameraX", round(camera[1]))
+    SHADERS.WAVE:send("cameraY", round(camera[2]))
+
+    SHADERS.CAVE_WATERFALL:send("screenImage", display)
+    SHADERS.CAVE_WATERFALL:send("time", globalTimer)
+
+    SHADERS.WAVE:send("cameraX", round(camera[1]))
+    SHADERS.WAVE:send("cameraY", round(camera[2]))
     
     -- Mouse pos
     xM, yM = love.mouse.getPosition()
@@ -186,14 +214,10 @@ function love.draw()
     love.graphics.setColor(1,1,1,1); love.graphics.setCanvas(display)
     love.graphics.clear (0,0,0,1)
 
-    SHADERS.WAVE:send("timePassed", globalTimer)
-    SHADERS.WAVE:send("cameraX", round(camera[1]))
-    SHADERS.WAVE:send("cameraY", round(camera[2]))
-
     --------------------------------------------------------------------------SCENE CALLED
     
     processShockwaves()
-    SHADERS.GLOW_AND_LIGHT:send("motionBlur", dt * 15)
+    SHADERS.GLOW_AND_LIGHT:send("colorBlindMode", OPT.colorBlindMode)
 
     transition = clamp(transition - dt / transitionTime, 0, 1)
     
@@ -213,7 +237,7 @@ function love.draw()
     love.graphics.setCanvas(postProCanvas)
     love.graphics.setShader(SHADERS[postPro])
 
-    love.graphics.draw(display, screenshake[1], screenshake[2], math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008)
+    love.graphics.draw(display, screenshake[1], screenshake[2], math.sin(math.max(shakeTimer.time / shakeTimer.timeMax, 0) * 3.14) * shakeStr * 0.0008 * (OPT.screenShake * 2))
 
     love.graphics.setShader()
     
@@ -248,13 +272,26 @@ function love.draw()
     end
 
     -- Check for fullscreen 
-    if justPressed("f1") then changeFullscreen() end
 
-    if justPressed("f2") then drawUi = not drawUi end
- 
-    if justPressed("f3") then love.graphics.captureScreenshot("screenshots/screenshot.png"); screenshotAnim = 5; love.system.setClipboardText(SS_FOLDER) end
+    if justPressed("f1") then drawUi = not drawUi end
+
+    if justPressed("f2") then
+        
+        love.graphics.captureScreenshot("screenshots/screenshot"..tostring(OPT.screenshotsTaken)..".png")
+
+        OPT.screenshotsTaken = OPT.screenshotsTaken + 1;
+
+        screenshotAnim = 5
+        
+        love.system.setClipboardText(SS_FOLDER)
+    
+    end
 
     -- Reset stuff
+    if fullscreen ~= OPT.fullscreen then changeFullscreen() end
+
+    fullscreen = OPT.fullscreen
+
     lastKeyPressed = "none"; lastMouseButtonPressed = -1
     for id,J in pairs(JOYSTICKS) do JOYSTICK_LAST_PRESSES[id] = "none" end
     scroll = 0; processSound(); resetLight()
@@ -309,4 +346,5 @@ end
 
 function love.quit()
     discordRPC.shutdown()
+    saveJson("OPTIONS.json", OPT)
 end

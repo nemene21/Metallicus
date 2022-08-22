@@ -1,7 +1,7 @@
 
 function buildGiantFirefly(x, y)
     return {
-        hp = 50,
+        hp = 40,
 
         knockback = newVec(0,0), knockBackResistance = 1,
 

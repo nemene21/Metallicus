@@ -158,6 +158,9 @@ function processTeleporter(teleporter)
     
             end
 
+            -- Place decoration
+            decorateRoom(bossRoom, biome)
+
             -- Set bg
             bossRoom.bgTilemap = newTilemap(loadSpritesheet(biome.bgTilesetPath, 16, 16), 48)
             for x=bossRoom.endLeft,bossRoom.endRight do for y=bossRoom.endUp,bossRoom.endDown do
@@ -195,9 +198,6 @@ function processTeleporter(teleporter)
 
             bossRoom.boss = bosses[1]
             table.remove(bosses, 1)
-
-            -- Place decoration
-            decorateRoom(bossRoom, biome)
 
             ROOMS = {bossRoom} -- Construct a new room sequence that includes just the boss room
 

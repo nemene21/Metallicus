@@ -25,9 +25,9 @@ function newPlayer(x,y,stats)
     wearing = addSlot(wearing,1,1,"bodyArmor","bodyArmor","equipmentSlot")
     wearing = addSlot(wearing,1,2,"activeItem","shield","equipmentSlot")
 
-    wearing = addSlot(wearing,2,0,"ring","ring","equipmentSlot")
-    wearing = addSlot(wearing,2,1,"ring","ring","equipmentSlot")
-    wearing = addSlot(wearing,2,2,"amulet","amulet","equipmentSlot")
+    -- wearing = addSlot(wearing,2,0,"ring","ring","equipmentSlot")
+    -- wearing = addSlot(wearing,2,1,"ring","ring","equipmentSlot")
+    -- wearing = addSlot(wearing,2,2,"pet","pet","equipmentSlot")
 
     local player = {
         vel=newVec(0, 0), knockback = newVec(0, 0), stats=stats, inventory=inventory, hotbar=hotbar, wearing=wearing, process=processPlayer, say=sayPlayer, draw=drawPlayer, drawUI=drawPlayerUI, setStats = setPlayerStats, resetStats = resetPlayerStats,
@@ -639,7 +639,7 @@ function drawPlayerUI(player)
 
     end
 
-    player.activeItemOffset = lerp(player.activeItemOffset, 0, dt * 2)
+    player.activeItemOffset = lerp(player.activeItemOffset, 200 * boolToInt(player.anvilOpen == true), dt * 6)
     
     -- Draw hp bar
     local barLenght = 186 * player.hp / player.hpMax
@@ -737,7 +737,7 @@ function drawPlayerUI(player)
         processMouseSlot()
 
         -- Drop items
-        if not player.inventory.hovered and not player.hotbar.hovered and not player.wearing.hovered and IN_HAND ~= nil then
+        if not ANY_INVENTORY_HOVERED and IN_HAND ~= nil then
 
             if mouseJustPressed(1) then
 

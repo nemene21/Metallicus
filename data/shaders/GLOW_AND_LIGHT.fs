@@ -16,7 +16,7 @@ float PI2 = 6.2831;
 
 float iterations = directions * quality - 15;
 
-float intensityBloom = 0.6;
+uniform float intensityBloom = 0.6;
 
 extern float xRatio;
 
@@ -33,18 +33,18 @@ struct Shockwave {
 
 };
 
+uniform int colorBlindMode = 0;
+
 extern int ACTIVE_SHOCKWAVES;
 
 extern Shockwave shockwaves[16];
 
 vec2 screenDimensions = vec2(800, 600);
 
-extern float motionBlur = 0.0;
+uniform float brightness;
 
 vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
 {
-
-    color.a = 1 - motionBlur;
 
     for (int i = 0; i < ACTIVE_SHOCKWAVES; i++) {
 
@@ -98,5 +98,13 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
     vec4 pxf = (lightedImage + vec4(1, 0, 0, 1) * hurtVignetteIntensity * Texel(hitVignetteMask, uvs).r) * Texel(vignetteMask, uvs);
     float gsc = (pxf.r + pxf.g + pxf.b) * 0.33;
 
-    return vec4(pxf.r + (gsc - pxf.r) * grayscale, pxf.g + (gsc - pxf.g) * grayscale, pxf.b + (gsc - pxf.b) * grayscale, 1) * color;
+    vec4 finalPx = vec4(pxf.r + (gsc - pxf.r) * grayscale, pxf.g + (gsc - pxf.g) * grayscale, pxf.b + (gsc - pxf.b) * grayscale, 1) * color;
+
+    if (colorBlindMode == 1) {finalPx = finalPx.gbra;}
+    if (colorBlindMode == 2) {finalPx = finalPx.brga;}
+    if (colorBlindMode == 3) {finalPx = finalPx.bgra;}
+
+    finalPx.rgb *= brightness;
+
+    return finalPx;
 }

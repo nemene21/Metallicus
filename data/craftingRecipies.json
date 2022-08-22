@@ -5,8 +5,8 @@
     "amount" : 2
 },
 {
-    "name" : "slimyShroomSoup",
-    "materials" : [["jello", 6], ["shroomOre", 6], ["wood", 2]],
+    "name" : "bowl",
+    "materials" : [["wood", 3]],
     "amount" : 1
 },
 {
@@ -61,7 +61,7 @@
 },
 {
     "name" : "jelloGrenade",
-    "materials" : [["jello", 24], ["stick", 2]],
+    "materials" : [["jello", 20], ["stick", 2]],
     "amount" : 1
 },
 {

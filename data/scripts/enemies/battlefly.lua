@@ -11,6 +11,8 @@ function buildBattlefly(x, y)
 
         drops = {flyDust = 250}, hasNoBodyOnDeath = true, mult = 0, shot = false,
 
+        onDeath = battleflyExplode,
+
         states = {
             float = battleflyStateFloat, move = battleflyStateMove
         }
@@ -78,16 +80,16 @@ function battleflyStateMove(battlefly)
 
         battlefly.state = "float"
 
-        battlefly.nextStateTimer.timeMax = love.math.random(2,3)
+        battlefly.nextStateTimer.timeMax = love.math.random(1,2)
         battlefly.nextStateTimer:reset()
 
         battlefly.vel = newVec(0, 0)
 
         if battlefly.goingToShoot then
-        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, 45, 18, 10, {255,200,200}))
-        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, -45, 18, 10, {255,200,200}))
-        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, 135, 18, 10, {255,200,200}))
-        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, -135, 18, 10, {255,200,200}))
+            table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, 45, 18, 15, {255,200,200}))
+            table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, -45, 18, 15, {255,200,200}))
+            table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, 135, 18, 15, {255,200,200}))
+            table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 200, -135, 18, 15, {255,200,200}))
         end
     end
 
@@ -108,4 +110,20 @@ function battleflyStateMove(battlefly)
 
     shine(battlefly.collider.x, battlefly.collider.y, 128, {255 * (1 - battlefly.mult), 80 * battlefly.mult, 255 * battlefly.mult, 80})
     love.graphics.setCanvas(display)
+
+end
+
+function battleflyExplode(battlefly)
+
+    shock(battlefly.collider.x, battlefly.collider.y, 0.25, 0.06, 0.15)
+
+    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 120, 45, 18, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 120, -45, 18, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 120, 135, 18, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(battlefly.collider.x, battlefly.collider.y), 120, -135, 18, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(battlefly.collider.x, battlefly.collider.y), 120, 0, 24, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(battlefly.collider.x, battlefly.collider.y), 120, 90, 24, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(battlefly.collider.x, battlefly.collider.y), 120, 180, 24, 15, {255,200,200}))
+    table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb",newVec(battlefly.collider.x, battlefly.collider.y), 120, 270, 24, 15, {255,200,200}))
+
 end

@@ -30,9 +30,7 @@ function fetchNextBiome(degrade)
             if degrade and not isBossFloor then
                 
                 BIOME_ORDER[id][2] = BIOME_ORDER[id][2] - 1
-
-                print(id, B[2])
-
+                
                 if BIOME_ORDER[id][2] == 0 then assumedIsBossFloor = true end
             
             end
@@ -51,7 +49,7 @@ function resetBiomes()
     bosses = {newSkeletonBoss()}
 
     BIOME_ORDER = {
-        {"cave", 1},
+        {"cave", 3},
         {"sporeCavern", -1}
     }
 
@@ -60,7 +58,7 @@ end
 
 resetBiomes()
 
-function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light, shader)
+function newDecoration(name, images, offset, spawnCondition, distance, frequency, centering, wind, windSpeed, particles, light, shader, setPos)
 
     -- LIGHT:
     --    1 = x offset
@@ -76,11 +74,18 @@ function newDecoration(name, images, offset, spawnCondition, distance, frequency
     --    3 = path to data
 
     DECORATION_IMAGES[name] = {}
-    for id, S in ipairs(images) do table.insert(DECORATION_IMAGES[name], love.graphics.newImage("data/images/levelDecorations/" .. S)) end
+    for id, S in ipairs(images) do
+
+        local image = love.graphics.newImage("data/images/levelDecorations/" .. S)
+        image:setWrap("repeat")
+        
+        table.insert(DECORATION_IMAGES[name], image)
+    
+    end
     if particles ~= nil then particles = {xO = particles[1], yO = particles[2], data = loadJson(particles[3])} end
 
     return {
-        shader = shader, particles = particles, offset = offset, name = name, distance = distance, frequency = frequency, spawnCondition = spawnCondition, centering = centering, wind = wind, windSpeed = windSpeed, light = light
+        problematic = problematic, setPos = setPos, shader = shader, particles = particles, offset = offset, name = name, distance = distance, frequency = frequency, spawnCondition = spawnCondition, centering = centering, wind = wind, windSpeed = windSpeed, light = light
     }
 end
 
@@ -107,7 +112,8 @@ cave = {
 
     foreground = {
 
-        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 2, 50, {0.5, 0}, 0.2, 0.5, nil, nil, "WAVE")
+        newDecoration("vine", {"cave/vine1.png","cave/vine2.png","cave/vine3.png"}, {0,0}, {{0, 0, true}, {0, 1, false}}, 2, 50, {0.5, 0}, 0.2, 0.5, nil, nil, "WAVE"),
+        newDecoration("waterfall", {"cave/waterfall1.png", "cave/waterfall2.png"}, {0, 0}, {}, 10, 0.015, {0.5, 0}, 0, 0, nil, nil, "CAVE_WATERFALL", {nil, -300})
 
     }
     },
@@ -124,7 +130,7 @@ cave = {
     giantFirefly = {spawnOn = "air", frequency = 75}
     },
 
-    nEnemies = {a = 3, b = 4},
+    nEnemies = {a = 2, b = 3},
 
 },
 sporeCavern = {
@@ -208,11 +214,7 @@ function generate(amount, biome)
                 layout = "data/layouts/end.json"
                 table.insert(room.structures, ENTERABLES.house(420, 579))
 
-                if love.math.random(0, 100) > 0 then
-
-                    table.insert(room.structures, newChest(220, 563))
-
-                end
+                table.insert(room.structures, newChest(220, 563))
 
             else
                 layout = biome.layoutPath..tostring(love.math.random(1, biome.nLayouts))..".json"
@@ -223,10 +225,7 @@ function generate(amount, biome)
             firstRoomEver = false
             layout = "data/layouts/firstRoom.json"
 
-            --oom.boss = bosses[1]
-
-            table.insert(room.structures, newTextDisplayer(400, 250, "A and D to move"))
-            table.insert(room.structures, newTextDisplayer(400, 350, "Space and right click to jump and dash!"))
+            --room.boss = bosses[1]
 
             playSound("enter")
 
@@ -237,11 +236,19 @@ function generate(amount, biome)
 
         end
 
+        if OPT.tutorial == true then
+
+            OPT.tutorial = false
+
+            table.insert(room.structures, newTextDisplayer(400, 250, "Now you are on your own"))
+            table.insert(room.structures, newTextDisplayer(400, 350, "Good luck :)"))
+
+        end
+
         local levelPreset = loadJson(layout)
         room.tilemap = newTilemap(loadSpritesheet(biome.tilesetPath, 16, 16), 48, levelPreset.tiles)
 
         -- Place structures from the preset
-
         for _, S in ipairs(levelPreset.structures) do
 
             table.insert(room.structures, IN_ROOM_STRUCTURES[S[1]](S[2], S[3], S))
@@ -273,6 +280,9 @@ function generate(amount, biome)
             end
 
         end
+
+        -- Place decoration
+        decorateRoom(room, biome)
 
         -- Place enemies
         placeEnemies(biome, room, num, amount)
@@ -362,9 +372,6 @@ function generate(amount, biome)
             table.insert(room.tilemap.collidersWithFalltrough, rectExit)
 
         end
-        
-        -- Place decoration
-        decorateRoom(room, biome)
 
         rooms[num + 1] = room
     end
@@ -431,8 +438,8 @@ function decorateRoom(room, biome)
 
         local tilesTaken = {}
 
-        for posX = 0, 16 do
-        for posY = 0, 12 do
+        for posX = room.endLeft + 3, room.endRight - 3 do
+        for posY = room.endUp + 3, room.endDown - 3 do
 
             local valid = true
 
@@ -461,9 +468,18 @@ function decorateRoom(room, biome)
                     local particles = nil
                     if B.particles ~= nil then particles = newParticleSystem(B.particles.xO + posX * 48 + 24 + B.offset[1], B.particles.yO + posY * 48 + 24 + B.offset[2], deepcopyTable(B.particles.data)) end
 
-                    table.insert(room.decorations.background, {
+                    local decoration = {
                         shader = B.shader, particles = particles, light = B.light, x = posX * 48 + 24 + B.offset[1], y = posY * 48 + 24 + B.offset[2], name = B.name, textureId = love.math.random(1, #DECORATION_IMAGES[B.name]), centering = B.centering, windSpeed = B.windSpeed, wind = B.wind
-                    })
+                    }
+
+                    if B.setPos ~= nil then
+
+                        decoration.x = B.setPos[1] or decoration.x
+                        decoration.y = B.setPos[2] or decoration.y
+
+                    end
+
+                    table.insert(room.decorations.background, decoration)
 
                     table.insert(tilesTaken, {posX, posY})
 
@@ -480,8 +496,8 @@ function decorateRoom(room, biome)
 
         local tilesTaken = {}
 
-        for posX = 0, 16 do
-        for posY = 0, 12 do
+        for posX = room.endLeft + 3, room.endRight - 3 do
+        for posY = room.endUp + 3, room.endDown - 3 do
 
             local valid = true
 
@@ -510,9 +526,18 @@ function decorateRoom(room, biome)
                     local particles = nil
                     if F.particles ~= nil then particles = newParticleSystem(F.particles.xO + posX * 48 + 24 + F.offset[1], F.particles.yO + posY * 48 + 24 + F.offset[2], deepcopyTable(F.particles.data)) end
                     
-                    table.insert(room.decorations.foreground, {
+                    local decoration = {
                         shader = F.shader, particles = particles, light = F.light, x = posX * 48 + 24 + F.offset[1], y = posY * 48 + 24 + F.offset[2], name = F.name, textureId = love.math.random(1, #DECORATION_IMAGES[F.name]), centering = F.centering, windSpeed = F.windSpeed, wind = F.wind
-                    })
+                    }
+
+                    if F.setPos ~= nil then
+
+                        decoration.x = F.setPos[1] or decoration.x
+                        decoration.y = F.setPos[2] or decoration.y
+
+                    end
+
+                    table.insert(room.decorations.foreground, decoration)
 
                     table.insert(tilesTaken, {posX, posY})
 
@@ -907,7 +932,7 @@ function roomProcessItems(room)
         I:process(room)
         I:draw()
 
-        if rectCollidingCircle(player.collider, I.pos.x, I.pos.y, 8) then 
+        if rectCollidingCircle(player.collider, I.pos.x, I.pos.y, 20) then 
             
             local startAmount = I.data.amount
             I.data = player.hotbar:convenientlyAddItem(I.data)

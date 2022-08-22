@@ -3,7 +3,7 @@
 
 function buildSlime(x, y)
     return {
-        hp = 80,
+        hp = 60,
 
         knockback = newVec(0,0), knockBackResistance = 1,
 

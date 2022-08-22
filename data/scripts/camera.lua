@@ -1,5 +1,5 @@
 
-camera = {0,0}; boundCamPos = {0,0}
+camera = {400, 300}; boundCamPos = {0,0}
 
 lerpSpeed = 2
 
@@ -52,11 +52,13 @@ function processCamera()
         end
     end
 
-    camera[1] = lerp(camera[1],boundCamPos[1], dt*lerpSpeed)
-    camera[2] = lerp(camera[2],boundCamPos[2], dt*lerpSpeed)
+    camera[1] = lerp(camera[1],boundCamPos[1], dt * lerpSpeed)
+    camera[2] = lerp(camera[2],boundCamPos[2], dt * lerpSpeed)
+
+    local screenShakeMult = OPT.screenShake * 2
     
-    screenshake[1] = boundScreenshake[1] * math.sin(3.14 * shakeTimer.time / shakeTimer.timeMax)
-    screenshake[2] = boundScreenshake[2] * math.sin(3.14 * shakeTimer.time / shakeTimer.timeMax)
+    screenshake[1] = boundScreenshake[1] * math.sin(3.14 * shakeTimer.time / shakeTimer.timeMax) * screenShakeMult
+    screenshake[2] = boundScreenshake[2] * math.sin(3.14 * shakeTimer.time / shakeTimer.timeMax) * screenShakeMult
 
 end
 

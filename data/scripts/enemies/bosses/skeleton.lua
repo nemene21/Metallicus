@@ -22,8 +22,8 @@ function newSkeletonBoss()
         handSlamPos = newVec(270, 330),
         handShootPos = newVec(330, 330),
 
-        maxHp = 2650,
-        hp = 2650,
+        maxHp = 2400,
+        hp = 2400,
 
         barDelay = 306,
 
@@ -62,7 +62,7 @@ function steletonBossAttack2Hands(boss)
     boss.slamArmBounceAnim = lerp(boss.slamArmBounceAnim, 0, dt * 4)
 
     boss.pos.x = 380 + 210 * math.sin(globalTimer)
-    boss.pos.y = 240 + 96 * math.sin(globalTimer * 0.5)
+    boss.pos.y = 235 + 110 * math.sin(globalTimer * 0.4)
 
     boss.smoke.x = boss.pos.x; boss.smoke.y = boss.pos.y
 
@@ -73,7 +73,7 @@ function steletonBossAttack2Hands(boss)
     boss.handShootSmoke.x = boss.handShootPos.x; boss.handShootSmoke.y = boss.handShootPos.y
 
     boss.handShootPos.x = lerp(boss.handShootPos.x, boss.pos.x + 64, dt * 5)
-    boss.handShootPos.y = lerp(boss.handShootPos.y, boss.pos.y + 30 - 128 * boolToInt(boss.isArmShootingUpTimer < 0), dt * 3)
+    boss.handShootPos.y = lerp(boss.handShootPos.y, boss.pos.y + 30 - 96 * boolToInt(boss.isArmShootingUpTimer < 0), dt * 3)
 
     boss.hitbox.x = boss.pos.x
     boss.hitbox.y = boss.pos.y
@@ -90,8 +90,8 @@ function steletonBossAttack2Hands(boss)
 
         boss.armShootingUp = 0.2
 
-        local projectile = newEnemyProjectile("mediumOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 200, 90 + love.math.random(-33, 33), 24, 10, {255,200,200})
-        if love.math.random(0, 100) > 50 then projectile = newEnemyProjectile("smallOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 250, 90 + love.math.random(-33, 33), 18, 10, {255,200,200}) end
+        local projectile = newEnemyProjectile("mediumOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 200, 90 + love.math.random(-33, 33), 24, 12, {255,200,200})
+        if love.math.random(0, 100) > 50 then projectile = newEnemyProjectile("smallOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 250, 90 + love.math.random(-33, 33), 18, 12, {255,200,200}) end
 
         projectile.acceleration.y = 300
 
@@ -118,9 +118,9 @@ function steletonBossAttack2Hands(boss)
 
         local dir = newVec(boss.pos.x - player.collider.x, boss.pos.y - player.collider.y):getRot()
 
-        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 200, dir + 33, 18, 10, {255,200,200}))
-        table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb", newVec(boss.pos.x, boss.pos.y + 36), 200, dir, 24, 10, {255,200,200}))
-        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 200, dir - 33, 18, 10, {255,200,200}))
+        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 250, dir + 33, 18, 12, {255,200,200}))
+        table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb", newVec(boss.pos.x, boss.pos.y + 36), 250, dir, 24, 12, {255,200,200}))
+        table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 250, dir - 33, 18, 12, {255,200,200}))
 
     end
 
@@ -143,7 +143,7 @@ function steletonBossAttack2Hands(boss)
 
         if boss.armGoingToSlamTimer < 0 then -- Slam the arm down
 
-            boss.handSlamPos.y = boss.handSlamPos.y + dt * 750
+            boss.handSlamPos.y = boss.handSlamPos.y + dt * 600
             
             if ROOM.tilemap:getTile(math.floor(boss.handSlamPos.x / 48), math.floor(boss.handSlamPos.y / 48)) ~= nil then -- See if the arm got slammed
 
@@ -153,7 +153,7 @@ function steletonBossAttack2Hands(boss)
 
                 for i = 1, 8 do -- Summon bullets
 
-                    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.handSlamPos.x, boss.handSlamPos.y), 250, 45 * i, 18, 10, {255,200,200}))
+                    table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.handSlamPos.x, boss.handSlamPos.y), 250, 45 * i, 12, 12, {255,200,200}))
 
                 end
 
@@ -212,5 +212,7 @@ function drawSkeletonBoss(boss)
     drawSprite(SKELETON_BOSS_ARM_SHOOT, boss.handShootPos.x, boss.handShootPos.y, bossAnimationTimer, bossAnimationTimer)
 
     shine(boss.handShootPos.x, boss.handShootPos.y, 144, {255, 60, 60, 80 * shootingAnim * bossAnimationTimer})
+
+    shine(boss.pos.x, boss.pos.y, 444, {255, 255, 255, 20 * bossAnimationTimer}) -- 
 
 end

@@ -81,7 +81,7 @@ function processTextParticles()
 
         local scaleProgress = math.min(progressI * 8, 1)
         
-        outlinedText(particle.x - camera[1], particle.y - camera[2] - 48 * progressI, 2, particle.text, {particle.color[1], particle.color[2], particle.color[3], 255 * clamp(progress * 4, 0, 1)}, lerp(3, 1, scaleProgress), lerp(0, 1, scaleProgress), 0.5, 0.5)
+        if OPT.textPopups then outlinedText(particle.x - camera[1], particle.y - camera[2] - 48 * progressI, 2, particle.text, {particle.color[1], particle.color[2], particle.color[3], 255 * clamp(progress * 4, 0, 1)}, lerp(3, 1, scaleProgress), lerp(0, 1, scaleProgress), 0.5, 0.5) end
 
         if particle.lifetime < 0 then table.insert(kill, id) end
 

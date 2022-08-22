@@ -4,7 +4,7 @@ function menuReload()
 
     -- Set bg
     BG = newTilemap(loadSpritesheet("data/images/tilesets/cave/bg.png", 16, 16), 48)
-    for x=-1,16 do for y=-1,13 do BG:setTile(x,y,{1,love.math.random(1,3)}) end end -- Place tiles
+    for x=-1,33 do for y=-1,13 do BG:setTile(x,y,{1,love.math.random(1,3)}) end end -- Place tiles
 
     BG:buildIndexes()
 
@@ -36,12 +36,37 @@ function menuReload()
     }
 
     mouseMode = "pointer"
+
+    UIDist = 160
+
+    optionsUI = {}
+    optionsUI.masterVolume = newSlider(1200, 80 + UIDist, "Master Volume", OPT.masterVolume, 0.1, "%")
+    optionsUI.SFXVolume = newSlider(1200, 80 + UIDist * 2, "Sound Effects Volume", OPT.SFXVolume, 0.1, "%")
+    optionsUI.musicVolume = newSlider(1200, 80 + UIDist * 3, "Music Volume", OPT.musicVolume, 0.1, "%")
+
+    optionsUI.screenShake = newSlider(1200, 80 + UIDist * 5, "Screen Shake", OPT.screenShake, 0.1, "%")
+    optionsUI.brightness = newSlider(1200, 80 + UIDist * 6, "Brightness", OPT.brightness, 0.1, "%")
+    optionsUI.fullscreen = new01Button(1200, 80 + UIDist * 7, "Fullscreen", OPT.fullscreen)
+    optionsUI.textPopups = new01Button(1200, 80 + UIDist * 8, "Text Popups", OPT.textPopups)
+
+    optionsUI.tutorial = new01Button(1200, 80 + UIDist * 9, "Tutorial", OPT.tutorial)
+
+    optionsOpen = false
+
+    optionsScroll = 0
+    optionsScrollVel = 0
+
+    lerpSpeed = 18
+
 end
 
 function menuDie()
 end
 
 function menu()
+
+    lerpSpeed = 18
+
     -- Reset
     sceneAt = "menu"
     
@@ -54,7 +79,7 @@ function menu()
 
     drawSprite(TITLE, 400, 100 + 20 * math.sin(globalTimer * 2))
 
-    local challangesYOffset = 600 - 122 + 122 * challangesOffset * challangesOffset - 27
+    local challangesYOffset = 600 - 80 + 80 * challangesOffset * challangesOffset - 27
 
     drawSprite(CHALLANGES_IMAGE, 0, challangesYOffset - 6, 1, 1, 0, 1, 0, 0)
     drawSprite(CHALLANGES_ARROW, 52, challangesYOffset + challangesArrowAnim + 21 - 21 * challangesOffset * challangesOffset, 1, challangesOffset * challangesOffset * 2 - 1, 0, 1, 0, 0)
@@ -66,7 +91,7 @@ function menu()
             if C.active then love.graphics.setShader() else SHADERS.GRAYSCALE:send("intensity", 1); love.graphics.setShader(SHADERS.GRAYSCALE) end
 
             local x = 72 + 72 * id
-            local y = challangesYOffset + 88
+            local y = challangesYOffset + 68
 
             C.scaleAnim = math.max(C.scaleAnim - dt, 0)
 
@@ -110,11 +135,17 @@ function menu()
 
     challangesOffset = clamp(challangesOffset + dt * 5 * (boolToInt(not challangesOpen) * 2 - 1), 0, 1)
 
-    if PLAY_BUTTON:process() then sceneAt = "game"; transition = 1 end
+    if PLAY_BUTTON:process() then sceneAt = "game"; transition = 1; lerpSpeed = 2 end
 
-    if OPTIONS_BUTTON:process() then end
+    if OPTIONS_BUTTON:process() then optionsOpen = true end
 
     if QUIT_BUTTON:process() then love.event.quit() end
+
+    if justPressed("escape") then optionsOpen = false; saveJson("OPTIONS.json", OPT) end
+
+    bindCamera(400 + 800 * boolToInt(optionsOpen), 300, 1)
+
+    if camera[1] > 410 then processOptions() end
 
     -- Mouse
     love.graphics.draw(mouse[mouseMode], xM, yM, 0, SPRSCL, SPRSCL, mouse[mouseMode]:getWidth() * mCentered, mouse[mouseMode]:getHeight() * mCentered)
@@ -127,5 +158,63 @@ end
 function newChallange(sprite, active)
 
     return {sprite = sprite, active = active or false, anim = 0, scaleAnim = 0}
+
+end
+
+function processOptions()
+
+    -- Scrolling
+    optionsScrollVel = lerp(optionsScrollVel, 0, dt * 5)
+    optionsScrollVel = optionsScrollVel + getScroll() * 300
+
+    optionsScroll = optionsScroll + optionsScrollVel * dt
+
+    optionsScroll = lerp(optionsScroll, clamp(optionsScroll, -1500, 0), dt * 20)
+
+    outlinedText(1200 - camera[1], 120 - camera[2] + optionsScroll, 3, "Audio", {255, 255, 255}, 3, 3, 0.5, 0.5)
+
+    optionsUI.masterVolume.displayValue = OPT.masterVolume * 100 -- Volume
+    optionsUI.masterVolume:process()
+    optionsUI.masterVolume:draw()
+
+    OPT.masterVolume = optionsUI.masterVolume:value()
+
+    optionsUI.SFXVolume.displayValue = OPT.SFXVolume * 100
+    optionsUI.SFXVolume:process()
+    optionsUI.SFXVolume:draw()
+
+    OPT.SFXVolume = optionsUI.SFXVolume:value()
+
+    optionsUI.musicVolume.displayValue = OPT.musicVolume * 100
+    optionsUI.musicVolume:process()
+    optionsUI.musicVolume:draw()
+
+    OPT.musicVolume = optionsUI.musicVolume:value()
+
+    outlinedText(1200 - camera[1], 120 + UIDist * 4 - camera[2] + optionsScroll, 3, "Graphics", {255, 255, 255}, 3, 3, 0.5, 0.5)
+
+    optionsUI.screenShake.displayValue = OPT.screenShake * 100 -- Graphics
+    optionsUI.screenShake:process()
+    optionsUI.screenShake:draw()
+
+    OPT.screenShake = optionsUI.screenShake:value()
+
+    optionsUI.brightness.displayValue = OPT.brightness * 100
+    optionsUI.brightness:process()
+    optionsUI.brightness:draw()
+
+    optionsUI.fullscreen:process()
+    optionsUI.fullscreen:draw()
+    OPT.fullscreen = optionsUI.fullscreen.value
+
+    optionsUI.textPopups:process()
+    optionsUI.textPopups:draw()
+    OPT.textPopups = optionsUI.textPopups.value
+
+    optionsUI.tutorial:process()
+    optionsUI.tutorial:draw()
+    OPT.tutorial = optionsUI.tutorial.value
+
+    OPT.brightness = optionsUI.brightness:value()
 
 end

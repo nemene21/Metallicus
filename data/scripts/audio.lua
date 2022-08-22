@@ -1,5 +1,6 @@
 
 SOUNDS = {
+    
 walk = love.audio.newSource("data/sounds/SFX/player/walk.wav", "stream"), -- Player sounds
 enter = love.audio.newSource("data/sounds/SFX/player/enter.wav", "stream"),
 fall = love.audio.newSource("data/sounds/SFX/player/fall.wav", "stream"),
@@ -29,12 +30,15 @@ slimeHitGround = love.audio.newSource("data/sounds/SFX/enemies/slimeHitGround.wa
 
 giantFireflyShoot = love.audio.newSource("data/sounds/SFX/enemies/giantFireflyShoot.wav", "stream"),
 
+bossDie = love.audio.newSource("data/sounds/SFX/enemies/bossDie.wav", "stream"),
+
 quack = love.audio.newSource("data/sounds/SFX/quack.wav", "stream") -- Quack
+
 }
 
 MASTER_VOLUME = 1
 SFX_VOLUME = 1
-MUSIC_VOLUME = 0.5
+MUSIC_VOLUME = 1
 
 SOUNDS_NUM_PLAYING = {}
 for id,S in pairs(SOUNDS) do SOUNDS_NUM_PLAYING[id] = 0 end

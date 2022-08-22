@@ -148,7 +148,9 @@ function drawEnterable(enterable)
 
     if isRectColliding(enterable.doorCollider, player.collider) then
 
+        love.graphics.setCanvas(UI_LAYER)
         drawInteract(enterable.doorCollider.x + 2, enterable.doorCollider.y - enterable.doorCollider.h * 0.5 - 24)
+        love.graphics.setCanvas(display)
 
         if justPressed("f") then
             
@@ -188,7 +190,7 @@ end
 
 function newHouse(x, y)
 
-    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, processCraftingArea, "data/particles/blankParticles.json", nil, true, {newTeleporter(560, 580), newAnvil(350, 580)}, "crafting")
+    return newEnterable(x, y, love.graphics.newImage("data/images/structures/house.png"), loadJson("data/layouts/structureRooms/house.json"), {"data/images/tilesets/houseTileset.png", "data/images/tilesets/houseBg.png"}, newRect(-39, -33, 24, 60), drawEnterable, processEnterable, processCraftingArea, "data/particles/blankParticles.json", nil, true, {newTeleporter(600, 580), newAnvil(280, 580), newBrewer(440, 580)}, "crafting")
 
 end
 

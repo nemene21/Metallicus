@@ -319,7 +319,7 @@ ENEMY_PROJECTILE_PARTICLES["mediumOrb"].particleData.width.b = 20
 -- Init
 function newEnemyProjectile(img, pos, speed, dir, radius, damage, glowColor)
     local projectile = {
-        dead = false, animation = 0, draw = drawEnemyProjectile, glowColor = glowColor, radius = radius, vel = newVec(speed,0), acceleration = newVec(0, 0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
+        dead = false, animation = 0, draw = drawEnemyProjectile, drawTrail = drawEnemyProjectileTrail, glowColor = glowColor, radius = radius, vel = newVec(speed,0), acceleration = newVec(0, 0), image = img, frames = frames, interpolation = interpolate, pos = pos, speed = speed, dir = dir, damage = damage, process = processEnemyProjectile
     }
 
     if ENEMY_PROJECTILE_PARTICLES[img] ~= nil then projectile.spawnParticles = newParticleSystem(pos.x, pos.y, deepcopyTable(ENEMY_PROJECTILE_PARTICLES[img])); projectile.spawnParticles.following = true end
@@ -348,11 +348,31 @@ function processEnemyProjectile(projectile)
 end
 
 function drawEnemyProjectile(projectile)
+
     setColor(255, 255, 255)
     drawSprite(ENEMY_PROJECTILE_IMAGES[projectile.image], projectile.pos.x, projectile.pos.y, projectile.animation, projectile.animation, projectile.vel:getRot() / 180 * 3.14)
 
     shine(projectile.pos.x, projectile.pos.y, (projectile.radius * 5 + math.sin(globalTimer * 3) * 24) * projectile.animation, projectile.glowColor)
     love.graphics.setCanvas(display)
+end
+
+ENEMY_BULLET_TRAIL = love.graphics.newMesh({{0,1, 0,1, 1,1,1,1}, {0,-1, 0,0, 1,1,1,1}, {1,0, 1,0.5, 1,1,1,1}}, "fan", "dynamic")
+ENEMY_BULLET_TRAIL:setTexture(love.graphics.newImage("data/images/shaderMasks/whitePixel.png"))
+
+function drawEnemyProjectileTrail(projectile)
+
+    setColor(228, 59, 68, 255 * projectile.animation)
+
+    love.graphics.draw(ENEMY_BULLET_TRAIL, projectile.pos.x - camera[1], projectile.pos.y - camera[2],
+            
+            (projectile.vel:getRot() + 180) / 180 * 3.14,
+            
+            projectile.vel:getLen() * 0.35,
+            
+            projectile.radius * 0.65
+            
+    )
+
 end
 
 -- Process enemy projectiles

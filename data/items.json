@@ -6,7 +6,17 @@
         "holdMode": "hold",
         "maxStack": 24,
         "types": [
-            "item"
+            "item", "burnable"
+        ]
+    },
+    "bowl": {
+        "texture": "bowl",
+        "name": "Bowl",
+        "rarity": "common",
+        "holdMode": "hold",
+        "maxStack": 24,
+        "types": [
+            "item", "burnable", "bowl"
         ]
     },
     "glowDrop": {
@@ -16,7 +26,7 @@
         "holdMode": "hold",
         "maxStack": 24,
         "types": [
-            "item"
+            "item", "burnable"
         ]
     },
     "shroomOre": {
@@ -83,7 +93,7 @@
         "noChargeTimer": 0,
         "noChargeTimerMax": 3,
         "charge": 1,
-        "chargeSpeed": 500,
+        "chargeSpeed": 800,
         "alreadyActivated": false,
         "flashTimer": 0,
         "projectile": {
@@ -121,7 +131,7 @@
         "holdMode": "hold",
         "maxStack": 24,
         "types": [
-            "item"
+            "item", "burnable"
         ]
     },
     "jello": {
@@ -146,11 +156,11 @@
     },
     "slimyShroomSoup": {
         "texture": "slimyShroomSoup",
-        "name": "Slimy Shroom Soup",
+        "name": "Jello Soup",
         "rarity": "uncommon",
         "holdMode": "consumable",
         "stats": {
-            "hp": 12
+            "hp": 5
         },
         "maxStack": 24,
         "types": [
@@ -378,7 +388,7 @@
             "particlesSpawn": "starShot"
         },
         "stats": {
-            "dmg": 15,
+            "dmg": 18,
             "attackTime": 0.3
         },
         "types": [
@@ -511,7 +521,7 @@
             "attackTime": 0.5
         },
         "types": [
-            "item"
+            "item", "burnable"
         ]
     },
     "stoneTribow": {
@@ -863,7 +873,7 @@
         },
         "maxStack": 1,
         "types": [
-            "item"
+            "item", "burnable"
         ]
     },
     "shroomBat": {
@@ -1233,7 +1243,7 @@
             "particlesSpawn": "slimeShot"
         },
         "stats": {
-            "dmg": 24,
+            "dmg": 20,
             "amount" : 40
         },
         "types": [
@@ -1313,12 +1323,24 @@
             "particlesDie" : "glowStabDie"
         },
         "stats": {
-            "dmg": 6,
+            "dmg": 8,
             "attackTime": 0.5, "burst" : 3, "light" : 50
         },
         "maxStack": 1,
         "types": [
             "item"
+        ]
+    },
+    "dragonEgg": {
+        "texture": "dragonEgg",
+        "name": "Dragon Egg",
+
+        "rarity": "common",
+        "holdMode": "hold",
+        "maxStack": 1,
+        "pet" : "dragon",
+        "types": [
+            "item", "pet"
         ]
     }
 }

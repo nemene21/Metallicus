@@ -44,6 +44,9 @@ function processEnemy(enemy)
     enemy.flash = lerp(enemy.flash, 0, dt * 6)
 
     setColor(255, 255, 255)
+
+    if enemy.hp <= 0 and enemy.onDeath ~= nil then enemy:onDeath() end
+
     return enemy.states[enemy.state](enemy, player)
 end
 

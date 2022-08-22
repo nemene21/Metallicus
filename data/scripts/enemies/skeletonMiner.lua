@@ -6,7 +6,7 @@ function buildSkeletonMiner(x, y)
     dashParticles.particleData.lifetime = {a=0.2, b=0.4}
 
     return {
-        hp = 100,
+        hp = 75,
 
         knockback = newVec(0,0), knockBackResistance = 1,
 
@@ -127,7 +127,7 @@ function skeletonMinerStateAttacking(enemy)
 
     if isRectColliding(hitbox, player.collider) then
 
-        player:hit(20)
+        player:hit(16)
 
     end
 

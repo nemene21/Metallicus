@@ -8,6 +8,8 @@ IN_HAND = nil
 ITEMS = loadJson("data/items.json")
 for id,I in pairs(ITEMS) do I.amount = 1; I.index = id end
 
+ANY_INVENTORY_HOVERED = false
+
 -- Init
 function newInventory(ox,oy,w,h,image)
     local inventory = {hovered = false, addItem = inventoryAddItem, convenientlyAddItem = inventoryConvenientlyAddItem, x=ox,y=oy,slots={},slotIndexes={}}
@@ -122,6 +124,7 @@ function processInventory(inventory)
             slotHovered = S
 
             inventory.hovered = true
+            ANY_INVENTORY_HOVERED = true
 
             S.scaleTo = 1.15
 
@@ -395,7 +398,7 @@ function MODE_CONSUME(player,headed,item)
     -- Draw
     drawSprite(ITEM_IMAGES[item.texture], (player.armR.x + 9) * headed + player.collider.x, player.armR.y + player.collider.y - 9, headed)
 
-    if mouseJustPressed(1) or justPressedTrigger[2] then
+    if (mouseJustPressed(1) or justPressedTrigger[2]) and not player.inventoryOpen then
 
         item.amount = item.amount - 1
 
@@ -732,7 +735,12 @@ bodyArmor = love.graphics.newImage("data/images/UI/inventory/icons/body.png"),
 headArmor = love.graphics.newImage("data/images/UI/inventory/icons/head.png"),
 ring = love.graphics.newImage("data/images/UI/inventory/icons/ring.png"),
 shield = love.graphics.newImage("data/images/UI/inventory/icons/shield.png"),
-amulet = love.graphics.newImage("data/images/UI/inventory/icons/amulet.png")
+amulet = love.graphics.newImage("data/images/UI/inventory/icons/amulet.png"),
+pet = love.graphics.newImage("data/images/UI/inventory/icons/pet.png"),
+
+brewerFuel = love.graphics.newImage("data/images/UI/inventory/icons/brewerFuel.png"),
+brewerResult = love.graphics.newImage("data/images/UI/inventory/icons/brewerResult.png"),
+brewerBowl = love.graphics.newImage("data/images/UI/inventory/icons/brewerBowl.png")
 }
 
 SLOT_IMAGES = {
@@ -820,13 +828,21 @@ function drawDroppedItem(item)
     love.graphics.setShader(SHADERS.FLASH); SHADERS.FLASH:send("intensity", 1)
     setColor(RARITY_COLORS[item.data.rarity][1], RARITY_COLORS[item.data.rarity][2], RARITY_COLORS[item.data.rarity][3])
 
-    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x - 1, item.pos.y + sine)
-    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x + 1, item.pos.y + sine)
-    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x, item.pos.y + sine - 1)
-    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x, item.pos.y + sine + 1)
+    local image = ITEM_IMAGES[item.data.texture]
 
-    love.graphics.setShader(); setColor(255, 255, 255)
+    drawSprite(image, item.pos.x - 1, item.pos.y + sine)
+    drawSprite(image, item.pos.x + 1, item.pos.y + sine)
+    drawSprite(image, item.pos.x, item.pos.y + sine - 1)
+    drawSprite(image, item.pos.x, item.pos.y + sine + 1)
 
-    drawSprite(ITEM_IMAGES[item.data.texture], item.pos.x, item.pos.y + sine)
+    love.graphics.setShader(SHADERS.ITEM_SHINE); setColor(255, 255, 255)
+    
+    SHADERS.ITEM_SHINE:send("shineColor", {RARITY_COLORS[item.data.rarity][1]/255, RARITY_COLORS[item.data.rarity][2]/255, RARITY_COLORS[item.data.rarity][3]/255, 1.0})
+
+    SHADERS.ITEM_SHINE:send("xRatio", image:getWidth() / image:getHeight())
+
+    drawSprite(image, item.pos.x, item.pos.y + sine)
+
+    love.graphics.setShader()
 
 end

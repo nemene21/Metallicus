@@ -15,7 +15,7 @@
 },
 
 "particleData" : {
-    "speed" : {"a" : 20, "b" : 40},
+    "speed" : {"a" : 10, "b" : 30},
     "rotation" : {"a" : 0, "b" : 0},
     "color" : {
         "r" : {"a" : 1, "b" : 1},
@@ -24,7 +24,7 @@
         "a" : {"a" : 1, "b" : 1}
     },
     "width" : {"a" : 4, "b" : 12},
-    "lifetime" : {"a" : 3, "b" : 5},
+    "lifetime" : {"a" : 1.2, "b" : 2},
     
     "drawMode" : "circle"
 }

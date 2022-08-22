@@ -133,9 +133,11 @@ function processAnvil(anvil)
 
     end
 
+    player.anvilOpen = false
+
     if anvil.open then
 
-        player.activeItemOffset = lerp(player.activeItemOffset, -336, dt * 6)
+        player.anvilOpen = true
 
         love.graphics.setCanvas(UI_LAYER)
 
@@ -227,15 +229,15 @@ function processAnvil(anvil)
         love.graphics.setCanvas(display)
     else
 
-    if  math.abs(player.collider.x - anvil.x) < 64 and math.abs(player.collider.y - anvil.y) < 64 then
+        if  math.abs(player.collider.x - anvil.x) < 64 and math.abs(player.collider.y - anvil.y) < 64 then
 
-        love.graphics.setCanvas(UI_LAYER)
-        drawInteract(anvil.x + 3, anvil.y - 86)
-        love.graphics.setCanvas(display)
+            love.graphics.setCanvas(UI_LAYER)
+            drawInteract(anvil.x + 3, anvil.y - 86)
+            love.graphics.setCanvas(display)
 
-        if justPressed("f") then player.inventoryOpen = false; anvil.open = true; player.inventoryOpen = true; anvil.scroll = 0; anvil.scrollVel = 0 end
+            if justPressed("f") then player.inventoryOpen = false; anvil.open = true; player.inventoryOpen = true; anvil.scroll = 0; anvil.scrollVel = 0 end
 
-    end
+        end
 
     end
 end

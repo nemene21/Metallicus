@@ -13,7 +13,15 @@ function gameReload()
     quakeWarnings = 3
     quakeProjectileTimer = 0
 
-    ROOMS = generate(5,fetchNextBiome())
+    if OPT.tutorial then
+
+        ROOMS = generateTutorial()
+
+    else
+
+        ROOMS = generate(5,fetchNextBiome())
+
+    end
     ROOM = ROOMS[roomOn]
 
     playerProjectiles = {}; enemyProjectiles = {}
@@ -56,6 +64,13 @@ function gameReload()
 
     BOSS_DIE_PARTICLES = loadJson("data/particles/enemies/bossDeath.json")
     TELEPORTER_REBUILT_PARTICLES = loadJson("data/particles/teleporterRebuilt.json")
+
+    lerpSpeed = 2
+    camera = {0,0}; boundCamPos = {0,0}; zoomInEffect = 1; UI_ALPHA = 255
+    cameraWallOffset = 100
+
+    itemShineTimer = 0; itemShineAnim = -0.1
+
 end
 
 function gameDie()
@@ -72,6 +87,22 @@ function game()
     -- Loop
     if not paused then
 
+        itemShineTimer = itemShineTimer - dt
+        if itemShineTimer < 0 then
+            
+            itemShineAnim = itemShineAnim + dt * 10
+
+            SHADERS.ITEM_SHINE:send("anim", itemShineAnim)
+
+            if itemShineAnim > 4 then
+
+                itemShineTimer = 2
+                itemShineAnim = -0.2
+
+            end
+
+        end
+
         zoomInEffect = lerp(zoomInEffect, 1, dt * 4)
 
         bossAnimationTimer = clamp(bossAnimationTimer + dt * boolToInt(ROOM.boss ~= nil) * 2, 0, 1)
@@ -86,6 +117,8 @@ function game()
                 if not bossDead then -- Reset boss die animation
 
                     playTrack("cave", 3)
+
+                    playSound("bossDie")
                 
                     bossDieAnimationTimer = 1
 
@@ -123,7 +156,7 @@ function game()
 
                     for id, I in ipairs(getLootTable(ROOM.boss.lootTable .. "BossDrops"):returnDrops()) do -- Drops
 
-                        table.insert(ROOM.items, newItem(ROOM.boss.pos.x + love.math.random(-16, 16), ROOM.boss.pos.y, I, newVec(love.math.random(-600, 600), love.math.random(-600, 0))))
+                        table.insert(ROOM.items, newItem(ROOM.boss.pos.x + love.math.random(-16, 16), ROOM.boss.pos.y, I, newVec(love.math.random(-800, 800), love.math.random(-900, -200))))
         
                     end
 
@@ -248,6 +281,10 @@ function game()
 
         if bossDieAnimationTimer < 0.99 then -- Boss die animation
 
+            UI_ALPHA = 255 * (1 - clamp((1 - bossDieAnimationTimer) * 10, 0, 1))
+
+            shine(lastBossPos.x, lastBossPos.y, 888, {255, 255, 255, 25 * (1 - bossDieAnimationTimer * bossDieAnimationTimer)})
+
             love.graphics.setCanvas(particleCanvas)
 
             setColor(255, 255, 255)
@@ -274,6 +311,10 @@ function game()
         for id,P in ipairs(playerProjectiles) do P:draw() end
 
         ROOM:drawTiles()
+
+        love.graphics.setShader(SHADERS.BULLET_TRAIL)
+        for id,P in ipairs(enemyProjectiles) do P:drawTrail() end
+        love.graphics.setShader()
 
         for id,P in ipairs(enemyProjectiles) do P:draw() end
 
