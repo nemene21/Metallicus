@@ -283,7 +283,7 @@ function love.draw()
         
         love.graphics.captureScreenshot("screenshots/screenshot"..tostring(OPT.screenshotsTaken)..".png")
 
-        OPT.screenshotsTaken = OPT.screenshotsTaken + 1;
+        OPT.screenshotsTaken = OPT.screenshotsTaken + 1
 
         screenshotAnim = 5
         

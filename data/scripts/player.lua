@@ -47,6 +47,8 @@ function newPlayer(x,y,stats)
         lastJoystickMousePos = newVec(0, 0), lastInventoryJoystickMousePos = newVec(0, 0), lastInventoryJoystickMousePosLerp = newVec(INVENTORY_SPACING * 0.5 + 12, 600 - 0.5 * INVENTORY_SPACING - 12),
 
         iFrames = 0,
+
+        showItemNameTimer = 0, lastItemHeldName = nil, lastItemHeldRarity = nil,
         
         damageReduction = 0,
 
@@ -97,12 +99,6 @@ function hitPlayer(player, damage, knockback)
 end
 
 function processPlayer(player)
-
-    if justPressed("1") then player.slotOn = 0 end
-    if justPressed("2") then player.slotOn = 1 end
-    if justPressed("3") then player.slotOn = 2 end
-    if justPressed("4") then player.slotOn = 3 end
-    if justPressed("5") then player.slotOn = 4 end
 
     player.knockback.x = lerp(player.knockback.x, 0, dt * 5)
     player.knockback.y = lerp(player.knockback.y, 0, dt * 5)
@@ -179,7 +175,7 @@ function processPlayer(player)
 
 
     player.walkSoundTimer:process() -- Walking sound
-    if player.walkSoundTimer:isDone() and xInput ~= 0 and player.collider.touching.y == 1 then player.walkSoundTimer:reset(); playSound("walk", love.math.random(30, 170) * 0.01) end
+    if player.walkSoundTimer:isDone() and xInput ~= 0 and player.collider.touching.y == 1 then player.walkSoundTimer:reset(); playSound("walk", love.math.random(50, 100) * 0.01) end
     
 
 
@@ -190,6 +186,9 @@ function processPlayer(player)
     if mouseJustPressed(2) or joystickJustPressed(1, 8) then player.dashInputTimer = 0.3 end
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
+
+        player.scaleX = 2.5
+        player.scaleY = 0.4
 
         shock(player.collider.x, player.collider.y, 0.12, 0.03, 0.25)
 
@@ -253,8 +252,6 @@ function processPlayer(player)
         if player.justLanded == false then
 
             local impulse = player.vel.y / 600
-
-            --playSound("fall", love.math.random(80, 120) * 0.01, None, impulse)
 
             player.justLanded = true
             if impulse > 0.1 then table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles))) end -- Fall particles
@@ -464,6 +461,29 @@ end
 
 function drawPlayerUI(player)
 
+    -- Item in hand name
+    local holding = tostring(player.slotOn)..",0"
+
+    local inHandItem = player.hotbar.slots[holding].item
+
+    player.showItemNameTimer = player.showItemNameTimer - dt
+
+    if inHandItem ~= nil then
+
+        player.lastItemHeldName = inHandItem.name
+
+        player.lastItemHeldRarity = inHandItem.rarity
+
+    end
+
+    if player.showItemNameTimer > 0 then
+
+        local color = RARITY_COLORS[player.lastItemHeldRarity]
+
+        outlinedText(24, 500, 2, player.lastItemHeldName, {color[1], color[2], color[3], 255 * player.showItemNameTimer / 3})
+
+    end
+
     -- Player talking
 
     player.speakTimer = player.speakTimer - dt
@@ -662,7 +682,14 @@ function drawPlayerUI(player)
 
     local scrolling = getScroll() ~= 0 or joystickScroll ~= 0
 
-    if scrolling and not player.inventoryOpen then
+    local scrolledByNumber = false
+    if justPressed("1") then player.slotOn = 0; scrolledByNumber = true end
+    if justPressed("2") then player.slotOn = 1; scrolledByNumber = true end
+    if justPressed("3") then player.slotOn = 2; scrolledByNumber = true end
+    if justPressed("4") then player.slotOn = 3; scrolledByNumber = true end
+    if justPressed("5") then player.slotOn = 4; scrolledByNumber = true end
+
+    if (scrolling and not player.inventoryOpen) or scrolledByNumber then
 
         player.slotOn = wrap(player.slotOn - getScroll(), 0, 4)
         player.slotOn = wrap(player.slotOn - joystickScroll, 0, 4)
@@ -670,6 +697,8 @@ function drawPlayerUI(player)
         local holding = tostring(player.slotOn)..",0"
 
         if player.hotbar.slots[holding].item ~= nil then
+
+            player.showItemNameTimer = 3
 
             if player.hotbar.slots[holding].item.holdData ~= nil then
 
