@@ -312,7 +312,7 @@ function game()
 
         ROOM:drawTiles()
 
-        love.graphics.setShader(SHADERS.BULLET_TRAIL)
+        love.graphics.setShader(SHADERS.BULLET_TRAIL); SHADERS.BULLET_TRAIL:send("time", globalTimer)
         for id,P in ipairs(enemyProjectiles) do P:drawTrail() end
         love.graphics.setShader()
 

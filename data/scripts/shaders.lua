@@ -166,5 +166,7 @@ end
 
 SHADERS.CAVE_WATERFALL:send("noise", newNoiseTexture(32, 540, 0.1))
 
+SHADERS.BULLET_TRAIL:send("noise", newNoiseTexture(100, 32, 0.075))
+
 -- Table of all post process effects you want, example: postPro = {"PIXEL_PERFECT","GLOW"}
 postPro = {}
