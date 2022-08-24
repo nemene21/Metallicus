@@ -187,6 +187,8 @@ function processPlayer(player)
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
+        playSound("dash", love.math.random(75, 100) * 0.01)
+
         player.scaleX = 2.5
         player.scaleY = 0.4
 

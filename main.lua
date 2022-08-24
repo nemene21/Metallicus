@@ -54,7 +54,7 @@ function love.load()
     
     require "data.scripts.misc"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
     require "data.scripts.buttons"; require "data.scripts.enemies"; require "data.scripts.projectiles"; require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"
-    require "data.scripts.debugLine"; require "data.scripts.lootTables"; require "data.scripts.structures.brewer"; require "data.scripts.tutorial"; require "data.scripts.pets"
+    require "data.scripts.debugLine"; require "data.scripts.lootTables"; require "data.scripts.structures.brewer"; require "data.scripts.tutorial"; require "data.scripts.structures.cannon"; require "data.scripts.pets"
 
     transitionSurf = love.graphics.newCanvas(WS[1] / 4, WS[2] / 4) -- Making the transition noise
     love.graphics.setCanvas(transitionSurf)

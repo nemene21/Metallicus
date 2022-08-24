@@ -49,7 +49,7 @@ function resetBiomes()
     bosses = {newSkeletonBoss()}
 
     BIOME_ORDER = {
-        {"cave", 3},
+        {"cave", 1},
         {"sporeCavern", -1}
     }
 
@@ -676,8 +676,8 @@ function roomDrawEdge(room)
     
     -- Door particles
 
-    if room.entranceParticles ~= nil then room.entranceParticles:process(); room.entranceParticles.spawning = #room.enemies ~= 0 end
-    if room.exitParticles ~= nil then room.exitParticles:process(); room.exitParticles.spawning = #room.enemies ~= 0  end
+    if room.entranceParticles ~= nil then room.entranceParticles:process(); room.entranceParticles.spawning = not room.cleared end
+    if room.exitParticles ~= nil then room.exitParticles:process(); room.exitParticles.spawning = not room.cleared  end
 
     -- Ambient particles
     room.ambientParticles.x = camera[1] + 400 + room.particleOffset.x; room.ambientParticles.y = camera[2] + 300 + room.particleOffset.y
@@ -847,8 +847,11 @@ function processRoom(room)
 
     trackPitch = lerp(trackPitch, lerp(0.8, 1.4, 1 - quakeWarnings / 3), dt * 3)
 
+    local testers = 0
+    for id, enemy in ipairs(room.enemies) do if enemy.image == "TESTER" then testers = testers + 1 end end
+
     -- Check if cleared
-    if not room.cleared and #room.enemies == 0 then
+    if not room.cleared and #room.enemies - testers == 0 then
         room.cleared = true
 
         room.tilemap:buildColliders()

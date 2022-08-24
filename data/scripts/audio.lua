@@ -6,6 +6,7 @@ enter = love.audio.newSource("data/sounds/SFX/player/enter.wav", "stream"),
 fall = love.audio.newSource("data/sounds/SFX/player/fall.wav", "stream"),
 jump = love.audio.newSource("data/sounds/SFX/player/jump.wav", "stream"),
 talk = love.audio.newSource("data/sounds/SFX/player/talk.wav", "stream"),
+dash = love.audio.newSource("data/sounds/SFX/player/dash.wav", "stream"),
 
 hitOre = love.audio.newSource("data/sounds/SFX/structures/hitOre.wav", "stream"), -- Structure sounds
 hitWood = love.audio.newSource("data/sounds/SFX/structures/hitWood.wav", "stream"),
@@ -16,8 +17,12 @@ teleport = love.audio.newSource("data/sounds/SFX/structures/teleport.wav", "stre
 craft = love.audio.newSource("data/sounds/SFX/structures/craft.wav", "stream"),
 cantCraft = love.audio.newSource("data/sounds/SFX/structures/cantCraft.wav", "stream"),
 
+cannonShoot = love.audio.newSource("data/sounds/SFX/structures/cannonShoot.wav", "stream"),
+
 inventoryClick = love.audio.newSource("data/sounds/SFX/inventory/tick.wav", "stream"), -- UI sounds
 scroll = love.audio.newSource("data/sounds/SFX/inventory/scroll.wav", "stream"),
+
+challangesOpen = love.audio.newSource("data/sounds/SFX/challangesOpen.wav", "stream"),
 
 buttonPressed = love.audio.newSource("data/sounds/SFX/buttonPressed.wav", "stream"),
 

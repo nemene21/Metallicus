@@ -102,9 +102,13 @@ function menu()
 
                 C.anim = lerp(C.anim, 1, dt * 12)
 
-                if mouseJustPressed(1) then C.active = not C.active
+                if mouseJustPressed(1) then
+                    
+                    C.active = not C.active
                     
                     C.scaleAnim = 0.2
+
+                    playSound("buttonPressed")
                 
                 end
 
@@ -126,7 +130,7 @@ function menu()
 
         challangesArrowAnim =  math.max(challangesArrowAnim - dt * 100, - 12)
         
-        if mouseJustPressed(1) then challangesOpen = not challangesOpen end
+        if mouseJustPressed(1) then challangesOpen = not challangesOpen; playSound("challangesOpen", love.math.random(90, 110) * 0.01) end
 
     else
 

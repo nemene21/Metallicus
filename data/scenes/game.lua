@@ -479,4 +479,6 @@ function swtichRoom(num)
     playerProjectiles = {}; enemyProjectiles = {}
     ALL_TEXT_PARTICLES = {}
 
+    player.dashParticles.particles = {}
+
 end

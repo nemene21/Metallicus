@@ -85,6 +85,8 @@ function processSlider(slider)
 
             slider.takeAnimation = 0.5
 
+            playSound("challangesOpen", love.math.random(90, 110) * 0.01)
+
         end
 
     else
@@ -97,10 +99,14 @@ function processSlider(slider)
 
     if slider.held then
 
+        local lastPoint = slider.point
+
         slider.point = (clamp(xM + camera[1], slider.x - 200, slider.x + 200) - slider.x) / 400
         slider.point = snap(slider.point + 0.5, slider.snap) - 0.5
 
         slider.takeAnimation = lerp(slider.takeAnimation, 0.15, dt * 12)
+
+        if slider.point ~= lastPoint then playSound("challangesOpen", love.math.random(90, 110) * 0.01) end
 
     end
 

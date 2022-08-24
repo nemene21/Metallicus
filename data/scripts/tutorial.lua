@@ -15,8 +15,8 @@ function generateTutorial()
 
     rooms[1] = generateTutorialRoom("data/layouts/firstRoom.json")
 
-    table.insert(rooms[1].structures, newTextDisplayer(400, 250, "A and D to move."))
-    table.insert(rooms[1].structures, newTextDisplayer(400, 350, "Space to jump!"))
+    table.insert(rooms[1].structures, newTextDisplayer(408, 250, "A and D to move."))
+    table.insert(rooms[1].structures, newTextDisplayer(408, 350, "Space to jump!"))
 
     rooms[2] = generateTutorialRoom("data/layouts/tutorialPassage.json")
 
@@ -27,45 +27,50 @@ function generateTutorial()
 
     table.insert(rooms[2].structures, newRock(448, 578))
 
-    table.insert(rooms[2].structures, newTextDisplayer(400, 300, "Right click to attack,"))
-    table.insert(rooms[2].structures, newTextDisplayer(400, 400, "to harvest materials attack them!"))
+    table.insert(rooms[2].structures, newTextDisplayer(408, 300, "Left click to attack,"))
+    table.insert(rooms[2].structures, newTextDisplayer(408, 400, "to harvest materials attack them!"))
 
     rooms[3] = generateTutorialRoom("data/layouts/tutorialPassage.json")
 
-    table.insert(rooms[3].structures, newTextDisplayer(400, 300, "Open your inventory with E."))
-    table.insert(rooms[3].structures, newTextDisplayer(400, 400, "Head to the anvil to craft!"))
+    table.insert(rooms[3].structures, newTextDisplayer(408, 300, "Open your inventory with E."))
+    table.insert(rooms[3].structures, newTextDisplayer(408, 400, "Head to the anvil to craft!"))
 
     table.insert(rooms[3].structures, newAnvil(364, 578))
 
     rooms[4] = generateTutorialRoom("data/layouts/tutorialPassage.json")
 
-    table.insert(rooms[4].structures, newTextDisplayer(400, 350, "Slay the enemies to open the door!"))
+    table.insert(rooms[4].structures, newTextDisplayer(408, 350, "Right click to dash!"))
 
-    table.insert(rooms[4].enemies, buildEnemy("slime", 264, 530))
-    table.insert(rooms[4].enemies, buildEnemy("slime", 564, 530))
+    table.insert(rooms[4].structures, newCannon(364, 564, 90))
 
     rooms[5] = generateTutorialRoom("data/layouts/tutorialPassage.json")
 
-    table.insert(rooms[5].structures, newTextDisplayer(400, 300, "Craft some bowls and put them in the brewer!"))
-    table.insert(rooms[5].structures, newTextDisplayer(400, 364, "Put flamables in the fuel slot,"))
-    table.insert(rooms[5].structures, newTextDisplayer(400, 428, "then put jello in the side slots!"))
-    table.insert(rooms[5].structures, newTextDisplayer(400, 492, "Enjoy your soup by clicking right click!"))
+    table.insert(rooms[5].structures, newTextDisplayer(408, 350, "Slay the enemies to open the door!"))
 
-    table.insert(rooms[5].structures, newWood(200, 578))
-    table.insert(rooms[5].structures, newWood(280, 578))
+    table.insert(rooms[5].enemies, buildEnemy("slime", 264, 530))
+    table.insert(rooms[5].enemies, buildEnemy("slime", 564, 530))
 
-    table.insert(rooms[5].structures, newAnvil(394, 578))
-    table.insert(rooms[5].structures, newBrewer(500, 578))
+    rooms[6] = generateTutorialRoom("data/layouts/tutorialPassage.json")
 
-    rooms[6] = generateTutorialRoom("data/layouts/end.json")
+    table.insert(rooms[6].structures, newTextDisplayer(408, 280, "Active items go in the shield slot!"))
+    table.insert(rooms[6].structures, newTextDisplayer(408, 350, "To charge an active item you need to get damage,"))
+    table.insert(rooms[6].structures, newTextDisplayer(408, 420, "and to use it you have to press shift"))
 
-    table.insert(rooms[6].structures, newTextDisplayer(400, 364, "At the end of a room sequence there"))
-    table.insert(rooms[6].structures, newTextDisplayer(400, 418, "will be a house (press F to enter)"))
+    local item = newItem(408, 100, deepcopyTable(ITEMS.quiver))
 
-    table.insert(rooms[6].structures, ENTERABLES.house(420, 579))
+    table.insert(rooms[6].items, item)
 
-    table.insert(rooms[6].structures[3].room.structures, newTextDisplayer(400, 364, "In the house you get an anvil, a"))
-    table.insert(rooms[6].structures[3].room.structures, newTextDisplayer(400, 418, "brewing station and a teleporter!"))
+    table.insert(rooms[6].enemies, buildEnemy("tester", 650, 550))
+
+    rooms[7] = generateTutorialRoom("data/layouts/end.json")
+
+    table.insert(rooms[7].structures, newTextDisplayer(408, 364, "At the end of a room sequence there"))
+    table.insert(rooms[7].structures, newTextDisplayer(408, 418, "will be a house (press F to enter)"))
+
+    table.insert(rooms[7].structures, ENTERABLES.house(420, 579))
+
+    table.insert(rooms[7].structures[3].room.structures, newTextDisplayer(408, 364, "In the house you get an anvil, a"))
+    table.insert(rooms[7].structures[3].room.structures, newTextDisplayer(408, 418, "brewing station and a teleporter!"))
 
     return rooms
 

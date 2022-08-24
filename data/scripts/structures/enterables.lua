@@ -3,7 +3,7 @@
 
 function newEnterable(x, y, texture, roomData, tileTexture, doorCollider, process, draw, additionalProcess, particles, particleOffset, stopQuake, structures, track)
     -- GENERATE THE ROOM
-    local enterableRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=false,enemies = {}, process=processEnterableRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, additionalProcess = additionalProcess, processParticles=roomParticles, particleSystems={}}
+    local enterableRoom = {processItems=roomProcessItems,items={}, processEnemyBodies=roomProcessEnemyBodies, enemyBodies = {}, items = {}, cleared=true,enemies = {}, process=processEnterableRoom, drawBg=roomDrawBg, drawTiles=roomDrawTiles, drawEdge=roomDrawEdge, processEnemies=roomProcessEnemies, additionalProcess = additionalProcess, processParticles=roomParticles, particleSystems={}}
 
     
     -- Ambient particles

@@ -9,7 +9,8 @@ ENEMY_NAMES = {
 slime="slime",
 giantFirefly="giant firefly",
 battlefly="battlefly",
-skeletonMiner="skeleton miner"
+skeletonMiner="skeleton miner",
+tester="tester"
 }
 
 ENEMY_HP_SCALE = 1
@@ -51,6 +52,9 @@ function processEnemy(enemy)
 end
 
 function hitEnemy(enemy,damage,strenght,dir)
+
+    local damage = damage * (enemy.damageResistance or 1)
+
     enemy.hp = enemy.hp - damage
     local knockback = newVec(strenght * enemy.knockBackResistance,0); knockback:rotate(dir)
 
@@ -86,6 +90,8 @@ end
 ENEMY_IMAGES = {
 SLIME = love.graphics.newImage("data/images/enemies/slime/slime.png"),
 
+TESTER = love.graphics.newImage("data/images/enemies/tester.png"),
+
 GIANT_FIREFLY = {
     head = love.graphics.newImage("data/images/enemies/giantFirefly/head.png"),
     wing = love.graphics.newImage("data/images/enemies/giantFirefly/wing.png"),
@@ -109,6 +115,8 @@ PARTICLES_FIREFLY = loadJson("data/particles/decorations/fireflies.json")
 
 --                                                           BUILDS AND STATES FOR EVERY ENEMY
 
+require "data.scripts.enemies.tester"
+
 -- Cave
 require "data.scripts.enemies.slime"; require "data.scripts.enemies.giantFirefly"; require "data.scripts.enemies.battlefly"; require "data.scripts.enemies.skeletonMiner"
 
@@ -116,7 +124,8 @@ enemies = {
 slime = buildSlime,
 giantFirefly = buildGiantFirefly,
 battlefly = buildBattlefly,
-skeletonMiner = buildSkeletonMiner
+skeletonMiner = buildSkeletonMiner,
+tester = buildTester
 }
 
 -- Bosses

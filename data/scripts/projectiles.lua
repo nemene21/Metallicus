@@ -367,9 +367,9 @@ function drawEnemyProjectileTrail(projectile)
             
             (projectile.vel:getRot() + 180) / 180 * 3.14,
             
-            projectile.radius * 4 * projectile.animation,
+            projectile.radius * 4.5 * projectile.animation * clamp(projectile.vel:getLen() / 100, 0, 1),
             
-            projectile.radius * 0.72 * projectile.animation
+            projectile.radius * 0.7 * projectile.animation
             
     )
 
