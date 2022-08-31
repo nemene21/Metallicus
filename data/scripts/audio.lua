@@ -8,6 +8,8 @@ jump = love.audio.newSource("data/sounds/SFX/player/jump.wav", "stream"),
 talk = love.audio.newSource("data/sounds/SFX/player/talk.wav", "stream"),
 dash = love.audio.newSource("data/sounds/SFX/player/dash.wav", "stream"),
 
+projectileExplode = love.audio.newSource("data/sounds/SFX/projectileExplode.wav", "stream"),
+
 hitOre = love.audio.newSource("data/sounds/SFX/structures/hitOre.wav", "stream"), -- Structure sounds
 hitWood = love.audio.newSource("data/sounds/SFX/structures/hitWood.wav", "stream"),
 hitShroom = love.audio.newSource("data/sounds/SFX/structures/hitShroom.wav", "stream"),
@@ -38,6 +40,9 @@ slimeHitGround = love.audio.newSource("data/sounds/SFX/enemies/slimeHitGround.wa
 giantFireflyShoot = love.audio.newSource("data/sounds/SFX/enemies/giantFireflyShoot.wav", "stream"),
 
 bossDie = love.audio.newSource("data/sounds/SFX/enemies/bossDie.wav", "stream"),
+skeletonBossArmShoot = love.audio.newSource("data/sounds/SFX/enemies/skeletonBossArmShoot.wav", "stream"),
+skeletonBossArmSlam = love.audio.newSource("data/sounds/SFX/enemies/skeletonBossArmSlam.wav", "stream"),
+skeletonBossSpit = love.audio.newSource("data/sounds/SFX/enemies/skeletonBossSpit.wav", "stream"),
 
 quack = love.audio.newSource("data/sounds/SFX/quack.wav", "stream") -- Quack
 
@@ -53,6 +58,8 @@ for id,S in pairs(SOUNDS) do SOUNDS_NUM_PLAYING[id] = 0 end
 SOUNDS_PLAYING = {}
 
 MUSIC = {
+menu = love.audio.newSource("data/sounds/music/menu.wav", "stream"),
+
 cave = love.audio.newSource("data/sounds/music/cave.wav", "stream"),         -- Biomes
 
 crafting = love.audio.newSource("data/sounds/music/crafting.wav", "stream"), -- Custom rooms

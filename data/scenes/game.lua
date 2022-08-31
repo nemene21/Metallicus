@@ -27,6 +27,12 @@ function gameReload()
     playerProjectiles = {}; enemyProjectiles = {}
 
     paused = false
+    pauseAnimation = 0
+    cameraBeforePause = {0, 0}
+
+    BACK_BUTTON    = newButton(400, 250, "Back")
+    OPTIONS_BUTTON = newButton(400, 350, "Options")
+    MENU_BUTTON    = newButton(400, 450, "Menu")
 
     PAUSED_SCREEN_BG = love.graphics.newCanvas(WS[1], WS[2])
 
@@ -298,6 +304,17 @@ function game()
             love.graphics.circle("fill", lastBossPos.x - camera[1], lastBossPos.y - camera[2], 128 * (1 - bossDieAnimationTimer * bossDieAnimationTimer))
 
             love.graphics.setCanvas(display)
+
+            local shaderCenter = {lastBossPos.x - camera[1], lastBossPos.y - 50 - camera[2]}
+
+            SHADERS.TELEPORTER_SWIRL:send("center", {shaderCenter[1] / 800, shaderCenter[2] / 600})
+            SHADERS.TELEPORTER_SWIRL:send("intensity", 1 - bossDieAnimationTimer * bossDieAnimationTimer)
+            SHADERS.TELEPORTER_SWIRL:send("screen", display)
+            SHADERS.TELEPORTER_SWIRL:send("time", globalTimer)
+    
+            love.graphics.setShader(SHADERS.TELEPORTER_SWIRL)
+            love.graphics.draw(TELEPORTER_SWIRL, 0, 0)
+            love.graphics.setShader()
         
         end
 
@@ -374,30 +391,92 @@ function game()
 
         setColor(255, 255, 255)
 
+        setColor(255, 255, 255)
+
         if justPressed("escape") then
 
-            love.graphics.setCanvas(PAUSED_SCREEN_BG)
-            love.graphics.setShader(SHADERS.BLUR)
-            love.graphics.draw(postProCanvas)
-            love.graphics.setShader()
-            love.graphics.setCanvas(display)
-            
             paused = true
+
+            pauseAnimation = 0
 
             mouseMode = "pointer"; mCentered = 0
 
+            love.graphics.setCanvas(PAUSED_SCREEN_BG)
+
+            love.graphics.setShader(SHADERS[postPro])
+            love.graphics.draw(display)
+            love.graphics.setShader()
+
+            cameraBeforePause = deepcopyTable(camera)
+
+            camera = {0, 0}
+
+            bindCamera(400, 300, 99)
+            lerpSpeed = 18
+
         end
+
+        pauseAnimation = lerp(pauseAnimation, 0, dt * 12)
+
     else
+
+        pauseAnimation = lerp(pauseAnimation, 1, dt * 12)
+
         setColor(255, 255, 255)
-        love.graphics.draw(PAUSED_SCREEN_BG, 0, 0)
 
+        love.graphics.draw(PAUSED_SCREEN_BG)
+
+        bindCamera(400 + 800 * boolToInt(optionsOpen), 300, 99)
+
+        if OPTIONS_BUTTON:process() then
+
+            optionsOpen = true
+
+        end
+
+        if (justPressed("escape") or BACK_BUTTON:process()) and not optionsOpen then
+            
+            paused = false
+
+            camera = deepcopyTable(cameraBeforePause)
+
+            lerpSpeed = 2
+        
+        end
+
+        if MENU_BUTTON:process() then
+
+            sceneAt = "menu"
+
+        end
+    
+    end
+
+    if pauseAnimation > 0.01 then
         love.graphics.setCanvas(UI_LAYER)
-        waveText(400, 300, 6, "Game Paused", {255,255,255}, 3, 3, 1, 1, 4, 5)
+        
+        setColor(0, 0, 0, 255 * pauseAnimation)
+        love.graphics.rectangle("fill", 0, 0, 800, 600)
 
-        if justPressed("escape") then paused = false end
+        waveText(400 - camera[1] * boolToInt(paused), 100 - 400 * (1 - pauseAnimation) - camera[2] * boolToInt(paused), 5, "Game Paused", {255,255,255}, 3, 3, 1, 1, 4, 5)
+
+        BACK_BUTTON.y = 250 + 400 * (1 - pauseAnimation)
+        OPTIONS_BUTTON.y = 350 + 400 * (1 - pauseAnimation)
+        MENU_BUTTON.y = 450 + 400 * (1 - pauseAnimation)
+
+        if paused then
+            BACK_BUTTON:draw()
+            OPTIONS_BUTTON:draw()
+            MENU_BUTTON:draw()
+        end
+
+        if camera[1] > 10 and paused then
+
+            processOptions()
+
+        end
 
         love.graphics.setCanvas(display)
-
     end
 
     -- Debug line

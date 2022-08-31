@@ -76,3 +76,54 @@ function joystickGetAxis(id,axis)
 
     return newVec(0, 0)
 end
+
+-- Get varying input
+
+allInputs = {
+    keyboard = pressed,
+    mouse = mousePressed
+}
+
+allJustInputs = {
+    keyboard = justPressed,
+    mouse = mouseJustPressed
+}
+
+function getInput(data) return allInputs[data[1]](data[2]) end
+ 
+function getJustInput(data) return allJustInputs[data[1]](data[2]) end
+
+inputNames = {
+    mouse = {
+
+        "left click", "right click", "scroll click"
+
+    },
+
+    keyboard = {
+
+        lshift = "left shift",
+        rshift = "right shift",
+        ["return"] = "enter",
+        lctrl = "left control",
+        rctrl = "right control"
+
+    }
+}
+
+function getInputName(action)
+
+    local inputType = OPT.keys[action][1]
+    local action    = OPT.keys[action][2]
+
+    if inputType == "mouse" then
+
+        return inputNames.mouse[tonumber(action)] or action
+    
+    else
+
+        return inputNames.keyboard[action] or action
+
+    end
+
+end

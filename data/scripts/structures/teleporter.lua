@@ -13,6 +13,8 @@ IMAGE_TELEPORTER_LASER = love.graphics.newImage("data/images/structures/teleport
 PARTICLES_TELEPORT = loadJson("data/particles/teleport.json")
 PARTICLES_TELEPORT_BURST = loadJson("data/particles/teleportBurst.json")
 
+TELEPORTER_SWIRL = love.graphics.newImage("data/images/shaderMasks/whiteScreen.png")
+
 function newTeleporter(x, y, broken)
     local teleporter = {x = x, y = y, isTeleporter = true}
 
@@ -41,7 +43,7 @@ function processTeleporter(teleporter)
         drawInteract(teleporter.x + 3, teleporter.y - 86 + math.sin(globalTimer * 2) * 9)
         love.graphics.setCanvas(display)
 
-        if justPressed("f") then
+        if getJustInput(OPT.keys["Interact"]) then
 
             teleporter.pressed = true
 

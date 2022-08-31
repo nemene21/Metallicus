@@ -50,7 +50,27 @@ function love.load()
     -- Imports
     json = require "data.scripts.json"; require "data.scripts.loading"
 
-    OPT = loadJson("OPTIONS.json")
+    local optionsFile = love.filesystem.read("OPTIONS.json")
+
+    if optionsFile ~= nil then
+
+        OPT = loadJson("OPTIONS.json")
+
+    else
+
+        OPT = json.decode([[{"fullscreen":true,"masterVolume":1,"musicVolume":1,"tutorial":true,"textPopups":true,"SFXVolume":1,"keys":{"Right":["keyboard","d"],"Slot 4":["keyboard","4"],"Active Item":["keyboard","lshift"],"Slot 1":["keyboard","1"],"Slot 3":["keyboard","3"],"Dash":["mouse",2],"Interact":["keyboard","f"],"Open Inventory":["keyboard","e"],"Left":["keyboard","a"],"Slot 2":["keyboard","2"],"Down":["keyboard","s"],"Jump":["keyboard","space"],"Up":["keyboard","w"],"Slot 5":["keyboard","5"]},"colorBlindMode":0,"brightness":0.5,"screenShake":0.5,"screenshotsTaken":0}]])
+
+    end
+
+    local optionsResetFile = love.filesystem.read("OPTIONS_RESET.json")
+
+    if optionsResetFile == nil then
+
+        love.filesystem.write("OPTIONS_RESET.json", [[{"fullscreen":true,"masterVolume":1,"musicVolume":1,"textPopups":true,"SFXVolume":1,"keys":{"Right":["keyboard","d"],"Slot 4":["keyboard","4"],"Active Item":["keyboard","lshift"],"Slot 1":["keyboard","1"],"Slot 3":["keyboard","3"],"Dash":["mouse",2],"Interact":["keyboard","f"],"Open Inventory":["keyboard","e"],"Left":["keyboard","a"],"Slot 2":["keyboard","2"],"Down":["keyboard","s"],"Jump":["keyboard","space"],"Up":["keyboard","w"],"Slot 5":["keyboard","5"]},"colorBlindMode":0,"brightness":0.5,"screenShake":0.5,"screenshotsTaken":0}]])
+
+    end
+
+    local screenshotFolder = love.filesystem.createDirectory("screenshots")
     
     require "data.scripts.misc"; require "data.scripts.shaders"; require "data.scripts.mathPlus"; require "data.scripts.input"; require "data.scripts.sprites"; require "data.scripts.particles"
     require "data.scripts.buttons"; require "data.scripts.enemies"; require "data.scripts.projectiles"; require "data.scripts.audio"; require "data.scripts.generation"; require "data.scripts.tiles"; require "data.scripts.text"; require "data.scripts.timer"; require "data.scripts.camera"; require "data.scripts.inventory"; require "data.scripts.player"

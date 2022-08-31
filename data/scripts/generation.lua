@@ -49,7 +49,7 @@ function resetBiomes()
     bosses = {newSkeletonBoss()}
 
     BIOME_ORDER = {
-        {"cave", 1},
+        {"cave", 3},
         {"sporeCavern", -1}
     }
 
@@ -118,7 +118,7 @@ cave = {
     }
     },
 
-    ambientLight = {50, 50, 50},
+    ambientLight = {120, 120, 120},
 
     layoutPath = "data/layouts/cave/", nLayouts = 5,
 
@@ -143,7 +143,7 @@ sporeCavern = {
 
     track = "cave",
 
-    ambientLight = {15, 35, 80},
+    ambientLight = {30, 80, 180},
     
     decorations = {
     background = {
@@ -240,8 +240,8 @@ function generate(amount, biome)
 
             OPT.tutorial = false
 
-            table.insert(room.structures, newTextDisplayer(400, 250, "Now you are on your own"))
-            table.insert(room.structures, newTextDisplayer(400, 350, "Good luck :)"))
+            table.insert(room.structures, newTextDisplayer(400, 250, "This is the first floor, finish it quickly"))
+            table.insert(room.structures, newTextDisplayer(400, 350, "before the earthquake, you are now alone :)"))
 
         end
 

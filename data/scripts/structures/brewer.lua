@@ -38,7 +38,7 @@ function processBrewer(brewer)
 
         drawInteract(brewer.x + 3, brewer.y - 86)
 
-        if justPressed("f") or not (math.abs(player.collider.x - brewer.x) < 64 and math.abs(player.collider.y - brewer.y) < 64) or not player.inventoryOpen then brewer.open = false; player.inventoryOpen = false end
+        if getJustInput(OPT.keys["Interact"]) or not (math.abs(player.collider.x - brewer.x) < 64 and math.abs(player.collider.y - brewer.y) < 64) or not player.inventoryOpen then brewer.open = false; player.inventoryOpen = false end
         
         brewer.inventory = processInventory(brewer.inventory)
         drawInventory(brewer.inventory)
@@ -58,7 +58,7 @@ function processBrewer(brewer)
             drawInteract(brewer.x + 3, brewer.y - 86)
             love.graphics.setCanvas(display)
 
-            if justPressed("f") then player.inventoryOpen = false; brewer.open = true; player.inventoryOpen = true; brewer.scroll = 0; brewer.scrollVel = 0 end
+            if getJustInput(OPT.keys["Interact"]) then player.inventoryOpen = false; brewer.open = true; player.inventoryOpen = true; brewer.scroll = 0; brewer.scrollVel = 0 end
 
         end
 

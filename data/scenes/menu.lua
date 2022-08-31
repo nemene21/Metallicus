@@ -37,20 +37,7 @@ function menuReload()
 
     mouseMode = "pointer"
 
-    UIDist = 160
-
-    optionsUI = {}
-    optionsUI.masterVolume = newSlider(1200, 80 + UIDist, "Master Volume", OPT.masterVolume, 0.1, "%")
-    optionsUI.SFXVolume = newSlider(1200, 80 + UIDist * 2, "Sound Effects Volume", OPT.SFXVolume, 0.1, "%")
-    optionsUI.musicVolume = newSlider(1200, 80 + UIDist * 3, "Music Volume", OPT.musicVolume, 0.1, "%")
-
-    optionsUI.screenShake = newSlider(1200, 80 + UIDist * 5, "Screen Shake", OPT.screenShake, 0.1, "%")
-    optionsUI.brightness = newSlider(1200, 80 + UIDist * 6, "Brightness", OPT.brightness, 0.1, "%")
-    optionsUI.fullscreen = new01Button(1200, 120 + UIDist * 7, "Fullscreen", OPT.fullscreen)
-    optionsUI.colorBlindMode = newSlider(1200, 80 + UIDist * 8, "Color Blind Mode (may help)", OPT.colorBlindMode / 3, 0.33)
-    optionsUI.textPopups = new01Button(1200, 120 + UIDist * 9, "Text Popups", OPT.textPopups)
-
-    optionsUI.tutorial = new01Button(1200, 120 + UIDist * 11, "Tutorial", OPT.tutorial)
+    buildOptions()
 
     optionsOpen = false
 
@@ -58,6 +45,20 @@ function menuReload()
     optionsScrollVel = 0
 
     lerpSpeed = 18
+
+    keysToRebind = {}
+    keysRebinding = false
+    rebindingAnim = 0
+    keyJustRebindedAnimation = 0
+
+    keyChanged = false1
+
+    trackVolume = 1
+    trackPitch = 1
+
+    playTrack("menu")
+
+    ambientLight = {120, 120, 120}
 
 end
 
@@ -140,13 +141,15 @@ function menu()
 
     challangesOffset = clamp(challangesOffset + dt * 5 * (boolToInt(not challangesOpen) * 2 - 1), 0, 1)
 
+    PLAY_BUTTON:draw()
+    OPTIONS_BUTTON:draw()
+    QUIT_BUTTON:draw()
+
     if PLAY_BUTTON:process() then sceneAt = "game"; transition = 1; lerpSpeed = 2 end
 
     if OPTIONS_BUTTON:process() then optionsOpen = true end
 
     if QUIT_BUTTON:process() then love.event.quit() end
-
-    if justPressed("escape") then optionsOpen = false; saveJson("OPTIONS.json", OPT) end
 
     bindCamera(400 + 800 * boolToInt(optionsOpen), 300, 1)
 
@@ -166,7 +169,32 @@ function newChallange(sprite, active)
 
 end
 
+function buildOptions()
+
+    UIDist = 160
+
+    optionsUI = {}
+    optionsUI.masterVolume = newSlider(1200, 80 + UIDist, "Master Volume", OPT.masterVolume, 0.1, "%")
+    optionsUI.SFXVolume = newSlider(1200, 80 + UIDist * 2, "Sound Effects Volume", OPT.SFXVolume, 0.1, "%")
+    optionsUI.musicVolume = newSlider(1200, 80 + UIDist * 3, "Music Volume", OPT.musicVolume, 0.1, "%")
+
+    optionsUI.screenShake = newSlider(1200, 80 + UIDist * 5, "Screen Shake", OPT.screenShake, 0.1, "%")
+    optionsUI.brightness = newSlider(1200, 80 + UIDist * 6, "Brightness", OPT.brightness, 0.1, "%")
+    optionsUI.fullscreen = new01Button(1200, 120 + UIDist * 7, "Fullscreen", OPT.fullscreen)
+    optionsUI.colorBlindMode = newSlider(1200, 80 + UIDist * 8, "Color Blind Mode (may help)", OPT.colorBlindMode / 3, 0.33)
+    optionsUI.textPopups = new01Button(1200, 120 + UIDist * 9, "Text Popups", OPT.textPopups)
+
+    optionsUI.rebindKeyboard = new01Button(1200, 120 + UIDist * 11, "Rebind Keys", true)
+
+    optionsUI.tutorial = new01Button(1200, 120 + UIDist * 13, "Tutorial", OPT.tutorial)
+
+    optionsUI.resetOptions = new01Button(1200, 120 + UIDist * 14, "Reset Options", true)
+
+end
+
 function processOptions()
+
+    keysRebinding = #keysToRebind > 0
 
     -- Scrolling
     optionsScrollVel = lerp(optionsScrollVel, 0, dt * 5)
@@ -174,7 +202,7 @@ function processOptions()
 
     optionsScroll = optionsScroll + optionsScrollVel * dt
 
-    optionsScroll = lerp(optionsScroll, clamp(optionsScroll, -1500, 0), dt * 20)
+    optionsScroll = lerp(optionsScroll, clamp(optionsScroll, -1900, 0), dt * 20)
 
     outlinedText(1200 - camera[1], 120 - camera[2] + optionsScroll, 3, "Audio", {255, 255, 255}, 3, 3, 0.5, 0.5)
 
@@ -223,10 +251,112 @@ function processOptions()
     optionsUI.textPopups:draw()
     OPT.textPopups = optionsUI.textPopups.value
 
-    outlinedText(1200 - camera[1], 120 + UIDist * 10 - camera[2] + optionsScroll, 3, "Miscellaneous", {255, 255, 255}, 3, 3, 0.5, 0.5) -- Misc
+    outlinedText(1200 - camera[1], 120 + UIDist * 10 - camera[2] + optionsScroll, 3, "Controls", {255, 255, 255}, 3, 3, 0.5, 0.5) -- Misc
+
+    optionsUI.rebindKeyboard:process()
+
+    if not optionsUI.rebindKeyboard.value then
+
+        optionsUI.rebindKeyboard.value = true
+
+        keysToRebind = {
+
+            "Up", "Left", "Down", "Right",
+
+            "Jump", "Dash",
+
+            "Active Item",
+
+            "Open Inventory", "Interact",
+
+            "Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5"
+
+        }
+
+    end
+
+    optionsUI.rebindKeyboard:draw()
+
+    outlinedText(1200 - camera[1], 120 + UIDist * 12 - camera[2] + optionsScroll, 3, "Miscellaneous", {255, 255, 255}, 3, 3, 0.5, 0.5) -- Controls
 
     optionsUI.tutorial:process()
     optionsUI.tutorial:draw()
     OPT.tutorial = optionsUI.tutorial.value
+
+    if justPressed("escape") and not keysRebinding then optionsOpen = false; saveJson("OPTIONS.json", OPT) end
+
+    if keysRebinding then
+
+        rebindingAnim = lerp(rebindingAnim, 1, dt * 12)
+
+        keyJustRebindedAnimation = clamp(keyJustRebindedAnimation - dt, 0, 0.5)
+        local fade = 1 - math.abs(math.sin(keyJustRebindedAnimation * 3.14 * 2))
+
+        setColor(0, 0, 0, 222 * rebindingAnim)
+        love.graphics.rectangle("fill", 0, 0, 800, 600)
+
+        outlinedText(400, 300 - 400 * (1 - rebindingAnim), 3, [[Press key/button for "]] .. keysToRebind[1] .. [["]], {255, 255, 255, 255 * fade}, 2, 2, 0.5, 0.5)
+
+        if lastKeyPressed ~= "none" then
+
+            OPT.keys[keysToRebind[1]] = {"keyboard", lastKeyPressed}
+
+            keyChanged = true
+
+            if #keysToRebind ~= 0 then keyJustRebindedAnimation = 0.5 end
+
+        else if lastMouseButtonPressed ~= -1 then
+
+            OPT.keys[keysToRebind[1]] = {"mouse", lastMouseButtonPressed}
+
+            keyChanged = true
+
+            if #keysToRebind ~= 0 then keyJustRebindedAnimation = 0.5 end
+
+        end end
+
+        if keyChanged and keyJustRebindedAnimation < 0.25 then
+
+            table.remove(keysToRebind, 1)
+
+            keyChanged = false
+
+        end
+
+    else
+
+        rebindingAnim = lerp(rebindingAnim, 0, dt * 8)
+
+        if rebindingAnim > 0.001 then
+
+            setColor(0, 0, 0, 222 * rebindingAnim)
+            love.graphics.rectangle("fill", 0, 0, 800, 600)
+    
+            outlinedText(400, 300 + 400 * (1 - rebindingAnim), 3, [[Press key/button for "]] .. "Slot 5" .. [["]], {255, 255, 255}, 2, 2, 0.5, 0.5)
+
+        end
+
+    end
+
+    optionsUI.resetOptions:process()
+    optionsUI.resetOptions:draw()
+
+    if optionsUI.resetOptions.value == false then
+
+        optionsUI.resetOptions.value = true
+
+        local reset = loadJson("OPTIONS_RESET.json")
+
+        for id, option in pairs(reset) do
+
+            OPT[id] = option
+
+        end
+
+        buildOptions()
+
+    end
+
+    setColor(255, 255, 255)
 
 end

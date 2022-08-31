@@ -184,6 +184,9 @@ function processPlayerProjectiles(playerProjectiles)
 
             if P.explosion ~= nil then
 
+                playSound("projectileExplode", love.math.random(90, 110) * 0.01)
+                shock(P.pos.x, P.pos.y, 0.25, 0.05, 0.2)
+
                 for id, E in ipairs(ROOM.enemies) do
 
                     if rectCollidingCircle(E.collider, P.pos.x, P.pos.y, P.explosion.radius) then
@@ -247,6 +250,9 @@ function processPlayerProjectiles(playerProjectiles)
 
             if P.explosion ~= nil then
 
+                playSound("projectileExplode", love.math.random(90, 110) * 0.01)
+                shock(P.pos.x, P.pos.y, 0.25, 0.05, 0.2)
+
                 for id, E in ipairs(ROOM.enemies) do
 
                     if rectCollidingCircle(E.collider, P.pos.x, P.pos.y, P.explosion.radius) then
@@ -286,7 +292,14 @@ function processPlayerProjectiles(playerProjectiles)
             if P.lifetime < 0 then
                 table.insert(kill,id)
                 if P.particles ~= nil then P.particles.ticks = 1; table.insert(ROOM.particleSystems, P.particles) end
-                if P.explosion ~= nil then table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.explosion.particles]))) end
+                if P.explosion ~= nil then
+                    
+                    table.insert(ROOM.particleSystems, newParticleSystem(P.pos.x, P.pos.y, deepcopyTable(PLAYER_PROJECTILE_PARTICLES_DIE[P.explosion.particles])))
+                
+                    playSound("projectileExplode", love.math.random(90, 110) * 0.01)
+                    shock(P.pos.x, P.pos.y, 0.25, 0.05, 0.2)
+
+                end
         else
             if P.pos.x < ROOM.endLeft.x - 100 or P.pos.x > ROOM.endRight.x + 100 or P.pos.y < ROOM.endUp.y - 100 or P.pos.y > ROOM.endDown.y + 100 then table.insert(kill, id)
                 if P.particles ~= nil then P.particles.ticks = 1; table.insert(ROOM.particleSystems, P.particles) end

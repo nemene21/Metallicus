@@ -88,7 +88,11 @@ function steletonBossAttack2Hands(boss)
 
     if boss.armShootingUp < 0 then
 
-        boss.armShootingUp = 0.3
+        boss.armShootingUp = 0.32
+
+        playSound("skeletonBossArmShoot", love.math.random(80, 120) * 0.01)
+
+        shock(boss.handShootPos.x, boss.handShootPos.y, 0.1, 0.05, 0.15)
 
         local projectile = newEnemyProjectile("mediumOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 200, 90 + love.math.random(-33, 33), 24, 12, {255,200,200})
         if love.math.random(0, 100) > 50 then projectile = newEnemyProjectile("smallOrb", newVec(boss.handShootPos.x, boss.handShootPos.y), 250, 90 + love.math.random(-33, 33), 18, 12, {255,200,200}) end
@@ -118,6 +122,10 @@ function steletonBossAttack2Hands(boss)
 
         local dir = newVec(boss.pos.x - player.collider.x, boss.pos.y - player.collider.y):getRot()
 
+        shock(boss.pos.x, boss.pos.y + 36, 0.15, 0.05, 0.2)
+
+        playSound("skeletonBossSpit")
+
         table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 250, dir + 33, 18, 12, {255,200,200}))
         table.insert(enemyProjectiles, newEnemyProjectile("mediumOrb", newVec(boss.pos.x, boss.pos.y + 36), 250, dir, 24, 12, {255,200,200}))
         table.insert(enemyProjectiles, newEnemyProjectile("smallOrb", newVec(boss.pos.x, boss.pos.y + 36), 250, dir - 33, 18, 12, {255,200,200}))
@@ -146,6 +154,12 @@ function steletonBossAttack2Hands(boss)
             boss.handSlamPos.y = boss.handSlamPos.y + dt * 600
             
             if ROOM.tilemap:getTile(math.floor(boss.handSlamPos.x / 48), math.floor(boss.handSlamPos.y / 48)) ~= nil then -- See if the arm got slammed
+
+                playSound("skeletonBossArmSlam", 1, 1, 4)
+
+                shock(boss.handSlamPos.x, boss.handSlamPos.y, 0.3, 0.05, 0.25)
+
+                shake(12, 3, 0.15)
 
                 boss.slamming = false
 

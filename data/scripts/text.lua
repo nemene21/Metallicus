@@ -56,7 +56,7 @@ function waveText(x,y,w,text,color, scaleX, scaleY ,cX,cY,waveSpeed,waveWidth)
 
     for id, L in ipairs(text) do
 
-        xOffset = xOffset + FONT:getWidth(L) * 3 + w
+        xOffset = xOffset + FONT:getWidth(L) * 3 + w * 0.25
 
         outlinedText(x + xOffset, y + math.sin(id + globalTimer * waveSpeed) * waveWidth or 1 - height, w, L, color, scaleX, scaleY, cX, cY)
     end

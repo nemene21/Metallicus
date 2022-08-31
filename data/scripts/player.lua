@@ -153,7 +153,7 @@ function processPlayer(player)
 
         if math.abs(joyMoveX) < 0.15 then
 
-            xInput = boolToInt(pressed("d")) - boolToInt(pressed("a"))
+            xInput = boolToInt(getInput(OPT.keys["Right"])) - boolToInt(getInput(OPT.keys["Left"]))
         else
 
             xInput = boolToInt(joyMoveX > 0) * 2 - 1
@@ -162,7 +162,7 @@ function processPlayer(player)
     
     else
 
-        xInput = boolToInt(pressed("d")) - boolToInt(pressed("a"))
+        xInput = boolToInt(getInput(OPT.keys["Right"])) - boolToInt(getInput(OPT.keys["Left"]))
 
     end
 
@@ -183,7 +183,7 @@ function processPlayer(player)
     player.dashTimer = clamp(player.dashTimer - dt, 0, 1)
     player.dashInputTimer = player.dashInputTimer - dt
 
-    if mouseJustPressed(2) or joystickJustPressed(1, 8) then player.dashInputTimer = 0.3 end
+    if getJustInput(OPT.keys["Dash"]) or joystickJustPressed(1, 8) then player.dashInputTimer = 0.3 end
 
     if player.dashInputTimer > 0 and player.dashTimer == 0 and xInput ~= 0 then
 
@@ -228,13 +228,13 @@ function processPlayer(player)
 
     if flying then
 
-        local yInput = boolToInt(pressed("s") and not debugLineOpen) - boolToInt(pressed("w") and not debugLineOpen)
+        local yInput = boolToInt(getInput(OPT.keys["Down"]) and not debugLineOpen) - boolToInt(getInput(OPT.keys["Up"]) and not debugLineOpen)
         player.vel.y = lerp(player.vel.y, yInput * 300, dt * 8)
 
     end
 
     player.downPressedTimer = player.downPressedTimer - dt -- Fall trough platform
-    if (pressed("s") or moveJoyAxis.y > 0.8) and not debugLineOpen then player.downPressedTimer = 0.3 end
+    if (getInput(OPT.keys["Down"]) or moveJoyAxis.y > 0.8) and not debugLineOpen then player.downPressedTimer = 0.3 end
 
     player.vel.y = math.min(player.vel.y + 1200 * dt * boolToInt(not flying),600) -- Gravity
     
@@ -242,7 +242,7 @@ function processPlayer(player)
 
     player.jumpPressedTimer = player.jumpPressedTimer - dt             -- Jump time
 
-    local jumpPressed = justPressed("space") or justPressedTrigger[1] and not player.inventoryOpen
+    local jumpPressed = getJustInput(OPT.keys["Jump"]) or justPressedTrigger[1]
     if jumpPressed and not debugLineOpen and not flying then player.jumpPressedTimer = 0.15 end
 
     if player.vel.y > 0 then player.canCutJump = false end
@@ -281,10 +281,11 @@ function processPlayer(player)
         player.canCutJump = true; playSound("jump", love.math.random(80, 120) * 0.01)
 
         table.insert(ROOM.particleSystems,newParticleSystem(player.collider.x,player.collider.y + 16,deepcopyTable(player.jumpParticles)))
+    else
+
+        if not (getInput(OPT.keys["Jump"]) or (joystickGetAxis(1, 3).x > 0.4)) and not debugLineOpen and player.canCutJump and player.vel.y < 0 then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
+
     end
-
-    if not (pressed("space") or (joystickGetAxis(1, 3).x > 0.4)) and not debugLineOpen and player.canCutJump and player.vel.y < 0 then player.vel.y = player.vel.y * 0.5; player.canCutJump = false end
-
 
     -- Move rect
 
@@ -314,7 +315,7 @@ function drawPlayer(player)
 
     player.lightScaleLerped = lerp(player.lightScaleLerped or 100, player.lightScale, dt * 3)
 
-    shine(player.collider.x,player.collider.y,300 * player.lightScaleLerped * 0.01 + math.sin(globalTimer * 3) * 30,{255,200,100,50}) -- Light
+    shine(player.collider.x,player.collider.y,300 * player.lightScaleLerped * 0.01 + math.sin(globalTimer * 3) * 30,{255,200,100,80}) -- Light
 
     love.graphics.setCanvas(display)
 
@@ -478,7 +479,7 @@ function drawPlayerUI(player)
 
     end
 
-    if player.showItemNameTimer > 0 then
+    if player.showItemNameTimer > 0 and not player.inventoryOpen then
 
         local color = RARITY_COLORS[player.lastItemHeldRarity]
 
@@ -566,7 +567,7 @@ function drawPlayerUI(player)
             if activeItem.chargeSpeed == -1 and activeItem.noChargeTimer < 0 then activeItem.charge = 1 end
 
             local used = false
-            if justPressed("lshift") and activeItem.charge == 1 and activeItem.noChargeTimer < 0 then
+            if getInput(OPT.keys["Active Item"]) and activeItem.charge == 1 and activeItem.noChargeTimer < 0 then
 
                 activeItem.charge = 0
                 ACTIVE_ITEM_EFFECTS[activeItem.effect](activeItem)
@@ -685,11 +686,11 @@ function drawPlayerUI(player)
     local scrolling = getScroll() ~= 0 or joystickScroll ~= 0
 
     local scrolledByNumber = false
-    if justPressed("1") then player.slotOn = 0; scrolledByNumber = true end
-    if justPressed("2") then player.slotOn = 1; scrolledByNumber = true end
-    if justPressed("3") then player.slotOn = 2; scrolledByNumber = true end
-    if justPressed("4") then player.slotOn = 3; scrolledByNumber = true end
-    if justPressed("5") then player.slotOn = 4; scrolledByNumber = true end
+    if getJustInput(OPT.keys["Slot 1"]) then player.slotOn = 0; scrolledByNumber = true end
+    if getJustInput(OPT.keys["Slot 2"]) then player.slotOn = 1; scrolledByNumber = true end
+    if getJustInput(OPT.keys["Slot 3"]) then player.slotOn = 2; scrolledByNumber = true end
+    if getJustInput(OPT.keys["Slot 4"]) then player.slotOn = 3; scrolledByNumber = true end
+    if getJustInput(OPT.keys["Slot 5"]) then player.slotOn = 4; scrolledByNumber = true end
 
     if (scrolling and not player.inventoryOpen) or scrolledByNumber then
 
@@ -718,7 +719,7 @@ function drawPlayerUI(player)
     end
 
     -- Open / close
-    if (justPressed("e") or joystickJustPressed(1, 4)) and not debugLineOpen then
+    if (getJustInput(OPT.keys["Open Inventory"]) or joystickJustPressed(1, 4)) and not debugLineOpen then
         
         player.inventoryOpen = not player.inventoryOpen
     

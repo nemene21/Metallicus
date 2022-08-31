@@ -10,13 +10,13 @@ extern Image lightImage;
 
 float directions = 8.0;
 float quality = 3.0;
-float radius = 0.001;
+float radius = 0.003;
 
 float PI2 = 6.2831;
 
 float iterations = directions * quality - 15;
 
-uniform float intensityBloom = 0.6;
+uniform float intensityBloom = 0.4;
 
 extern float xRatio;
 
@@ -83,7 +83,7 @@ vec4 effect( vec4 color, Image image, vec2 uvs, vec2 screen_coords )
         for (float i = qualityDiv; i < quality; i += qualityDiv) {
 
             vec4 lookup = Texel(image, uvs + vec2(cos(directionOn) * xRatio, sin(directionOn)) * radius * i);
-            glow += lookup * lookup * (i / quality);
+            glow += lookup * lookup * lookup * lookup * lookup * (i / quality) / i;
 
         }
 

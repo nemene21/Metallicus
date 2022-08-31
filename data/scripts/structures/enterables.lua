@@ -152,7 +152,7 @@ function drawEnterable(enterable)
         drawInteract(enterable.doorCollider.x + 2, enterable.doorCollider.y - enterable.doorCollider.h * 0.5 - 24)
         love.graphics.setCanvas(display)
 
-        if justPressed("f") then
+        if getJustInput(OPT.keys["Interact"]) then
             
             playTrack(enterable.track or BIOMES[biomeOn].track, 0.5)
 

@@ -36,6 +36,8 @@ SHADERS = {
     BULLET_TRAIL = love.graphics.newShader((love.filesystem.read("data/shaders/BULLET_TRAIL.fs")))
     ,
     UI = love.graphics.newShader((love.filesystem.read("data/shaders/UI.fs")))
+    ,
+    TELEPORTER_SWIRL = love.graphics.newShader((love.filesystem.read("data/shaders/TELEPORTER_SWIRL.fs")))
 }
 
 SHADERS.GLOW:send("xRatio",aspectRatio[2])
@@ -60,6 +62,8 @@ ambientLight = {80,80,80}
 LIGHT_ROUND = love.graphics.newImage("data/images/roundLight.png")
 
 lights = {}
+
+whitePixel = love.graphics.newImage("data/images/shaderMasks/whitePixel.png")
 
 function processLight() SHADERS.GLOW_AND_LIGHT:send("lightImage",lightImage); lights = {} end
 

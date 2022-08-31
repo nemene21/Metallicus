@@ -1,13 +1,13 @@
 
 function newButton(x, y, text)
-    return {x = x, y = y, text = text, animation = 0, process = processButton}
+    return {x = x, y = y, text = text, animation = 0, process = processButton, draw = drawButton}
 end
 
 function processButton(btn)
 
     local pressed = false
 
-    if yM > btn.y - 36 and yM < btn.y + 36 and xM > btn.x - 400 and xM < btn.x + 400 - camera[1] then
+    if yM > btn.y - 36 and yM < btn.y + 36 and xM > btn.x - 400 and xM < btn.x + 400 - camera[1] and not keysRebinding then
 
         btn.animation = lerp(btn.animation, 1, dt * 10)
 
@@ -18,7 +18,12 @@ function processButton(btn)
         btn.animation = lerp(btn.animation, 0, dt * 10)
 
     end
-    
+
+    return pressed
+end
+
+function drawButton(btn)
+
     local scale = 1 + 0.2 * btn.animation
     local offsetY = - 16 * btn.animation
 
@@ -31,7 +36,6 @@ function processButton(btn)
 
     outlinedText(btn.x - camera[1], btn.y - camera[2], 2, btn.text, {255, 255, 255}, scale + 0.8, scale + 0.8, 0.5, 0.5)
 
-    return pressed
 end
 
 interactIconScale = 0; interacting = false
@@ -57,8 +61,7 @@ function drawInteract(x, y, fromProcess)
     interacting = true; interactLastPos = newVec(x, y)
     
     local sine = math.sin(globalTimer * 2)
-    drawSprite(IMAGE_F, x, y + sine * 10, (1 + math.sin(globalTimer * 10) * 0.1) * interactIconScale, (1 + math.sin(globalTimer * 10 + 3.14) * 0.1) * interactIconScale)
-
+    normalText(x - camera[1], y + sine * 10 - camera[2], getInputName("Interact"), {255, 255, 255}, interactIconScale * 2, interactIconScale * 2, 0.5, 0.5)
 end
 
 -- SLIDERS
@@ -75,7 +78,7 @@ end
 
 function processSlider(slider)
 
-    if newVec((slider.x + slider.point * 400) - (xM + camera[1]), slider.y + 64 - yM + optionsScroll):getLen() < 24 then
+    if newVec((slider.x + slider.point * 400) - (xM + camera[1]), slider.y + 64 - yM + optionsScroll):getLen() < 24 and not keysRebinding then
 
         if not slider.held then slider.takeAnimation = lerp(slider.takeAnimation, 0.15, dt * 12) end
 
@@ -163,7 +166,7 @@ end
 
 function process01Button(button)
 
-    if xM + camera[1] > button.x - button.width * 0.5 and xM + camera[1] < button.x + button.width * 0.5 and yM + camera[2] - optionsScroll > button.y - button.height * 0.5 and yM + camera[2] - optionsScroll < button.y + button.height * 0.5 then
+    if xM + camera[1] > button.x - button.width * 0.5 and xM + camera[1] < button.x + button.width * 0.5 and yM + camera[2] - optionsScroll > button.y - button.height * 0.5 and yM + camera[2] - optionsScroll < button.y + button.height * 0.5 and not keysRebinding then
 
         button.animation = lerp(button.animation, 0.2, dt * 16)
 
