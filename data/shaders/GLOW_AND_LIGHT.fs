@@ -33,13 +33,13 @@ struct Shockwave {
 
 };
 
-uniform int colorBlindMode = 0;
-
 extern int ACTIVE_SHOCKWAVES;
 
 extern Shockwave shockwaves[16];
 
 vec2 screenDimensions = vec2(800, 600);
+
+uniform int colorBlindMode = 0;
 
 uniform float brightness;
 
